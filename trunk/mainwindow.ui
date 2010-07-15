@@ -10,6 +10,11 @@
     <height>364</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Sans Serif</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>GSDS</string>
   </property>
@@ -210,6 +215,7 @@ p, li { white-space: pre-wrap; }
      <string>&amp;Application</string>
     </property>
     <addaction name="action_Open"/>
+    <addaction name="actionSave"/>
     <addaction name="action_Quit"/>
    </widget>
    <addaction name="menu_Application"/>
@@ -235,6 +241,7 @@ p, li { white-space: pre-wrap; }
    </attribute>
    <addaction name="action_Quit"/>
    <addaction name="action_Open"/>
+   <addaction name="actionSave"/>
    <addaction name="actionTest"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -263,6 +270,14 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
    </property>
   </action>
  </widget>

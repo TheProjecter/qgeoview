@@ -21,6 +21,7 @@ typedef struct {
 } CacheLog;
 
 typedef struct {
+    QDomElement xmlElement;
     bool selected;
     double latitude;
     double longitude;

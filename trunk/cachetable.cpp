@@ -197,6 +197,7 @@ void CacheTable::openGPX(QDomDocument *doc)
         QDomElement wpt_element = wpt_list.item(wpt_i).toElement();
         QDomElement cache_element = wpt_element.elementsByTagName("groundspeak:cache").item(0).toElement();
         Cache *cache = new Cache;
+        cache->xmlElement = wpt_element;
         cache->selected = false;
         cache->latitude = wpt_element.attribute("lat").toDouble();
         cache->longitude = wpt_element.attribute("lon").toDouble();

@@ -25,8 +25,10 @@ private:
     Ui::MainWindow *ui;
     QSortFilterProxyModel *_cacheTableProxy;
     CacheTable *_cacheTable;
+    QDomDocument gpx_file;
 
 private slots:
+    void on_actionSave_triggered();
     void on_action_Open_triggered();
     void on_actionTest_triggered();
     void on_action_Quit_triggered();
