@@ -12,6 +12,9 @@ SOURCES += main.cpp \
 HEADERS += mainwindow.h \
     cachetable.h
 FORMS += mainwindow.ui
-
-target.path = /usr/local/qgeoview
-INSTALLS += target
+unix {
+    PREFIX = $$(PREFIX)
+    isEmpty( PREFIX ):PREFIX = /usr/local
+    target.path = $$PREFIX/bin/
+    INSTALLS += target
+}
