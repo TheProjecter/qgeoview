@@ -12,3 +12,6 @@ SOURCES += main.cpp \
 HEADERS += mainwindow.h \
     cachetable.h
 FORMS += mainwindow.ui
+
+target.path = /usr/local/qgeoview
+INSTALLS += target
