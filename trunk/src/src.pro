@@ -16,3 +16,4 @@ FORMS += mainwindow.ui
 SOURCES += cachetable.cpp \
     main.cpp \
     mainwindow.cpp
+RESOURCES += src.qrc

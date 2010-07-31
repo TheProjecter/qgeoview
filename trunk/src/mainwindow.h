@@ -30,6 +30,7 @@
 namespace Ui {
     class MainWindow;
 }
+using namespace qmapcontrol;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -48,7 +49,8 @@ private:
     QDomDocument gpx_file;
     qmapcontrol::MapControl *_map;
     qmapcontrol::MapAdapter* _map_adapter;
-    qmapcontrol::Layer* _map_mainlayer;
+    qmapcontrol::Layer* _map_layer_main;
+    qmapcontrol::Layer* _map_layer_caches;
 
 private slots:
     void on_actionSave_triggered();
@@ -58,7 +60,9 @@ private slots:
 
 public slots:
     void view_row_selected(const QModelIndex & index);
-    void cache_selected(Cache *cache);
+    void activate_cache(Cache *cache);
+    void cache_added(Cache *cache);
+    void cache_clicked(Geometry* geometry, QPoint point);
 
 signals:
     void row_selected(const QModelIndex & index);
@@ -82,6 +86,8 @@ signals:
     void cache_desc_short_html_changed(QString);
     void cache_hint_changed(QString);
     void quit();
+protected:
+    virtual void resizeEvent (QResizeEvent *);
 };
 
 #endif // MAINWINDOW_H

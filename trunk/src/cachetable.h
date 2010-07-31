@@ -82,6 +82,7 @@ public:
     void addCache(Cache *cache);
     void openGPX(QDomDocument *doc);
     QList<Cache*> selected_caches();
+    Cache *cacheByNumber(QString number);
 
 private:
     QList<Cache*> _caches;
@@ -89,7 +90,8 @@ private:
     QSortFilterProxyModel *_proxy;
 
 signals:
-    void cache_selected(Cache *cache);
+    void activate_cache(Cache *cache);
+    void cache_added(Cache *cache);
 
 public slots:
     void row_selected(const QModelIndex & index);

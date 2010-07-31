@@ -40,20 +40,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->caches_list->setModel(_cacheTableProxy);
 
-    // TODO: Remove next line
-    //openFile("test.gpx");
+    
     _map = new qmapcontrol::MapControl(QSize(380, 540));
     _map_adapter = new qmapcontrol::OSMMapAdapter();
-    _map_mainlayer = new qmapcontrol::MapLayer("OpenStreetMap-Layer", _map_adapter);
     ui->tab_map_layout->addWidget(_map);
 
-    _map->addLayer(_map_mainlayer);
+    _map_layer_main = new qmapcontrol::MapLayer("OpenStreetMap-Layer", _map_adapter);
+    _map->addLayer(_map_layer_main);
+
+    _map_layer_caches = new qmapcontrol::GeometryLayer("Caches", _map_adapter);
+    _map->addLayer(_map_layer_caches);
+
     _map->showScale(true);
 
+    connect(_map_layer_caches, SIGNAL(geometryClicked(Geometry *, QPoint)), this, SLOT(cache_clicked(Geometry*, QPoint)));
+    connect(ui->map_zoomin, SIGNAL(clicked(bool)), _map, SLOT(zoomIn()));
+    connect(ui->map_zoomout, SIGNAL(clicked(bool)), _map, SLOT(zoomOut()));
 
+
+    connect(_cacheTable, SIGNAL(cache_added(Cache*)), this, SLOT(cache_added(Cache*)));
     connect(ui->caches_list, SIGNAL(clicked(QModelIndex)), this, SLOT(view_row_selected(QModelIndex)));
     connect(this, SIGNAL(row_selected(QModelIndex)), _cacheTable, SLOT(row_selected(QModelIndex)));
-    connect(_cacheTable, SIGNAL(cache_selected(Cache*)), this, SLOT(cache_selected(Cache*)));
+    connect(_cacheTable, SIGNAL(activate_cache(Cache*)), this, SLOT(activate_cache(Cache*)));
 }
 
 
@@ -82,7 +90,7 @@ void MainWindow::on_action_Quit_triggered()
 }
 
 
-void MainWindow::cache_selected(Cache *cache)
+void MainWindow::activate_cache(Cache *cache)
 {
     emit cache_changed(cache);
     emit cache_lat_changed(cache->latitude);
@@ -108,12 +116,14 @@ void MainWindow::cache_selected(Cache *cache)
         emit cache_desc_short_changed(cache->desc_short);
     emit cache_hint_changed(cache->hint);
     ui->cache_page->setUrl(cache->url);
-    //ui->map->setUrl(tr("http://local.google.ca/?ll=%1,%2").arg(QString::number(cache->latitude), QString::number(cache->longitude)));
+    _map->moveTo(QPointF(cache->longitude, cache->latitude));
+    ui->statusBar->showMessage(cache->number + " - " + cache->name);
 }
 
 
 void MainWindow::on_actionTest_triggered()
 {
+    openFile("/home/doug/Desktop/test.gpx");
 }
 
 
@@ -168,22 +178,17 @@ void MainWindow::on_actionSave_triggered()
     double maxlon = minlon;
     if (caches.count() > 1) {
         for (int i = 1; i < caches.count(); ++i) {
-            std::cout << "checking " << i << std::endl;
             cache = caches.at(i);
             if (cache->latitude < minlat) {
-                std::cout << cache->latitude << " < " << minlat << std::endl;
                 minlat = cache->latitude;
             }
             if (cache->latitude > maxlat) {
-                std::cout << cache->latitude << " > " << maxlat << std::endl;
                 maxlat = cache->latitude;
             }
             if (cache->longitude < minlon) {
-                std::cout << cache->longitude << " < " << minlon << std::endl;
                 minlon = cache->longitude;
             }
             if (cache->longitude > maxlon) {
-                std::cout << cache->longitude << " > " << maxlon << std::endl;
                 maxlon = cache->longitude;
             }
         }
@@ -225,7 +230,6 @@ void MainWindow::on_actionSave_triggered()
     for (int i = 0; i < caches.count(); ++i) {
         cache = caches.at(i);
         gpx.appendChild(cache->xmlElement);
-        std::cout << "Adding " << cache->number.toStdString() << std::endl;
     }
     doc.appendChild(gpx);
 
@@ -238,4 +242,24 @@ void MainWindow::on_actionSave_triggered()
     QTextStream stream(&file);
     stream << doc.toString();
     file.close();
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    // TODO: Determine available size.
+    _map->resize(QSize(event->size().width()/2, (2*event->size().height())/3));
+}
+
+void MainWindow::cache_added(Cache *cache)
+{
+    qmapcontrol::Point* cachepoint = new qmapcontrol::ImagePoint(cache->longitude, cache->latitude, ":/icons/traditional.gif", cache->number);
+    _map_layer_caches->addGeometry(cachepoint);
+}
+
+
+void MainWindow::cache_clicked(qmapcontrol::Geometry *geometry, QPoint point)
+{
+    Cache *cache = _cacheTable->cacheByNumber(geometry->name());
+    if (cache != NULL)
+        activate_cache(cache);
 }

@@ -9,10 +9,9 @@ DEPENDPATH += src \
 INCLUDEPATH += src \
     QMapControl/src
 target.files = bin/*
-unix {
-    target.path = /usr/bin
-}
-win32 {
-    target.path = c:\Program Files\$$TARGET
-}
+unix:target.path = /usr/bin
+win32:target.path = c:\Program \
+    Files\$$TARGET
 INSTALLS += target
+HEADERS += 
+SOURCES += 
