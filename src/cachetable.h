@@ -83,6 +83,7 @@ public:
     void openGPX(QDomDocument *doc);
     QList<Cache*> selected_caches();
     Cache *cacheByNumber(QString number);
+    QDomDocument *genGPX();
 
 private:
     QList<Cache*> _caches;
