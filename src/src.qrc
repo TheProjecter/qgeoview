@@ -11,5 +11,6 @@
         <file>icons/traditional.gif</file>
         <file>icons/virtual.gif</file>
         <file>icons/webcam.gif</file>
+        <file>icons/application.svg</file>
     </qresource>
 </RCC>
