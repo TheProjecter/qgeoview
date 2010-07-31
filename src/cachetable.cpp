@@ -188,7 +188,7 @@ void CacheTable::row_selected(const QModelIndex & index)
         return;
     if (index.row() >= _caches.size() || index.row() < 0)
         return;
-    emit cache_selected(_caches.at(index.row()));
+    emit activate_cache(_caches.at(index.row()));
 }
 
 
@@ -253,6 +253,7 @@ void CacheTable::openGPX(QDomDocument *doc)
             cache->logs.append(log);
         }
         addCache(cache);
+        emit cache_added(cache);
     }
 }
 
@@ -269,3 +270,13 @@ QList<Cache*> CacheTable::selected_caches()
     return selected;
 }
 
+Cache *CacheTable::cacheByNumber(QString number)
+{
+    Cache *cache;
+    for (int i=0; i < _caches.count(); ++ i) {
+        cache = _caches.at(i);
+        if (cache->number == number)
+            return cache;
+    }
+    return NULL;
+}
