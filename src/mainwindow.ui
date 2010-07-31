@@ -81,6 +81,11 @@
        </attribute>
       </widget>
       <widget class="QTabWidget" name="tabWidget">
+       <property name="font">
+        <font>
+         <family>Sans Serif</family>
+        </font>
+       </property>
        <property name="currentIndex">
         <number>1</number>
        </property>
@@ -109,19 +114,7 @@ p, li { white-space: pre-wrap; }
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QWebView" name="map">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="url">
-            <url>
-             <string>http://local.google.ca/</string>
-            </url>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="tab_map_layout"/>
          </item>
         </layout>
        </widget>

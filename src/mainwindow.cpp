@@ -42,6 +42,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // TODO: Remove next line
     //openFile("test.gpx");
+    _map = new qmapcontrol::MapControl(QSize(380, 540));
+    _map_adapter = new qmapcontrol::OSMMapAdapter();
+    _map_mainlayer = new qmapcontrol::MapLayer("OpenStreetMap-Layer", _map_adapter);
+    ui->tab_map_layout->addWidget(_map);
+
+    _map->addLayer(_map_mainlayer);
+    _map->showScale(true);
+
 
     connect(ui->caches_list, SIGNAL(clicked(QModelIndex)), this, SLOT(view_row_selected(QModelIndex)));
     connect(this, SIGNAL(row_selected(QModelIndex)), _cacheTable, SLOT(row_selected(QModelIndex)));
@@ -100,7 +108,7 @@ void MainWindow::cache_selected(Cache *cache)
         emit cache_desc_short_changed(cache->desc_short);
     emit cache_hint_changed(cache->hint);
     ui->cache_page->setUrl(cache->url);
-    ui->map->setUrl(tr("http://local.google.ca/?ll=%1,%2").arg(QString::number(cache->latitude), QString::number(cache->longitude)));
+    //ui->map->setUrl(tr("http://local.google.ca/?ll=%1,%2").arg(QString::number(cache->latitude), QString::number(cache->longitude)));
 }
 
 

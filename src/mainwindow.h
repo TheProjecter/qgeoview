@@ -25,6 +25,7 @@
 #include <QItemSelection>
 #include <QSortFilterProxyModel>
 #include "cachetable.h"
+#include "../QMapControl/qmapcontrol.h"
 
 namespace Ui {
     class MainWindow;
@@ -45,6 +46,9 @@ private:
     QSortFilterProxyModel *_cacheTableProxy;
     CacheTable *_cacheTable;
     QDomDocument gpx_file;
+    qmapcontrol::MapControl *_map;
+    qmapcontrol::MapAdapter* _map_adapter;
+    qmapcontrol::Layer* _map_mainlayer;
 
 private slots:
     void on_actionSave_triggered();
