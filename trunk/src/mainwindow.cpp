@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _cacheTable(new CacheTable(ui->caches_list, _cacheTableProxy))
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(":/icons/application.svg"));
 
     _cacheTableProxy->setSourceModel(_cacheTable);
     _cacheTableProxy->setDynamicSortFilter(true);
