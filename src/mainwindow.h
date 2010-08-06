@@ -63,6 +63,7 @@ public slots:
     void activate_cache(Cache *cache);
     void cache_added(Cache *cache);
     void cache_clicked(Geometry* geometry, QPoint point);
+    void MapSourceChanged(QString src);
 
 signals:
     void row_selected(const QModelIndex & index);

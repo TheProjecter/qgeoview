@@ -200,3 +200,28 @@ void MainWindow::cache_clicked(qmapcontrol::Geometry *geometry, QPoint point)
     if (cache != NULL)
         activate_cache(cache);
 }
+
+void MainWindow::MapSourceChanged(QString src)
+{
+    int zoom = _map_adapter->adaptedZoom();
+    _map->setZoom(0);
+    if (src == "Open Street Map") {
+        _map_adapter = new qmapcontrol::OSMMapAdapter();
+    } else if (src == "Google Map") {
+        _map_adapter = new qmapcontrol::GoogleMapAdapter();
+    } else if (src == "Google Map (Satelite") {
+        _map_adapter = new qmapcontrol::GoogleSatMapAdapter();
+    } else if (src == "Yahoo Map") {
+        _map_adapter = new qmapcontrol::YahooMapAdapter();
+    } else if (src == "Yahoo Map (Satelite)") {
+        _map_adapter = new qmapcontrol::YahooMapAdapter("us.maps3.yimg.com", "/aerial.maps.yimg.com/png?v=1.7&t=a&s=256&x=%2&y=%3&z=%1");
+    } else {
+        std::cerr << "Unknwon Map Source: \"" << src.toStdString() << "\"" << std::endl;
+        _map->setZoom(zoom);
+    }
+    std::cout << "Loading \"" << src.toStdString() << "\" Map Source" << std::endl;
+    _map->updateRequestNew();
+    _map->setZoom(zoom);
+    _map_layer_main->setMapAdapter(_map_adapter);
+    _map_layer_caches->setMapAdapter(_map_adapter);
+}
