@@ -156,6 +156,41 @@ p, li { white-space: pre-wrap; }
                </property>
               </spacer>
              </item>
+             <item>
+              <widget class="QComboBox" name="map_source_selector">
+               <property name="minimumSize">
+                <size>
+                 <width>150</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Open Street Map</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Google Map</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Google Map (Satelite)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Yahoo Map</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Yahoo Map (Satelite)</string>
+                </property>
+               </item>
+              </widget>
+             </item>
             </layout>
            </item>
           </layout>
@@ -289,6 +324,9 @@ p, li { white-space: pre-wrap; }
    <property name="toolTip">
     <string>Quit The Application</string>
    </property>
+   <property name="font">
+    <font/>
+   </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
    </property>
@@ -392,6 +430,22 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>map_source_selector</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>MapSourceChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>583</x>
+     <y>208</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>634</x>
+     <y>188</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>row_selected(QModelIndex)</signal>
@@ -413,5 +467,6 @@ p, li { white-space: pre-wrap; }
   <signal>cache_desc_short_changed(QString)</signal>
   <signal>cache_desc_shot_html_changed(QString)</signal>
   <signal>cache_hint_changed(QString)</signal>
+  <slot>MapSourceChanged(QString)</slot>
  </slots>
 </ui>
