@@ -1,17 +1,29 @@
-include(QMapControl/QMapControl.pri)
-include(src/src.pro)
+QT += xml \
+    webkit \
+    sql
+TEMPLATE = app
 MOC_DIR = tmp
 OBJECTS_DIR = obj
 DESTDIR = bin
 TARGET = QGeoView
-DEPENDPATH += src \
-    QMapControl/src
-INCLUDEPATH += src \
-    QMapControl/src
+DEPENDPATH += .
+INCLUDEPATH += .
 target.files = bin/*
 unix:target.path = /usr/bin
 win32:target.path = c:\Program \
     Files\$$TARGET
 INSTALLS += target
-HEADERS += 
-SOURCES += 
+HEADERS += mainwindow.h \
+    itemstreewidget.h \
+    treeitem.h \
+    treemodel.h
+FORMS += mainwindow.ui
+SOURCES += main.cpp \
+    mainwindow.cpp \
+    itemstreewidget.cpp \
+    treeitem.cpp \
+    treemodel.cpp
+
+RESOURCES += QGeoView.qrc
+LIBS += -lmarblewidget
+INCLUDEPATH += /usr/include/marble
