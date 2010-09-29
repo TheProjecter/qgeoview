@@ -24,22 +24,57 @@
 #include <QFileDialog>
 #include <QProcess>
 #include <QTextStream>
+#include <QCoreApplication>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "treemodel.h"
+
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    _cacheTableProxy(new QSortFilterProxyModel(this))
+    ui(new Ui::MainWindow)
 {
+    // Settings
+    QCoreApplication::setOrganizationName("DarwinSurvivor");
+    QCoreApplication::setOrganizationDomain("http://code.google.com/p/qgeoview/");
+    QCoreApplication::setApplicationName("QGeoView");
+    _settings = new QSettings;
+    if (!_settings->contains("installed")) {
+        firstRun();
+    }
+
+    // Database
+    _db = new Database(_settings->value("database/location").toString());
+
+    // UI
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/application.svg"));
+    ui->item_list->setModel(new TreeModel);
 
-    _db = new QSqlQueryModel;
-    _db->setQuery("select * from caches");    
-
+    // Map
     ui->map->centerOn(49, 122, true);
     infoType(INFO_TYPE_NONE);
+}
+
+void MainWindow::firstRun()
+{
+    std::cout << "First run detected, setting defaults" << std::endl;
+    // Settings
+    _settings->setValue("installed", true);
+    QString database_location = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    database_location.append("/db.sqlite3");
+    _settings->setValue("database/location", database_location);
+
+    // Directories
+    QDir dir;
+    if (!dir.mkpath(QString(QDesktopServices::storageLocation(QDesktopServices::DataLocation)))) {
+        std::cerr << "Error creating dataStorage folder" << std::endl;
+    }
+
+    // Empty DB File
+    std::cout << "copying database to " << _settings->value("database/location").toString().toStdString() << std::endl;
+    QFile(":/db.sqlite3.empty").copy(_settings->value("database/location").toString());
 }
 
 
@@ -110,7 +145,6 @@ void MainWindow::view_row_selected(const QModelIndex & index)
 {
     if (!index.isValid())
         return;
-    emit row_selected(_cacheTableProxy->mapToSource(index));
 }
 
 
@@ -125,6 +159,7 @@ void MainWindow::on_action_Open_triggered()
 
 void MainWindow::openFile(QString filename)
 {
+    QDomDocument gpx_file;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
         std::cerr << "Cannot open file" << std::endl;

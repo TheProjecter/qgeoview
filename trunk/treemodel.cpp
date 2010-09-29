@@ -1,9 +1,13 @@
 #include "treeitem.h"
 #include "treemodel.h"
+#include <iostream>
 
 TreeModel::TreeModel(QObject *parent) :
     QAbstractItemModel(parent)
 {
+    _rootItem = new TreeItem;
+    *_rootItem << "Name";
+    *_rootItem << "Description";
 }
 
 TreeModel::~TreeModel()
@@ -94,4 +98,19 @@ int TreeModel::rowCount(const QModelIndex &parent) const
         parentItem = static_cast<TreeItem*>(parent.internalPointer());
     }
     return parentItem->childCount();
+}
+
+void TreeModel::waypoint_added(int id)
+{
+
+}
+
+void TreeModel::track_added(int id)
+{
+
+}
+
+void TreeModel::route_added(int id)
+{
+
 }
