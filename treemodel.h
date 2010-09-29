@@ -22,6 +22,10 @@ public:
     int columnCount(const QModelIndex &parent) const;
 private:
     TreeItem* _rootItem;
+public slots:
+    void waypoint_added(int id);
+    void track_added(int id);
+    void route_added(int id);
 
 signals:
 

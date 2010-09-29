@@ -12,5 +12,6 @@
         <file>icons/virtual.gif</file>
         <file>icons/webcam.gif</file>
         <file>icons/application.svg</file>
+        <file>db.sqlite3.empty</file>
     </qresource>
 </RCC>

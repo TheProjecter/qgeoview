@@ -1,7 +1,7 @@
 #include <QStringList>
 #include "treeitem.h"
 
-TreeItem::TreeItem(const QList<QVariant> &data, TreeItem *parent): _itemData(data), _parentItem(parent)
+TreeItem::TreeItem(TreeItem *parent): _parentItem(parent)
 {
 }
 
@@ -46,4 +46,10 @@ int TreeItem::row() const
         return _parentItem->_childItems.indexOf(const_cast<TreeItem*>(this));
     }
     return 0;
+}
+
+TreeItem TreeItem::operator<<(QVariant data)
+{
+    _itemData.append(data);
+    return *this;
 }

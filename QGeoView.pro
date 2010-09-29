@@ -16,14 +16,15 @@ INSTALLS += target
 HEADERS += mainwindow.h \
     itemstreewidget.h \
     treeitem.h \
-    treemodel.h
+    treemodel.h \
+    database.h
 FORMS += mainwindow.ui
 SOURCES += main.cpp \
     mainwindow.cpp \
     itemstreewidget.cpp \
     treeitem.cpp \
-    treemodel.cpp
-
+    treemodel.cpp \
+    database.cpp
 RESOURCES += QGeoView.qrc
 LIBS += -lmarblewidget
 INCLUDEPATH += /usr/include/marble

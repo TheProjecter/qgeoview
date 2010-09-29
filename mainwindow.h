@@ -21,12 +21,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QSettings>
 #include <QMainWindow>
 #include <QItemSelection>
 #include <QSortFilterProxyModel>
-#include <QSqlQueryModel>
 #include <QDomDocument>
 #include <QDateTime>
+
+#include "database.h"
 
 #define INFO_TYPE_NONE      1
 #define INFO_TYPE_WAYPOINT  2
@@ -73,6 +75,7 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = 0);
+    void firstRun();
     void openFile(QString filename);
     void infoType(int type);
     ~MainWindow();
@@ -84,9 +87,8 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    QSortFilterProxyModel *_cacheTableProxy;
-    QDomDocument gpx_file;
-    QSqlQueryModel* _db;
+    Database* _db;
+    QSettings* _settings;
 
 private slots:
     void on_actionSave_triggered();
