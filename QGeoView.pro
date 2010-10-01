@@ -17,14 +17,20 @@ HEADERS += mainwindow.h \
     itemstreewidget.h \
     treeitem.h \
     treemodel.h \
-    database.h
-FORMS += mainwindow.ui
+    database.h \
+    newitemdialog.h
+FORMS += mainwindow.ui \
+    newitemdialog.ui \
+    ItemDescription.ui \
+    ItemLocation.ui \
+    PointAccuracy.ui
 SOURCES += main.cpp \
     mainwindow.cpp \
     itemstreewidget.cpp \
     treeitem.cpp \
     treemodel.cpp \
-    database.cpp
+    database.cpp \
+    newitemdialog.cpp
 RESOURCES += QGeoView.qrc
 LIBS += -lmarblewidget
 INCLUDEPATH += /usr/include/marble

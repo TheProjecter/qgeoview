@@ -25,6 +25,7 @@
 #include <QProcess>
 #include <QTextStream>
 #include <QCoreApplication>
+#include "newitemdialog.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "treemodel.h"
@@ -55,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Map
     ui->map->centerOn(49, 122, true);
     infoType(INFO_TYPE_NONE);
+
+    // Test
 }
 
 void MainWindow::firstRun()
@@ -136,6 +139,7 @@ void MainWindow::activate_cache(Cache *cache)
 
 void MainWindow::on_actionTest_triggered()
 {
+    NewItemDialog(this).exec();
     openFile("/home/doug/test.gpx");
     ui->map->openGpxFile("/home/doug/test.gpx");
 }
