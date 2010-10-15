@@ -106,42 +106,11 @@ void MainWindow::on_action_Quit_triggered()
 }
 
 
-void MainWindow::activate_cache(Cache *cache)
-{
-    emit cache_changed(cache);
-    emit cache_lat_changed(cache->latitude);
-    emit cache_lon_changed(cache->longitude);
-    emit cache_number_changed(cache->number);
-    emit cache_name_changed(cache->name);
-    emit cache_long_name_changed(cache->long_name);
-    emit cache_url_changed(cache->url);
-    emit cache_url_name_changed(cache->url_name);
-    emit cache_placed_by_changed(cache->placed_by);
-    emit cache_owner_changed(cache->owner);
-    emit cache_terrain_changed(cache->terrain);
-    emit cache_type_changed(cache->type);
-    emit cache_container_changed(cache->container);
-    emit cache_difficulty_changed(cache->difficulty);
-    if (cache->desc_long_html)
-        emit cache_desc_long_html_changed(cache->desc_long);
-    else
-        emit cache_desc_long_changed(cache->desc_long);
-    if (cache->desc_long_html)
-        emit cache_desc_short_html_changed(cache->desc_short);
-    else
-        emit cache_desc_short_changed(cache->desc_short);
-    emit cache_hint_changed(cache->hint);
-    ui->cache_page->setUrl(cache->url);
-    // TODO: move map
-    ui->statusBar->showMessage(cache->number + " - " + cache->name);
-}
-
 
 void MainWindow::on_actionTest_triggered()
 {
-    NewItemDialog(this).exec();
+    //NewItemDialog(this).exec();
     openFile("/home/doug/test.gpx");
-    ui->map->openGpxFile("/home/doug/test.gpx");
 }
 
 
@@ -163,20 +132,17 @@ void MainWindow::on_action_Open_triggered()
 
 void MainWindow::openFile(QString filename)
 {
-    QDomDocument gpx_file;
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
         std::cerr << "Cannot open file" << std::endl;
         return;
     }
-
-    if (!gpx_file.setContent(&file)) {
-        std::cerr << "Unusable file" << std::endl;
-        file.close();
-        return;
+    if (_db->import_gpx(&file)) {
+        std::cout << "Successfully Imported " << filename.toStdString() << "as GPX" << std::endl;
+    } else {
+        std::cerr << "Error Importing " << filename.toStdString() << " as GPX" << std::endl;
     }
     file.close();
-    // TODO: _cacheTable->openGPX(&gpx_file);
 }
 
 
@@ -233,63 +199,10 @@ void MainWindow::MapSourceChanged(QString src)
     std::cout << "Loading \"" << src.toStdString() << "\" Map Source" << std::endl;
 }
 
-void MainWindow::openGPX(QDomDocument *doc)
-{
-    QDomElement gpx_element = doc->documentElement();
-    if (gpx_element.tagName() != "gpx")
-    {
-        std::cerr << "Not an XML file" << std::endl;
-        return;
-    }
-
-    // read data
-    QDomNodeList wpt_list = gpx_element.elementsByTagName("wpt");
-    for (int wpt_i = 0; wpt_i < wpt_list.count(); ++wpt_i)
-    {
-        QDomElement wpt_element = wpt_list.item(wpt_i).toElement();
-        QDomElement cache_element = wpt_element.elementsByTagName("groundspeak:cache").item(0).toElement();
-        Cache *cache = new Cache;
-        cache->xmlElement = wpt_element;
-        cache->selected = false;
-        cache->latitude = wpt_element.attribute("lat").toDouble();
-        cache->longitude = wpt_element.attribute("lon").toDouble();
-        cache->number = wpt_element.elementsByTagName("name").item(0).firstChild().nodeValue();
-        cache->name = cache_element.elementsByTagName("groundspeak:name").item(0).firstChild().nodeValue();
-        cache->long_name = wpt_element.elementsByTagName("desc").item(0).firstChild().nodeValue();
-        cache->url = wpt_element.elementsByTagName("url").item(0).firstChild().nodeValue();
-        cache->url_name = wpt_element.elementsByTagName("name").item(0).firstChild().nodeValue();
-        cache->placed_by = cache_element.elementsByTagName("groundspeak:placed_by").item(0).firstChild().nodeValue();
-        cache->owner = cache_element.elementsByTagName("groundspeak:owner").item(0).firstChild().nodeValue();
-        cache->type = cache_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue();
-        cache->container = cache_element.elementsByTagName("groundspeak:container").item(0).firstChild().nodeValue();
-        cache->difficulty = cache_element.elementsByTagName("groundspeak:difficulty").item(0).firstChild().nodeValue().toFloat();
-        cache->terrain = cache_element.elementsByTagName("groundspeak:terrain").item(0).firstChild().nodeValue().toFloat();
-        QDomElement short_description_element = cache_element.elementsByTagName("groundspeak:short_description").item(0).toElement();
-        cache->desc_short_html = short_description_element.attribute("html", "False") == "True";
-        cache->desc_short = short_description_element.firstChild().nodeValue();
-        QDomElement long_description_element = cache_element.elementsByTagName("groundspeak:long_description").item(0).toElement();
-        cache->desc_long_html = long_description_element.attribute("html", "False") == "True";
-        cache->desc_long = long_description_element.firstChild().nodeValue();
-        cache->hint = cache_element.elementsByTagName("groundspeak:encoded_hints").item(0).firstChild().nodeValue();
-        QDomNodeList cache_log_list = cache_element.elementsByTagName("groundspeak:logs").item(0).toElement().elementsByTagName("groundspeak:log");
-        for (int cache_log_i = 0; cache_log_i < cache_log_list.count(); ++cache_log_i)
-        {
-            QDomElement log_element = cache_log_list.item(cache_log_i).toElement();
-            CacheLog *log = new CacheLog;
-            log->datetime = QDateTime::fromString(log_element.elementsByTagName("groundspeak:date").item(0).firstChild().nodeValue());
-            log->type = log_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue();
-            log->poster = log_element.elementsByTagName("groundspeak:finder").item(0).firstChild().nodeValue();
-            QDomElement log_text_element = log_element.elementsByTagName("groundspeak:text").item(0).toElement();
-            log->text_encoded = log_text_element.attribute("encoded", "False") == "True";
-            log->text = log_text_element.nodeValue();
-            cache->logs.append(log);
-        }
-        emit new_cache(cache);
-    }
-}
-
 QDomDocument *MainWindow::genGPX(QList<Cache*> caches)
 {
+    return new QDomDocument;
+    /*
     // create gpx structure
     if (caches.empty())
         return NULL;
@@ -354,5 +267,5 @@ QDomDocument *MainWindow::genGPX(QList<Cache*> caches)
         gpx.appendChild(cache->xmlElement);
     }
     doc->appendChild(gpx);
-    return doc;
+    return doc;*/
 }
