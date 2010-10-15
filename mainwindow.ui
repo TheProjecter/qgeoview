@@ -308,6 +308,11 @@ p, li { white-space: pre-wrap; }
      <height>16777215</height>
     </size>
    </property>
+   <property name="font">
+    <font>
+     <family>Sans Serif</family>
+    </font>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
