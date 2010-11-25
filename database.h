@@ -3,8 +3,13 @@
 
 #include <QString>
 #include <QSqlDatabase>
+#include <QDomDocument>
 #include <QObject>
 #include <QFile>
+
+#define DATABASE_DATATYPE_STRING	0
+#define DATABASE_DATATYPE_INT		1
+#define DATABASE_DATATYPE_DOUBLE	2
 
 typedef struct point_ {
     int id;
@@ -86,6 +91,7 @@ public:
     QFile export_gpx();
     ~Database();
 private:
+    QVariant child_value(QDomNodeList list, int format);
     QSqlDatabase _db;
 
 signals:

@@ -36,6 +36,7 @@ bool Database::import_gpx(QFile *file)
         std::cerr << "Not an XML file" << std::endl;
         return false;
     }
+    _db.transaction();
 
     // read data
     QDomNodeList wpt_list = gpx_element.elementsByTagName("wpt");
@@ -45,38 +46,40 @@ bool Database::import_gpx(QFile *file)
         QDomElement wpt_element = wpt_list.item(wpt_i).toElement();
         QDomElement cache_element = wpt_element.elementsByTagName("groundspeak:cache").item(0).toElement();
         // Point
-        query.prepare("INSERT INTO Points (time, elevation, magneticVariation, geoIDHeight, symbox, fix, statelites, horizontalDOP, verticalDOP, positionDOP, ageofDGPSData, DGPSID, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        query.addBindValue(wpt_element.elementsByTagName("time").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("ele").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("magvar").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("geoidheight").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("sym").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("fix").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("sat").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("hdop").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("vdop").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("pdop").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("ageofdgpsdata").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("dgpsid").item(0).firstChild().nodeValue());
+        query.prepare("INSERT INTO Points (time, elevation, magneticVariation, geoIDHeight, symbol, fix, satelites, horizontalDOP, verticalDOP, positionDOP, ageofDGPSData, DGPSID, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+        query.addBindValue(child_value(wpt_element.elementsByTagName("time"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("ele"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("magvar"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("geoidheight"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("sym"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("fix"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("sat"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("hdop"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("vdop"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("pdop"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("ageofdgpsdata"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("dgpsid"), DATABASE_DATATYPE_STRING));
         query.addBindValue(wpt_element.attribute("lat").toDouble());
         query.addBindValue(wpt_element.attribute("lon").toDouble());
+        std::cout << "executing query 1" << std::endl;
         if (query.exec()) {
             std::cout << "query.exec() DONE" << std::endl;
         } else {
             std::cout << "query.exec() FAIL" << std::endl;
-            std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
+            std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\" and \"" << query.lastError().databaseText().toStdString() << "\"" << std::endl;
             return false;
         }
         point_id = query.lastInsertId().toInt();
 
         // Description
         query.prepare("INSERT INTO Descriptions (name, link_url, link_name, comments, source, type) VALUES (?,?,?,?,?,?)");
-        query.addBindValue(wpt_element.elementsByTagName("name").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("link").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("link").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("cmt").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("src").item(0).firstChild().nodeValue());
-        query.addBindValue(wpt_element.elementsByTagName("type").item(0).firstChild().nodeValue());
+        query.addBindValue(child_value(wpt_element.elementsByTagName("name"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("link"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("link"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("cmt"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("src"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("type"), DATABASE_DATATYPE_STRING));
+        std::cout << "executing query 2" << std::endl;
         if (query.exec()) {
             std::cout << "query.exec() DONE" << std::endl;
         } else {
@@ -90,6 +93,7 @@ bool Database::import_gpx(QFile *file)
         query.prepare("INSERT INTO Waypoints (description, point) VALUES(?,?)");
         query.addBindValue(description_id);
         query.addBindValue(point_id);
+        std::cout << "executing query 3" << std::endl;
         if (query.exec()) {
             std::cout << "query.exec() DONE" << std::endl;
         } else {
@@ -100,24 +104,25 @@ bool Database::import_gpx(QFile *file)
         waypoint_id = query.lastInsertId().toInt();
 
         // Cache
-        query.prepare("INSERT INTO Caches (name, placed_by, owner, owner_guid, owner_name, type, container, difficulty, terrain, country, state, short_description, short_description_encoded, long_description, long_description_encoded, encoded_hints, waypoint) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:name").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:placed_by").item(0).firstChild().nodeValue());
+        query.prepare("INSERT INTO Caches (name, placed_by, owner_id, owner_guid, owner_name, type, container, difficulty, terrain, country, state, short_description, short_description_html, long_description, long_description_html, encoded_hints, waypoint) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:name"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:placed_by"), DATABASE_DATATYPE_STRING));
         query.addBindValue(cache_element.elementsByTagName("groundspeak:owner").item(0).toElement().attribute("id"));
         query.addBindValue(cache_element.elementsByTagName("groundspeak:owner").item(0).toElement().attribute("guid"));
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:owner").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:container").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:difficulty").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:terrain").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:country").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:state").item(0).firstChild().nodeValue());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:short_description").item(0).firstChild().nodeValue());
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:owner"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:type"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:container"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:difficulty"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:terrain"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:country"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:state"), DATABASE_DATATYPE_STRING));
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:short_description"), DATABASE_DATATYPE_STRING));
         query.addBindValue(cache_element.elementsByTagName("groundspeak:short_description").item(0).toElement().attribute("html").toInt());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:long_description").item(0).firstChild().nodeValue());
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:long_description"), DATABASE_DATATYPE_STRING));
         query.addBindValue(cache_element.elementsByTagName("groundspeak:long_description").item(0).toElement().attribute("html").toInt());
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:encoded_hints").item(0).firstChild().nodeValue());
+        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:encoded_hints"), DATABASE_DATATYPE_STRING));
         query.addBindValue(waypoint_id);
+        std::cout << "executing query 4" << std::endl;
         if (query.exec()) {
             std::cout << "query.exec() DONE" << std::endl;
         } else {
@@ -131,19 +136,20 @@ bool Database::import_gpx(QFile *file)
         for (int cache_log_i = 0; cache_log_i < cache_log_list.count(); ++cache_log_i)
         {
             QDomElement log_element = cache_log_list.item(cache_log_i).toElement();
-            query.prepare("INSERT INTO Logs (log_id, log_guid, date, type, finder_id, finder_guid, finder_name, text, text_encoded, latitude, longitude, cache) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+            query.prepare("INSERT INTO Logs (log_id, log_guid, date, type, finder_id, finder_guid, finder_name, text, text_encoded, latitude, longitude, cache) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
             query.addBindValue(cache_element.attribute("id"));
             query.addBindValue(cache_element.attribute("guid"));
-            query.addBindValue(cache_element.elementsByTagName("groundspeak:date").item(0).firstChild().nodeValue());
-            query.addBindValue(cache_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
+            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:date"), DATABASE_DATATYPE_STRING));
+            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:type"), DATABASE_DATATYPE_STRING));
             query.addBindValue(cache_element.elementsByTagName("groundspeak:finder").item(0).toElement().attribute("id"));
             query.addBindValue(cache_element.elementsByTagName("groundspeak:finder").item(0).toElement().attribute("guid"));
-            query.addBindValue(cache_element.elementsByTagName("groundspeak:finder").item(0).firstChild().nodeValue());
-            query.addBindValue(cache_element.elementsByTagName("groundspeak:text").item(0).firstChild().nodeValue());
+            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:finder"), DATABASE_DATATYPE_STRING));
+            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:text"), DATABASE_DATATYPE_STRING));
             query.addBindValue(cache_element.elementsByTagName("groundspeak:text").item(0).toElement().attribute("encoded").toInt());
             query.addBindValue(cache_element.attribute("lat"));
             query.addBindValue(cache_element.attribute("lon"));
             query.addBindValue(cache_id);
+            std::cout << "executing query 5" << std::endl;
             if (query.exec()) {
                 std::cout << "query.exec() DONE" << std::endl;
             } else {
@@ -153,6 +159,31 @@ bool Database::import_gpx(QFile *file)
             }
         }
     }
+    _db.commit();
     return true;
 }
 
+QVariant Database::child_value(QDomNodeList list, int format=0) {
+    if (list.size() == 0) {
+        switch (format) {
+            case DATABASE_DATATYPE_STRING:
+                return QVariant::String;
+            case DATABASE_DATATYPE_INT:
+                return QVariant::Int;
+            case DATABASE_DATATYPE_DOUBLE:
+                return QVariant::Double;
+            default:
+                std::cerr << "Invalid DATABASE_DATATYPE" << std::endl;
+        }
+    }
+    switch (format) {
+        case DATABASE_DATATYPE_STRING:
+            return list.item(0).firstChild().nodeValue();
+        case DATABASE_DATATYPE_INT:
+            return list.item(0).firstChild().nodeValue().toInt();
+        case DATABASE_DATATYPE_DOUBLE:
+            return list.item(0).firstChild().nodeValue().toDouble();
+    }
+    std::cerr << "Invalid DATABASE_DATATYPE" << std::endl;
+    return QVariant();
+}

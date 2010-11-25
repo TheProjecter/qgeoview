@@ -7,6 +7,7 @@ TreeItem::TreeItem(TreeItem *parent): _parentItem(parent)
 
 TreeItem::~TreeItem()
 {
+    delete _parentItem;
     qDeleteAll(_childItems);
 }
 
