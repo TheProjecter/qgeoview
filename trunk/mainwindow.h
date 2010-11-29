@@ -47,8 +47,6 @@ public:
     void openFile(QString filename);
     void infoType(int type);
     ~MainWindow();
-    void openGPX(QDomDocument *doc);
-    QDomDocument* genGPX(QList<Cache*> caches);
 
 protected:
     void changeEvent(QEvent *e);

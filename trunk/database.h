@@ -87,8 +87,8 @@ class Database : public QObject
 Q_OBJECT
 public:
     explicit Database(QString location, QObject *parent = 0);
-    bool import_gpx(QFile *file);
-    QFile export_gpx();
+    void import_gpx(QFile *file);
+    void export_gpx(QFile *file, int collection_id);
     ~Database();
 private:
     QVariant child_value(QDomNodeList list, int format);
