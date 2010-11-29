@@ -23,6 +23,10 @@
 #include "mainwindow.h"
 #include <QMessageBox>
 
+
+/*
+ Initializes the application.
+*/
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

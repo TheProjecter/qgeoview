@@ -63,7 +63,6 @@ private slots:
     void on_action_Quit_triggered();
 
 public slots:
-    void view_row_selected(const QModelIndex & index);
     void MapSourceChanged(QString src);
 
 signals:
