@@ -10,8 +10,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 target.files = bin/*
 unix:target.path = /usr/bin
-win32:target.path = c:\Program \
-    Files\$$TARGET
+win32:target.path = c:\Program\ Files\$$TARGET
 INSTALLS += target
 HEADERS += mainwindow.h \
     itemstreewidget.h \

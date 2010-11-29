@@ -32,6 +32,11 @@
 
 #include <QDesktopServices>
 
+/*
+ Sets up the application.
+
+ QWidget *parent : paret Widget
+*/
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -60,6 +65,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // Test
 }
 
+/*
+ Sets defaults and creates the database.
+ This method is only called if the application detects that it has not yet been set up.
+*/
 void MainWindow::firstRun()
 {
     std::cout << "First run detected, setting defaults" << std::endl;
@@ -82,6 +91,9 @@ void MainWindow::firstRun()
 }
 
 
+/*
+ Removes private variables from memory.
+*/
 MainWindow::~MainWindow()
 {
     delete _db;
@@ -89,7 +101,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+/*
+ TODO: document (can't actually remember this one's purpose...) :(
 
+ QEvent *e : ?
+*/
 void MainWindow::changeEvent(QEvent *e)
 {
     QMainWindow::changeEvent(e);
@@ -103,38 +119,33 @@ void MainWindow::changeEvent(QEvent *e)
 }
 
 
+/*
+ Quit the application.
+ Called when "Quit" is clicked (either on the toolbar or in the menu)
+*/
 void MainWindow::on_action_Quit_triggered()
 {
     emit quit();
 }
 
 
-
+/*
+ Test function for developement
+ Called when "Test" is clicked on the toolbar
+*/
 void MainWindow::on_actionTest_triggered()
 {
-    //NewItemDialog(this).exec();
-    openFile("/home/doug/test.gpx");
+    std::cout << "Test Button Does Nothing" << std::endl;
 }
 
-
-void MainWindow::view_row_selected(const QModelIndex & index)
-{
-    if (!index.isValid())
-        return;
-}
-
-
+/*
+ Generates the "open dialog" and then sends the file for parsing.
+*/
 void MainWindow::on_action_Open_triggered()
 {
     QString filename = QFileDialog::getOpenFileName();
     if (filename.isNull())
         return;
-    openFile(filename);
-}
-
-
-void MainWindow::openFile(QString filename)
-{
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
         std::cerr << "Cannot open file" << std::endl;
@@ -145,6 +156,10 @@ void MainWindow::openFile(QString filename)
 }
 
 
+/*
+ Generates the "save dialog" and saves the database.
+ TODO: make it ask for a collection ID.
+*/
 void MainWindow::on_actionSave_triggered()
 {
     // get filename
@@ -163,6 +178,9 @@ void MainWindow::on_actionSave_triggered()
 }
 
 
+/*
+ TODO: document (forgot purpse of this method).
+*/
 void MainWindow::infoType(int type) {
     ui->route_info->setVisible(false);
     ui->track_info->setVisible(false);
@@ -180,7 +198,7 @@ void MainWindow::infoType(int type) {
     }
 }
 
-
+// TODO: move the Map class.
 void MainWindow::MapSourceChanged(QString src)
 {
     if (src == "Open Street Map") {

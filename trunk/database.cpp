@@ -5,6 +5,10 @@
 #include <QVariant>
 #include <QSqlError>
 
+
+/*
+ Opens the database and ensures that it is available.
+*/
 Database::Database(QString location, QObject *parent) :
     QObject(parent)
 {
@@ -17,11 +21,20 @@ Database::Database(QString location, QObject *parent) :
     }
 }
 
+
+/*
+ Closes the database connection.
+*/
 Database::~Database()
 {
     _db.close();
 }
 
+
+/*
+ Imports a GPX file into the database
+ TODO: Detect duplicates.
+*/
 void Database::import_gpx(QFile *file)
 {
     QDomDocument doc;
@@ -162,6 +175,10 @@ void Database::import_gpx(QFile *file)
     _db.commit();
 }
 
+
+/*
+ Exports a collection to a GPX file.
+*/
 void Database::export_gpx(QFile *file, int collection_id) {
     return;
     /*
@@ -233,6 +250,10 @@ void Database::export_gpx(QFile *file, int collection_id) {
     stream << doc->toString();*/
 }
 
+
+/*
+ Converts a sql string to either a specified format, or null (QVariant())
+*/
 QVariant Database::child_value(QDomNodeList list, int format=0) {
     if (list.size() == 0) {
         switch (format) {
