@@ -22,19 +22,19 @@ Database::~Database()
     _db.close();
 }
 
-bool Database::import_gpx(QFile *file)
+void Database::import_gpx(QFile *file)
 {
     QDomDocument doc;
     QSqlQuery query;
     if (!doc.setContent(file)) {
         std::cerr << "Unusable GPX file" << std::endl;
-        return false;
+        return;
     }
     QDomElement gpx_element = doc.documentElement();
     if (gpx_element.tagName() != "gpx")
     {
         std::cerr << "Not an XML file" << std::endl;
-        return false;
+        return;
     }
     _db.transaction();
 
@@ -67,7 +67,7 @@ bool Database::import_gpx(QFile *file)
         } else {
             std::cout << "query.exec() FAIL" << std::endl;
             std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\" and \"" << query.lastError().databaseText().toStdString() << "\"" << std::endl;
-            return false;
+            return;
         }
         point_id = query.lastInsertId().toInt();
 
@@ -85,7 +85,7 @@ bool Database::import_gpx(QFile *file)
         } else {
             std::cout << "query.exec() FAIL" << std::endl;
             std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-            return false;
+            return;
         }
         description_id = query.lastInsertId().toInt();
 
@@ -99,7 +99,7 @@ bool Database::import_gpx(QFile *file)
         } else {
             std::cout << "query.exec() FAIL" << std::endl;
             std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-            return false;
+            return;
         }
         waypoint_id = query.lastInsertId().toInt();
 
@@ -128,7 +128,7 @@ bool Database::import_gpx(QFile *file)
         } else {
             std::cout << "query.exec() FAIL" << std::endl;
             std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-            return false;
+            return;
         }
         cache_id = query.lastInsertId().toInt();
 
@@ -155,12 +155,82 @@ bool Database::import_gpx(QFile *file)
             } else {
                 std::cout << "query.exec() FAIL" << std::endl;
                 std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-                return false;
+                return;
             }
         }
     }
     _db.commit();
-    return true;
+}
+
+void Database::export_gpx(QFile *file, int collection_id) {
+    return;
+    /*
+    // create gpx structure
+    if (caches.empty())
+        return NULL;
+    Cache *cache = caches.at(0);
+    double minlat = cache->latitude;
+    double minlon = cache->longitude;
+    double maxlat = minlat;
+    double maxlon = minlon;
+    if (caches.count() > 1) {
+        for (int i = 1; i < caches.count(); ++i) {
+            cache = caches.at(i);
+            if (cache->latitude < minlat) {
+                minlat = cache->latitude;
+            }
+            if (cache->latitude > maxlat) {
+                maxlat = cache->latitude;
+            }
+            if (cache->longitude < minlon) {
+                minlon = cache->longitude;
+            }
+            if (cache->longitude > maxlon) {
+                maxlon = cache->longitude;
+            }
+        }
+    }
+    QDomDocument *doc = new QDomDocument("Gpx");
+    QDomElement gpx = doc->createElement("gpx");
+    gpx.setAttribute("xmlns:xsi", "http://www.w3.org/2010/XMLSchema-instance");
+    gpx.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
+    gpx.setAttribute("version", "1.0");
+    gpx.setAttribute("creator", "qgeoview");
+    gpx.setAttribute("xsi:schemaLocation", "http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd http://www.groundspeak.com/cache/1/0 http://www.groundspeak.com/cache/1/0/cache.xsd");
+    gpx.setAttribute("xmlns", "http://www.topografix.com/GPS/1/0");
+    QDomElement name = doc->createElement("name");
+    name.appendChild(doc->createTextNode("New Query"));
+    gpx.appendChild(name);
+    QDomElement desc = doc->createElement("desc");
+    desc.appendChild(doc->createTextNode("Geocaching file modified by qgeoview"));
+    gpx.appendChild(desc);
+    QDomElement author = doc->createElement("author");
+    author.appendChild(doc->createTextNode("Doug Penner"));
+    gpx.appendChild(author);
+    QDomElement email = doc->createElement("email");
+    email.appendChild(doc->createTextNode("darwinsurvivor@gmail.com"));
+    gpx.appendChild(email);
+    QDomElement time = doc->createElement("time");
+    time.appendChild(doc->createTextNode("2010-06-18T14:37:42.2184239Z"));    // TODO: add actual time
+    gpx.appendChild(time);
+    QDomElement keywords = doc->createElement("keywords");
+    keywords.appendChild(doc->createTextNode("cache, geocache, groundspeak"));
+    gpx.appendChild(keywords);
+    QDomElement bounds = doc->createElement("bounds");
+    bounds.setAttribute("minlat", minlat);
+    bounds.setAttribute("minlon", minlon);
+    bounds.setAttribute("maxlat", maxlat);
+    bounds.setAttribute("maxlon", maxlon);
+    gpx.appendChild(bounds);
+
+    // add caches
+    for (int i = 0; i < caches.count(); ++i) {
+        cache = caches.at(i);
+        gpx.appendChild(cache->xmlElement);
+    }
+    doc->appendChild(gpx);
+    QTextStream stream(file);
+    stream << doc->toString();*/
 }
 
 QVariant Database::child_value(QDomNodeList list, int format=0) {
