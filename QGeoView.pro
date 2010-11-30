@@ -17,7 +17,8 @@ HEADERS += mainwindow.h \
     treeitem.h \
     treemodel.h \
     database.h \
-    newitemdialog.h
+    newitemdialog.h \
+    listitem.h
 FORMS += mainwindow.ui \
     newitemdialog.ui \
     ItemDescription.ui \
@@ -29,7 +30,8 @@ SOURCES += main.cpp \
     treeitem.cpp \
     treemodel.cpp \
     database.cpp \
-    newitemdialog.cpp
+    newitemdialog.cpp \
+    listitem.cpp
 RESOURCES += QGeoView.qrc
 LIBS += -lmarblewidget
 INCLUDEPATH += /usr/include/marble
