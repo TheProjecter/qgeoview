@@ -50,13 +50,12 @@ MainWindow::MainWindow(QWidget *parent) :
         firstRun();
     }
 
-    // Database
-    _db = new Database(_settings->value("database/location").toString());
-
     // UI
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/application.svg"));
-    ui->item_list->setModel(new TreeModel);
+
+    // Database
+    _db = new Database(_settings->value("database/location").toString(), ui->item_list);
 
     // Map
     ui->map->centerOn(49, 122, true);
@@ -136,6 +135,7 @@ void MainWindow::on_action_Quit_triggered()
 void MainWindow::on_actionTest_triggered()
 {
     std::cout << "Test Button Does Nothing" << std::endl;
+    _db->populate();
 }
 
 /*

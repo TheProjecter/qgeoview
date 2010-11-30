@@ -4,13 +4,15 @@
 #include <QSqlQuery>
 #include <QVariant>
 #include <QSqlError>
+#include "listitem.h"
 
 
 /*
  Opens the database and ensures that it is available.
 */
-Database::Database(QString location, QObject *parent) :
-    QObject(parent)
+Database::Database(QString location, QListWidget *list, QObject *parent) :
+    QObject(parent),
+    _list(list)
 {
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(location);
@@ -19,6 +21,7 @@ Database::Database(QString location, QObject *parent) :
     } else {
         std::cerr << "Error Connecting to Database: " << location.toStdString() << std::endl;
     }
+    populate();
 }
 
 
@@ -28,6 +31,40 @@ Database::Database(QString location, QObject *parent) :
 Database::~Database()
 {
     _db.close();
+}
+
+
+/*
+ Populates the list
+*/
+void Database::populate(int collection_id) {
+    QSqlQuery *query;
+    // Caches
+    if (collection_id < 0) {
+        std::cout << "selecting all" << std::endl;
+        query = new QSqlQuery("SELECT Caches.id, Caches.name from Caches");
+    } else {
+        std::cout << "selecting from collection" << std::endl;
+        query = new QSqlQuery("SELECT Caches.id, Caches.name from Caches where c.id in (SELECT CachesInCollections.cache FROM CachesInCollections where CachesInCollections.id=?)");
+        query->addBindValue(collection_id);
+    }
+    _list->setSortingEnabled(1);
+    std::cout << "Now Adding " << query->size() << "items" << std::endl;
+    std::cerr << "Error: " << query->lastError().driverText().toStdString() << std::endl;
+    std::cerr << "Error: " << query->lastError().databaseText().toStdString() << std::endl;
+    while (query->next()) {
+        ListItem *item = new ListItem(LISTITEM_TYPE_CACHE, query->value(0).toInt(), query->value(1).toString());
+        _list->addItem(item);
+        std::cout << "Added " << item->text().toStdString() << std::endl;
+    }
+    // waypoints TODO: finish
+    if (collection_id < 0) {
+        query = new QSqlQuery("SELECT w.id, d.name from Waypoints w INNER JOIN Descriptions d ON w.description = d.id");
+    } else {
+        query = new QSqlQuery("SELECT w.id, d.name from Waypoints w INNER JOIN Descriptions d ON w.description = d.id where w.id in (SELECT wc.waypoint FROM WaypointCollections wc where id=?)");
+        query->addBindValue(collection_id);
+    }
+    delete query;
 }
 
 
