@@ -1,0 +1,16 @@
+QGeoView is licensed under GPLv3
+
+QGeoView is designed to be a cross-platform alternative to the windows-only GSAK for Geocaching.
+The main objective is to allow users to store, sort, categorize, export and transmit geocaches.
+In the future we also hope to support other gps data such as tracks and routes.
+
+Current features being worked on (mostly in this order, but not strictly):
+-GPX import
+-GPX export
+-Manual geocache creation (through the GUI)
+-Geocache browsing and editing (descriptions, notes, logs, etc)
+-Collections (for categorizing and organizing)
+
+Features currently on the back-burner:
+-Map: I am still searching for a lightweight map widget that works on an n810 and resizes within a split view.
+-GPS support: both upload and download, will probably use gpsbabel either internally or through system call
