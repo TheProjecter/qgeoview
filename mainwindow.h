@@ -68,7 +68,6 @@ public slots:
 signals:
     void row_selected(const QModelIndex & index);
     void quit();
-    void new_cache(Cache* cache);
 };
 
 #endif // MAINWINDOW_H
