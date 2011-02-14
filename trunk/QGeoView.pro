@@ -13,12 +13,9 @@ unix:target.path = /usr/bin
 win32:target.path = c:\Program\ Files\$$TARGET
 INSTALLS += target
 HEADERS += mainwindow.h \
-    itemstreewidget.h \
     treeitem.h \
     treemodel.h \
     database.h \
-    newitemdialog.h \
-    listitem.h \
     point.h \
     accuracy.h \
     log.h \
@@ -26,19 +23,12 @@ HEADERS += mainwindow.h \
     description.h \
     databaseobject.h \
     collection.h
-FORMS += mainwindow.ui \
-    newitemdialog.ui \
-    ItemDescription.ui \
-    ItemLocation.ui \
-    PointAccuracy.ui
+FORMS += mainwindow.ui
 SOURCES += main.cpp \
     mainwindow.cpp \
-    itemstreewidget.cpp \
     treeitem.cpp \
     treemodel.cpp \
     database.cpp \
-    newitemdialog.cpp \
-    listitem.cpp \
     point.cpp \
     accuracy.cpp \
     log.cpp \

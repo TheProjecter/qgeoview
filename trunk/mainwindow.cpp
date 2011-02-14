@@ -25,7 +25,6 @@
 #include <QProcess>
 #include <QTextStream>
 #include <QCoreApplication>
-#include "newitemdialog.h"
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "treemodel.h"
@@ -55,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowIcon(QIcon(":/icons/application.svg"));
 
     // Database
-    _db = new Database(_settings->value("database/location").toString(), ui->item_list);
+    _db = new Database(_settings->value("database/location").toString(), ui->tree);
 
     // Map
     ui->map->centerOn(49, 122, true);
