@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Sep 29 16:25:04 2010
-**      by: Qt User Interface Compiler version 4.7.0
+** Created: Mon Feb 14 06:55:47 2011
+**      by: Qt User Interface Compiler version 4.7.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -27,6 +27,7 @@
 #include <QtGui/QStatusBar>
 #include <QtGui/QTabWidget>
 #include <QtGui/QTextBrowser>
+#include <QtGui/QTextEdit>
 #include <QtGui/QToolBar>
 #include <QtGui/QTreeView>
 #include <QtGui/QVBoxLayout>
@@ -47,9 +48,12 @@ public:
     QAction *action_Tracks;
     QAction *action_Routes;
     QWidget *centralWidget;
-    QVBoxLayout *verticalLayout;
+    QHBoxLayout *horizontalLayout;
     QSplitter *splitter;
-    QTreeView *item_list;
+    QWidget *layoutWidget;
+    QVBoxLayout *verticalLayout;
+    QComboBox *comboBox;
+    QTreeView *tree;
     QTabWidget *tabWidget;
     QWidget *map_tab;
     QVBoxLayout *verticalLayout_9;
@@ -62,7 +66,7 @@ public:
     QVBoxLayout *verticalLayout_6;
     QFrame *blank_info;
     QVBoxLayout *verticalLayout_10;
-    QTextBrowser *textBrowser;
+    QTextBrowser *blank_info_text;
     QFrame *waypoint_info;
     QVBoxLayout *verticalLayout_7;
     QHBoxLayout *horizontalLayout_2;
@@ -70,7 +74,11 @@ public:
     QLabel *cache_info_gc_2;
     QTextBrowser *cache_info_description_2;
     QFrame *track_info;
+    QVBoxLayout *verticalLayout_2;
+    QTextEdit *track_info_text;
     QFrame *route_info;
+    QVBoxLayout *verticalLayout_3;
+    QTextEdit *route_info_text;
     QWidget *tab_cache_page;
     QVBoxLayout *verticalLayout_4;
     QWebView *cache_page;
@@ -84,7 +92,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(601, 503);
+        MainWindow->resize(601, 564);
         QFont font;
         font.setFamily(QString::fromUtf8("Sans Serif"));
         MainWindow->setFont(font);
@@ -109,19 +117,35 @@ public:
         action_Routes->setCheckable(true);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        centralWidget->setFont(font);
         centralWidget->setMouseTracking(false);
         centralWidget->setAcceptDrops(false);
-        verticalLayout = new QVBoxLayout(centralWidget);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        horizontalLayout = new QHBoxLayout(centralWidget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         splitter = new QSplitter(centralWidget);
         splitter->setObjectName(QString::fromUtf8("splitter"));
         splitter->setOrientation(Qt::Horizontal);
-        item_list = new QTreeView(splitter);
-        item_list->setObjectName(QString::fromUtf8("item_list"));
-        item_list->setFont(font);
-        splitter->addWidget(item_list);
+        layoutWidget = new QWidget(splitter);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        verticalLayout = new QVBoxLayout(layoutWidget);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        comboBox = new QComboBox(layoutWidget);
+        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+
+        verticalLayout->addWidget(comboBox);
+
+        tree = new QTreeView(layoutWidget);
+        tree->setObjectName(QString::fromUtf8("tree"));
+        tree->setFont(font);
+
+        verticalLayout->addWidget(tree);
+
+        splitter->addWidget(layoutWidget);
         tabWidget = new QTabWidget(splitter);
         tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
         tabWidget->setFont(font);
@@ -177,10 +201,10 @@ public:
         verticalLayout_10->setSpacing(6);
         verticalLayout_10->setContentsMargins(11, 11, 11, 11);
         verticalLayout_10->setObjectName(QString::fromUtf8("verticalLayout_10"));
-        textBrowser = new QTextBrowser(blank_info);
-        textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
+        blank_info_text = new QTextBrowser(blank_info);
+        blank_info_text->setObjectName(QString::fromUtf8("blank_info_text"));
 
-        verticalLayout_10->addWidget(textBrowser);
+        verticalLayout_10->addWidget(blank_info_text);
 
 
         verticalLayout_6->addWidget(blank_info);
@@ -224,6 +248,15 @@ public:
         track_info->setObjectName(QString::fromUtf8("track_info"));
         track_info->setFrameShape(QFrame::StyledPanel);
         track_info->setFrameShadow(QFrame::Raised);
+        verticalLayout_2 = new QVBoxLayout(track_info);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        track_info_text = new QTextEdit(track_info);
+        track_info_text->setObjectName(QString::fromUtf8("track_info_text"));
+
+        verticalLayout_2->addWidget(track_info_text);
+
 
         verticalLayout_6->addWidget(track_info);
 
@@ -231,6 +264,15 @@ public:
         route_info->setObjectName(QString::fromUtf8("route_info"));
         route_info->setFrameShape(QFrame::StyledPanel);
         route_info->setFrameShadow(QFrame::Raised);
+        verticalLayout_3 = new QVBoxLayout(route_info);
+        verticalLayout_3->setSpacing(6);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
+        route_info_text = new QTextEdit(route_info);
+        route_info_text->setObjectName(QString::fromUtf8("route_info_text"));
+
+        verticalLayout_3->addWidget(route_info_text);
+
 
         verticalLayout_6->addWidget(route_info);
 
@@ -256,12 +298,12 @@ public:
         tabWidget->addTab(tab_cache_page, QString());
         splitter->addWidget(tabWidget);
 
-        verticalLayout->addWidget(splitter);
+        horizontalLayout->addWidget(splitter);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 601, 23));
+        menuBar->setGeometry(QRect(0, 0, 601, 21));
         menu_Application = new QMenu(menuBar);
         menu_Application->setObjectName(QString::fromUtf8("menu_Application"));
         menu_View = new QMenu(menuBar);
@@ -271,6 +313,7 @@ public:
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
         mainToolBar->setMinimumSize(QSize(0, 27));
         mainToolBar->setMaximumSize(QSize(16777215, 16777215));
+        mainToolBar->setFont(font);
         MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
@@ -292,7 +335,7 @@ public:
         retranslateUi(MainWindow);
         QObject::connect(map_source_selector_2, SIGNAL(currentIndexChanged(QString)), MainWindow, SLOT(MapSourceChanged(QString)));
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -315,6 +358,10 @@ public:
         action_Waypoints->setText(QApplication::translate("MainWindow", "&Waypoints", 0, QApplication::UnicodeUTF8));
         action_Tracks->setText(QApplication::translate("MainWindow", "&Tracks", 0, QApplication::UnicodeUTF8));
         action_Routes->setText(QApplication::translate("MainWindow", "&Routes", 0, QApplication::UnicodeUTF8));
+        comboBox->clear();
+        comboBox->insertItems(0, QStringList()
+         << QApplication::translate("MainWindow", "All", 0, QApplication::UnicodeUTF8)
+        );
         map_view_selector->clear();
         map_view_selector->insertItems(0, QStringList()
          << QApplication::translate("MainWindow", "ALL", 0, QApplication::UnicodeUTF8)
@@ -333,7 +380,7 @@ public:
 #endif // QT_NO_WHATSTHIS
         map->setProperty("mapThemeId", QVariant(QApplication::translate("MainWindow", "earth/openstreetmap/openstreetmap.dgml", 0, QApplication::UnicodeUTF8)));
         tabWidget->setTabText(tabWidget->indexOf(map_tab), QApplication::translate("MainWindow", "Map", 0, QApplication::UnicodeUTF8));
-        textBrowser->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+        blank_info_text->setHtml(QApplication::translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;\">\n"

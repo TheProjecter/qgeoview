@@ -4,15 +4,15 @@
 #include <QSqlQuery>
 #include <QVariant>
 #include <QSqlError>
-#include "listitem.h"
+#include "treeitem.h"
 
 
 /*
  Opens the database and ensures that it is available.
 */
-Database::Database(QString location, QListWidget *list, QObject *parent) :
+Database::Database(QString location, QTreeView *tree, QObject *parent) :
     QObject(parent),
-    _list(list)
+    _tree(tree)
 {
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(location);
@@ -48,14 +48,13 @@ void Database::populate(int collection_id) {
         query = new QSqlQuery("SELECT Caches.id, Caches.name from Caches where c.id in (SELECT CachesInCollections.cache FROM CachesInCollections where CachesInCollections.id=?)");
         query->addBindValue(collection_id);
     }
-    _list->setSortingEnabled(1);
+    _tree->setSortingEnabled(1);
     std::cout << "Now Adding " << query->size() << "items" << std::endl;
-    std::cerr << "Error: " << query->lastError().driverText().toStdString() << std::endl;
-    std::cerr << "Error: " << query->lastError().databaseText().toStdString() << std::endl;
+    std::cerr << "Possible Driver Error: " << query->lastError().driverText().toStdString() << std::endl;
+    std::cerr << "Possible Database Error: " << query->lastError().databaseText().toStdString() << std::endl;
     while (query->next()) {
-        ListItem *item = new ListItem(LISTITEM_TYPE_CACHE, query->value(0).toInt(), query->value(1).toString());
-        _list->addItem(item);
-        std::cout << "Added " << item->text().toStdString() << std::endl;
+        // TODO: Add Item To Tree
+        // std::cout << "Added " << item->text().toStdString() << std::endl;
     }
     // waypoints TODO: finish
     if (collection_id < 0) {
