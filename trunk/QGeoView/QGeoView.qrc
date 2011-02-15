@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/cito.gif</file>
+        <file>icons/earth.gif</file>
+        <file>icons/event.gif</file>
+        <file>icons/letterbox.gif</file>
+        <file>icons/lost_found.gif</file>
+        <file>icons/mega-event.gif</file>
+        <file>icons/multi.gif</file>
+        <file>icons/mystery.gif</file>
+        <file>icons/traditional.gif</file>
+        <file>icons/virtual.gif</file>
+        <file>icons/webcam.gif</file>
+        <file>icons/application.svg</file>
+        <file>db/db.sqlite3.empty</file>
+    </qresource>
+</RCC>
