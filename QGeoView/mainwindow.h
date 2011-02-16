@@ -53,15 +53,15 @@ protected:
 
 private:
     void loadPlugins();
-    void loadReadPlugin(ReadInterface *plugin);
-    void loadWritePlugin(WriteInterface *plugin);
-    void loadModePlugin(ModeInterface *plugin);
+    void loadReadPlugin(ReadPlugin *plugin);
+    void loadWritePlugin(WritePlugin *plugin);
+    void loadModePlugin(ModePlugin *plugin);
     Ui::MainWindow *ui;
     Database* _db;
     QSettings* _settings;
-    QList<ReadInterface*> _readPlugins;
-    QList<WriteInterface*> _writePlugins;
-    QList<ModeInterface*> _modePlugins;
+    QList<ReadPlugin*> _readPlugins;
+    QList<WritePlugin*> _writePlugins;
+    QList<ModePlugin*> _modePlugins;
 
 private slots:
     void on_actionSave_triggered();

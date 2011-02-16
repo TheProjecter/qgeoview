@@ -170,7 +170,7 @@ void MainWindow::on_actionSave_triggered()
         std::cerr << "Cannot open file for saving." << std::endl;
         return;
     }
-    WriteInterface *writer; // TODO: Get one!
+    WritePlugin *writer; // TODO: Get one!
     writer->write(file, 0);  // TODO: replace 0 with collection_id
     file.close();
 }
@@ -188,23 +188,12 @@ void MainWindow::loadPlugins()
         std::cout << "Loading from " << pluginsDir.absoluteFilePath(fileName).toStdString() << std::endl;
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
-            ReadInterface *readInterface = qobject_cast<ReadInterface*>(plugin);
-            if (readInterface)
-                loadReadPlugin(readInterface);
+            ReadPluginFactory *readPluginFactory = qobject_cast<ReadPluginFactory*>(plugin);
+            if (readPluginFactory)
+                ReadPlugin *plugin = readPluginFactory->get_plugin();
+                //loadReadPlugin(readPluginFactory->get_plugin(_db));
             else
-                std::cout << "Not a ReadInterface" << std::endl;
-
-            WriteInterface *writeInterface = qobject_cast<WriteInterface*>(plugin);
-            if (writeInterface)
-                loadWritePlugin(writeInterface);
-            else
-                std::cout << "Not a WriteInterface" << std::endl;
-
-            ModeInterface *modeInterface = qobject_cast<ModeInterface*>(plugin);
-            if (modeInterface)
-                loadModePlugin(modeInterface);
-            else
-                std::cout << "Not a ModeInterface" << std::endl;
+                std::cout << "Not a ReadPluginFactory" << std::endl;
         } else
             std::cout << "Loading " << fileName.toStdString() << " failed: " << pluginLoader.errorString().toStdString() << std::endl;
     }
@@ -214,17 +203,17 @@ void MainWindow::loadPlugins()
     std::cout << "\tMode Plugins: \t" << _readPlugins.count() << std::endl;
 }
 
-void MainWindow::loadReadPlugin(ReadInterface *plugin) {
+void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
     std::cout << "loading Read plugin: " << plugin->name().toStdString();
     _readPlugins.append(plugin);
 }
 
-void MainWindow::loadWritePlugin(WriteInterface *plugin) {
+void MainWindow::loadWritePlugin(WritePlugin *plugin) {
     std::cout << "loading Write plugin: " << plugin->name().toStdString();
     _writePlugins.append(plugin);
 }
 
-void MainWindow::loadModePlugin(ModeInterface *plugin) {
+void MainWindow::loadModePlugin(ModePlugin *plugin) {
     std::cout << "loading Mode plugin: " << plugin->name().toStdString();
     _modePlugins.append(plugin);
 }
