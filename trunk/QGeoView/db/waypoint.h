@@ -20,4 +20,4 @@ private:
     Point *_point;
 };
 
-#endif // WAYPOINT_H
+#endif

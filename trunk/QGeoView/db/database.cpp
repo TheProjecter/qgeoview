@@ -36,7 +36,8 @@ Database::~Database()
 /*
  Populates the list
 */
-void Database::populate(int collection_id) {
+void Database::populate(int collection_id)
+{
     QSqlQuery *query;
     // Caches
     if (collection_id < 0) {
@@ -65,3 +66,12 @@ void Database::populate(int collection_id) {
     delete query;
 }
 
+void Database::transaction()
+{
+    _db.transaction();
+}
+
+void Database::commit()
+{
+    _db.commit();
+}

@@ -36,5 +36,6 @@ SOURCES        += main.cpp \
                   db/description.cpp \
                   db/log.cpp \
                   db/point.cpp \
-                  db/waypoint.cpp
+                  db/waypoint.cpp \
+    interfaces.cpp
 RESOURCES      += QGeoView.qrc

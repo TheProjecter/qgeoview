@@ -3,47 +3,70 @@
 
 #include <QtPlugin>
 #include <QSqlDatabase>
+#include <QString>
+#include <QFile>
+
+#include "db/database.h"
 
 #define COMPATIBLE_NO       0
 #define COMPATIBLE_YES      1
 #define COMPATIBLE_MAYBE    2
 
-class ReadInterface
+class ReadPlugin
 {
 public:
-    virtual void setup(QSqlDatabase *db) = 0;
+    virtual void setup(Database *db) = 0;
     virtual QString name() = 0;
     virtual void read(QFile *file) = 0;
 private:
-    QSqlDatabase *_db;
+    Database *_db;
 };
 
-class WriteInterface
+class WritePlugin
 {
 public:
-    virtual void setup(QSqlDatabase *db) { _db = db; }
-    virtual QString name() = 0;
-    virtual void write(QFile &file, int collection) = 0;
+    WritePlugin(Database *db);
+    QString name() { return "Abstract"; }
+    void write(QFile &file, int collection) {}
 private:
-    QSqlDatabase *_db;
+    Database *_db;
 };
 
-class ModeInterface
+class ModePlugin
 {
 public:
-    virtual ~ModeInterface() {}
     virtual QString name() = 0;
 public slots:
-    virtual void start() = 0;
-    virtual void stop() = 0;
-    virtual void activate() = 0;
-    virtual void deactivate() = 0;
-    virtual void selected() = 0;
-    virtual void deselected() = 0;
+    void start() {};
+    void stop() {};
+    void activate() {};
+    void deactivate() {};
+    void selected() {};
+    void deselected() {};
 };
 
-Q_DECLARE_INTERFACE(ReadInterface, "org.homelinux.darwinsurvivor.QGeoView.ReadInterface");
-Q_DECLARE_INTERFACE(WriteInterface, "org.homelinux.darwinsurvivor.QGeoView.WriteInterface");
-Q_DECLARE_INTERFACE(ModeInterface, "org.homelinux.darwinsurvivor.QGeoView.ModeInterface");
+class ReadPluginFactory
+{
+public:
+    virtual ~ReadPluginFactory() = 0;
+    virtual ReadPlugin *get_plugin() = 0;
+    virtual ReadPlugin *get_plugin(Database *db) = 0;
+};
+
+class WritePluginFactory
+{
+public:
+    virtual WritePlugin *get_plugin(Database *db) = 0;
+};
+
+class ModePluginFactory
+{
+public:
+    virtual ModePlugin *get_plugin() = 0;
+};
+
+Q_DECLARE_INTERFACE(ReadPluginFactory, "org.homelinux.darwinsurvivor.QGeoView.ReadPluginFactory");
+Q_DECLARE_INTERFACE(WritePluginFactory, "org.homelinux.darwinsurvivor.QGeoView.WritePluginFactory");
+Q_DECLARE_INTERFACE(ModePluginFactory, "org.homelinux.darwinsurvivor.QGeoView.ModePluginFactory");
 
 #endif

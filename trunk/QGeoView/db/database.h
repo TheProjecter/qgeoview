@@ -17,6 +17,8 @@ Q_OBJECT
 public:
     explicit Database(QString location, QTreeView *list, QObject *parent = 0);
     void populate(int collection_id=-1);
+    void transaction();
+    void commit();
     ~Database();
 private:
     QSqlDatabase _db;
