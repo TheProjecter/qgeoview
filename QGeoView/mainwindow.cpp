@@ -170,8 +170,10 @@ void MainWindow::on_actionSave_triggered()
         std::cerr << "Cannot open file for saving." << std::endl;
         return;
     }
+    /*
     WritePlugin *writer; // TODO: Get one!
     writer->write(file, 0);  // TODO: replace 0 with collection_id
+    */
     file.close();
 }
 
@@ -188,32 +190,21 @@ void MainWindow::loadPlugins()
         std::cout << "Loading from " << pluginsDir.absoluteFilePath(fileName).toStdString() << std::endl;
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
-            ReadPluginFactory *readPluginFactory = qobject_cast<ReadPluginFactory*>(plugin);
-            if (readPluginFactory)
-                ReadPlugin *plugin = readPluginFactory->get_plugin();
-                //loadReadPlugin(readPluginFactory->get_plugin(_db));
+            DummyPluginFactory *dummyPluginFactory = qobject_cast<DummyPluginFactory*>(plugin);
+            if (dummyPluginFactory)
+                DummyPlugin *plugin = dummyPluginFactory->get_plugin();
             else
-                std::cout << "Not a ReadPluginFactory" << std::endl;
+                std::cout << "Not a DummyPluginFactory" << std::endl;
         } else
             std::cout << "Loading " << fileName.toStdString() << " failed: " << pluginLoader.errorString().toStdString() << std::endl;
     }
     std::cout << "Found: " << std::endl;
-    std::cout << "\tRead Plugins: \t" << _readPlugins.count() << std::endl;
-    std::cout << "\tWrite Plugins:\t" << _readPlugins.count() << std::endl;
-    std::cout << "\tMode Plugins: \t" << _readPlugins.count() << std::endl;
+    std::cout << "\tDummy Plugins: \t" << _dummyPlugins.count() << std::endl;
 }
 
-void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
-    std::cout << "loading Read plugin: " << plugin->name().toStdString();
-    _readPlugins.append(plugin);
-}
-
-void MainWindow::loadWritePlugin(WritePlugin *plugin) {
-    std::cout << "loading Write plugin: " << plugin->name().toStdString();
-    _writePlugins.append(plugin);
-}
-
-void MainWindow::loadModePlugin(ModePlugin *plugin) {
-    std::cout << "loading Mode plugin: " << plugin->name().toStdString();
-    _modePlugins.append(plugin);
+void MainWindow::loadDummyPlugin(DummyPlugin *plugin) {
+    std::cout << "loading Dummy plugin: ";
+    plugin->print();
+    std::cout << std::endl;
+    _dummyPlugins.append(plugin);
 }
