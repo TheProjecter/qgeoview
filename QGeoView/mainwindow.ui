@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>601</width>
+    <height>564</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Sans Serif</family>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>GSDS</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <property name="font">
+    <font>
+     <family>Sans Serif</family>
+    </font>
+   </property>
+   <property name="mouseTracking">
+    <bool>false</bool>
+   </property>
+   <property name="acceptDrops">
+    <bool>false</bool>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QComboBox" name="comboBox">
+          <item>
+           <property name="text">
+            <string>All</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTreeView" name="tree">
+          <property name="font">
+           <font>
+            <family>Sans Serif</family>
+           </font>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="font">
+        <font>
+         <family>Sans Serif</family>
+        </font>
+       </property>
+       <property name="tabShape">
+        <enum>QTabWidget::Rounded</enum>
+       </property>
+       <property name="currentIndex">
+        <number>-1</number>
+       </property>
+       <property name="elideMode">
+        <enum>Qt::ElideNone</enum>
+       </property>
+       <property name="usesScrollButtons">
+        <bool>true</bool>
+       </property>
+       <property name="tabsClosable">
+        <bool>false</bool>
+       </property>
+       <property name="movable">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>601</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_Application">
+    <property name="title">
+     <string>&amp;Application</string>
+    </property>
+    <addaction name="action_Quit"/>
+    <addaction name="action_About"/>
+    <addaction name="action_Test"/>
+   </widget>
+   <widget class="QMenu" name="menu_Import">
+    <property name="title">
+     <string>&amp;Import</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_Export">
+    <property name="title">
+     <string>&amp;Export</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_Plugins">
+    <property name="title">
+     <string>&amp;Plugins</string>
+    </property>
+   </widget>
+   <addaction name="menu_Application"/>
+   <addaction name="menu_Import"/>
+   <addaction name="menu_Export"/>
+   <addaction name="menu_Plugins"/>
+  </widget>
+  <action name="action_Quit">
+   <property name="text">
+    <string>&amp;Quit</string>
+   </property>
+   <property name="toolTip">
+    <string>Quit The Application</string>
+   </property>
+   <property name="font">
+    <font/>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionTest">
+   <property name="text">
+    <string>Test</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="action_Waypoints">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Waypoints</string>
+   </property>
+  </action>
+  <action name="action_Tracks">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Tracks</string>
+   </property>
+  </action>
+  <action name="action_Routes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Routes</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About</string>
+   </property>
+  </action>
+  <action name="action_Test">
+   <property name="text">
+    <string>&amp;Test</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+ <slots>
+  <signal>row_selected(QModelIndex)</signal>
+  <signal>cache_lat_changed(double)</signal>
+  <signal>cache_long_changed(double)</signal>
+  <signal>cache_number_changed(QString)</signal>
+  <signal>cache_name_changed(QString)</signal>
+  <signal>cache_long_name_changed(QString)</signal>
+  <signal>cache_url_changed(QString)</signal>
+  <signal>cache_url_name_changed(QString)</signal>
+  <signal>cache_placed_by_changed(QString)</signal>
+  <signal>cache_owner_changed(QString)</signal>
+  <signal>cache_terrain_changed(double)</signal>
+  <signal>cache_type_changed(QString)</signal>
+  <signal>cache_container_changed(QString)</signal>
+  <signal>cache_difficulty_changed(double)</signal>
+  <signal>cache_desc_long_changed(QString)</signal>
+  <signal>cache_desc_long_html_changed(QString)</signal>
+  <signal>cache_desc_short_changed(QString)</signal>
+  <signal>cache_desc_shot_html_changed(QString)</signal>
+  <signal>cache_hint_changed(QString)</signal>
+  <slot>MapSourceChanged(QString)</slot>
+ </slots>
+</ui>
