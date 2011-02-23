@@ -17,7 +17,6 @@
 ** along with QGeoView.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-
 #include <QFile>
 #include <iostream>
 #include <QFileDialog>
@@ -28,7 +27,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "treemodel.h"
-#include "interfaces.h"
 
 #include <QDesktopServices>
 
@@ -191,20 +189,27 @@ void MainWindow::loadPlugins()
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
             DummyPluginFactory *dummyPluginFactory = qobject_cast<DummyPluginFactory*>(plugin);
+            ReadPluginFactory *readPluginFactory = qobject_cast<ReadPluginFactory*>(plugin);
             if (dummyPluginFactory)
-                DummyPlugin *plugin = dummyPluginFactory->get_plugin();
-            else
-                std::cout << "Not a DummyPluginFactory" << std::endl;
-        } else
+                loadDummyPlugin(dummyPluginFactory->get_plugin());
+            if (readPluginFactory)
+                loadReadPlugin(readPluginFactory->get_plugin(_db));
+        } else {
             std::cout << "Loading " << fileName.toStdString() << " failed: " << pluginLoader.errorString().toStdString() << std::endl;
+            std::cout << "\tyou should fix this" << std::endl;
+        }
     }
     std::cout << "Found: " << std::endl;
     std::cout << "\tDummy Plugins: \t" << _dummyPlugins.count() << std::endl;
+    std::cout << "\tRead Plugins: \t" << _readPlugins.count() << std::endl;
 }
 
 void MainWindow::loadDummyPlugin(DummyPlugin *plugin) {
-    std::cout << "loading Dummy plugin: ";
-    plugin->print();
-    std::cout << std::endl;
+    std::cout << "Loading Dummy Plugin: " << plugin->name().toStdString() << std::endl;
     _dummyPlugins.append(plugin);
+}
+
+void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
+    std::cout << "Loading Read Plugin: " << plugin->name().toStdString() << std::endl;
+    _readPlugins.append(plugin);
 }

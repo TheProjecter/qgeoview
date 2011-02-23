@@ -20,11 +20,11 @@
 #ifndef DUMMY_GPX_H
 #define DUMMY_GPX_H
 
-#include "interfaces.h"
+#include "dummyplugin.h"
 
 class MyDummyPlugin : public DummyPlugin {
 public:
-    void print();
+    QString name();
 };
 
 class MyDummyPluginFactory: public QObject, public DummyPluginFactory

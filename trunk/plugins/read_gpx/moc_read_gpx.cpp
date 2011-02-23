@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'read_gpx.h'
 **
-** Created: Wed Feb 16 01:24:18 2011
+** Created: Tue Feb 22 22:31:32 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!

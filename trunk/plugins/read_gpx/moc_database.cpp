@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'database.h'
 **
-** Created: Tue Feb 15 06:10:53 2011
+** Created: Tue Feb 22 22:22:51 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.1)
 **
 ** WARNING! All changes made in this file will be lost!

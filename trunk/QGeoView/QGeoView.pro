@@ -12,7 +12,7 @@ target.files = bin/*
 unix:target.path = /usr/bin
 win32:target.path = c:\Program\ Files\$$TARGET
 INSTALLS       += target
-HEADERS        += interfaces.h \
+HEADERS        += \
                   mainwindow.h \
                   treeitem.h \
                   treemodel.h \
@@ -23,7 +23,10 @@ HEADERS        += interfaces.h \
                   db/description.h \
                   db/log.h \
                   db/point.h \
-                  db/waypoint.h
+                  db/waypoint.h \
+    test_class.h \
+    readplugin.h \
+    dummyplugin.h
 FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
@@ -37,5 +40,7 @@ SOURCES        += main.cpp \
                   db/log.cpp \
                   db/point.cpp \
                   db/waypoint.cpp \
-    interfaces.cpp
+    test_class.cpp \
+    readplugin.cpp \
+    dummyplugin.cpp
 RESOURCES      += QGeoView.qrc

@@ -22,15 +22,15 @@
 
 #include <QDomNodeList>
 
-#include "interfaces.h"
+#include "readplugin.h"
+#include "db/database.h"
 
 class ReadGpxPlugin : public ReadPlugin {
 public:
     ReadGpxPlugin(Database *db);
     QString name();
     void read(QFile *file);
-private:
-    Database *_db;
+protected:
     QVariant child_value(QDomNodeList list, int format);
 };
 
@@ -39,7 +39,6 @@ class ReadGpxPluginFactory: public QObject, public ReadPluginFactory
     Q_OBJECT
     Q_INTERFACES(ReadPluginFactory)
 public:
-    ReadPlugin *get_plugin();
     ReadPlugin *get_plugin(Database *db);
 };
 

@@ -22,10 +22,10 @@
 #include <QSqlError>
 
 #include "read_gpx.h"
+
 ReadGpxPlugin::ReadGpxPlugin(Database *db) :
         ReadPlugin(db)
 {
-
 }
 
 QString ReadGpxPlugin::name()
@@ -201,14 +201,10 @@ QVariant ReadGpxPlugin::child_value(QDomNodeList list, int format=0)
     return QVariant();
 }
 
+
 ReadPlugin *ReadGpxPluginFactory::get_plugin(Database *db)
 {
     return new ReadGpxPlugin(db);
-}
-
-ReadPlugin *ReadGpxPluginFactory::get_plugin()
-{
-    return new ReadGpxPlugin(new Database("", new QTreeView()));
 }
 
 Q_EXPORT_PLUGIN2(readgpxpluginfactory, ReadGpxPluginFactory);

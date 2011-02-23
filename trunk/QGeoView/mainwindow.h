@@ -29,7 +29,8 @@
 #include <QDir>
 
 #include "database.h"
-#include "interfaces.h"
+#include "dummyplugin.h"
+#include "readplugin.h"
 
 #define INFO_TYPE_NONE      1
 #define INFO_TYPE_WAYPOINT  2
@@ -54,10 +55,12 @@ protected:
 private:
     void loadPlugins();
     void loadDummyPlugin(DummyPlugin *plugin);
+    void loadReadPlugin(ReadPlugin *plugin);
     Ui::MainWindow *ui;
     Database* _db;
     QSettings* _settings;
     QList<DummyPlugin*> _dummyPlugins;
+    QList<ReadPlugin*> _readPlugins;
 
 private slots:
     void on_actionSave_triggered();
