@@ -102,15 +102,12 @@ int TreeModel::rowCount(const QModelIndex &parent) const
 
 void TreeModel::waypoint_added(int id)
 {
-
 }
 
 void TreeModel::track_added(int id)
 {
-
 }
 
 void TreeModel::route_added(int id)
 {
-
 }

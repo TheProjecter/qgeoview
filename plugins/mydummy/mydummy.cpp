@@ -20,12 +20,14 @@
 #include <QSqlQuery>
 #include <iostream>
 #include <QSqlError>
+#include <QTreeView>
 
 #include "mydummy.h"
+#include "test_class.h"
 
-void MyDummyPlugin::print()
+QString MyDummyPlugin::name()
 {
-    std::cout << "Ran MyDummy.print() :D" << std::endl;;
+    return "My Dummy Plugin";
 }
 
 DummyPlugin *MyDummyPluginFactory::get_plugin()
