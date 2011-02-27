@@ -71,6 +71,9 @@ void MainWindow::firstRun()
     QString database_location = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
     database_location.append("/db.sqlite3");
     _settings->setValue("database/location", database_location);
+    QString plugins_location = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    plugins_location.append("/plugins");
+    _settings->setValue("plugins/location", plugins_location);
 
     // Directories
     QDir dir;
@@ -80,7 +83,7 @@ void MainWindow::firstRun()
 
     // Empty DB File
     std::cout << "copying database to " << _settings->value("database/location").toString().toStdString() << std::endl;
-    QFile(":/db.sqlite3.empty").copy(_settings->value("database/location").toString());
+    QFile(":/db/db.sqlite3.empty").copy(_settings->value("database/location").toString());
     QFile::setPermissions(_settings->value("database/location").toString(), QFile::ReadOwner | QFile::WriteOwner);
 }
 
@@ -177,11 +180,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::loadPlugins()
 {
-    QDir pluginsDir(qApp->applicationDirPath());
-    pluginsDir.cdUp();
-    pluginsDir.cdUp();
-    pluginsDir.cd("plugins");
-    pluginsDir.cd("bin");
+    QDir pluginsDir(_settings->value("plugins/location").toString());
     std::cout << "Loading plugins from " << pluginsDir.absolutePath().toStdString() << std::endl;
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
