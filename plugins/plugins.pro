@@ -1,7 +1,7 @@
 TEMPLATE    = subdirs
-SUBDIRS     = mydummy \
-              read_gpx \
+SUBDIRS     = read_gpx \
 #              write_gpx \
+#              mydummy \
 #              item_details \
 #              geocaching_website \
 #              marble_map \

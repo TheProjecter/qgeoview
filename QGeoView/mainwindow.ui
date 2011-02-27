@@ -105,14 +105,14 @@
     <addaction name="action_About"/>
     <addaction name="action_Test"/>
    </widget>
-   <widget class="QMenu" name="menu_Import">
+   <widget class="QMenu" name="menu_Read">
     <property name="title">
-     <string>&amp;Import</string>
+     <string>&amp;Read</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menu_Export">
+   <widget class="QMenu" name="menu_Write">
     <property name="title">
-     <string>&amp;Export</string>
+     <string>&amp;Write</string>
     </property>
    </widget>
    <widget class="QMenu" name="menu_Plugins">
@@ -121,8 +121,8 @@
     </property>
    </widget>
    <addaction name="menu_Application"/>
-   <addaction name="menu_Import"/>
-   <addaction name="menu_Export"/>
+   <addaction name="menu_Read"/>
+   <addaction name="menu_Write"/>
    <addaction name="menu_Plugins"/>
   </widget>
   <action name="action_Quit">

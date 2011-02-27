@@ -6,7 +6,6 @@ INCLUDEPATH    += . \
                   ../../QGeoView
 HEADERS        += read_gpx.h \
                   ../../QGeoView/db/database.h \
-                  ../../QGeoView/db/interfaces.h \
                   ../../QGeoView/readplugin.h
 SOURCES        += read_gpx.cpp \
                   ../../QGeoView/db/database.cpp \

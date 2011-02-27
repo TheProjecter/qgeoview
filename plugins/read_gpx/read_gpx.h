@@ -21,15 +21,19 @@
 #define READ_GPX_H
 
 #include <QDomNodeList>
+#include <QObject>
 
 #include "readplugin.h"
 #include "db/database.h"
 
 class ReadGpxPlugin : public ReadPlugin {
+    Q_OBJECT
 public:
     ReadGpxPlugin(Database *db);
     QString name();
     void read(QFile *file);
+public slots:
+    void open();
 protected:
     QVariant child_value(QDomNodeList list, int format);
 };
