@@ -33,6 +33,11 @@ QString ReadGpxPlugin::name()
     return "GPX Reader";
 }
 
+void ReadGpxPlugin::open()
+{
+    std::cout << "ReadGpxPlugin::open() called" << std::endl;
+}
+
 void ReadGpxPlugin::read(QFile *file)
 {
     QDomDocument doc;
@@ -200,7 +205,6 @@ QVariant ReadGpxPlugin::child_value(QDomNodeList list, int format=0)
     std::cerr << "Invalid DATABASE_DATATYPE" << std::endl;
     return QVariant();
 }
-
 
 ReadPlugin *ReadGpxPluginFactory::get_plugin(Database *db)
 {

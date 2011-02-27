@@ -5,11 +5,14 @@
 
 #include "db/database.h"
 
-class ReadPlugin
+class ReadPlugin : public QObject
 {
+    Q_OBJECT
 public:
     ReadPlugin(Database *db);
     virtual QString name() = 0;
+public slots:
+    virtual void open() = 0;
 protected:
     Database *_db;
 };

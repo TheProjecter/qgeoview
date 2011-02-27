@@ -3,8 +3,9 @@
 
 #include <QtPlugin>
 
-class DummyPlugin
+class DummyPlugin : public QObject
 {
+    Q_OBJECT
 public:
     DummyPlugin();
     virtual QString name() = 0;

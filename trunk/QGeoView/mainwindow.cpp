@@ -211,4 +211,5 @@ void MainWindow::loadDummyPlugin(DummyPlugin *plugin) {
 void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
     std::cout << "Loading Read Plugin: " << plugin->name().toStdString() << std::endl;
     _readPlugins.append(plugin);
+    ui->menu_Read->addAction(plugin->name(), plugin, SLOT(open()));
 }
