@@ -2,7 +2,10 @@
 #define DATABASEOBJECT_H
 
 #include <QObject>
+#include <QSqlQuery>
 #include "database.h"
+
+#define NULLMASK_ID                 0x1
 
 class DatabaseObject : public QObject
 {
@@ -10,6 +13,7 @@ class DatabaseObject : public QObject
 public:
     explicit DatabaseObject(QObject *parent = 0);
     DatabaseObject(Database *db);
+    bool isSet(int value);
 
 signals:
     void saved();
@@ -20,6 +24,9 @@ public slots:
     virtual void remove() = 0;
 private:
     int _id;
+    int _nullMask;
+    virtual QStringList fields() = 0;
+    virtual void addBindValues(QSqlQuery query) = 0;
     Database *_db;
 };
 

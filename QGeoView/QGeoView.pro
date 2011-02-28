@@ -16,7 +16,6 @@ HEADERS        += \
                   mainwindow.h \
                   treeitem.h \
                   treemodel.h \
-                  db/accuracy.h \
                   db/collection.h \
                   db/database.h \
                   db/databaseobject.h \
@@ -26,13 +25,13 @@ HEADERS        += \
                   db/waypoint.h \
     test_class.h \
     readplugin.h \
-    dummyplugin.h
+    dummyplugin.h \
+    db/exceptions.h
 FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
                   treeitem.cpp \
                   treemodel.cpp \
-                  db/accuracy.cpp \
                   db/collection.cpp \
                   db/database.cpp \
                   db/databaseobject.cpp \
