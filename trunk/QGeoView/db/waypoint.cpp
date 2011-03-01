@@ -1,6 +1,6 @@
 #include "waypoint.h"
 
-Waypoint::Waypoint(QObject *parent) :
-    DatabaseObject(parent)
+Waypoint::Waypoint(Database *db) :
+    DatabaseObject(db)
 {
 }

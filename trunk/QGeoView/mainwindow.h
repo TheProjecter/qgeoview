@@ -31,6 +31,7 @@
 #include "database.h"
 #include "dummyplugin.h"
 #include "readplugin.h"
+#include "db/point.h"
 
 #define INFO_TYPE_NONE      1
 #define INFO_TYPE_WAYPOINT  2
@@ -67,9 +68,11 @@ private slots:
     void on_action_Open_triggered();
     void on_actionTest_triggered();
     void on_action_Quit_triggered();
+    void pointRead(Point *point);
 
 signals:
     void quit();
+    void newPoint(Point *point);
 };
 
 #endif // MAINWINDOW_H

@@ -7,7 +7,7 @@ class Description : public DatabaseObject
 {
     Q_OBJECT
 public:
-    explicit Description(QObject *parent = 0);
+    Description(Database *db);
 
 signals:
 

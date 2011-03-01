@@ -10,7 +10,7 @@ class Waypoint : public DatabaseObject
 {
     Q_OBJECT
 public:
-    explicit Waypoint(QObject *parent = 0);
+    explicit Waypoint(Database *db);
 
 signals:
 

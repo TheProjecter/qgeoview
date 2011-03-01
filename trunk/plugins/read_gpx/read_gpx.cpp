@@ -36,6 +36,10 @@ QString ReadGpxPlugin::name()
 void ReadGpxPlugin::open()
 {
     std::cout << "ReadGpxPlugin::open() called" << std::endl;
+    Point *point = new Point(_db);
+    point->setFloatValue(NULLMASK_LATITUDE, 49);
+    point->setFloatValue(NULLMASK_LONGITUDE, -122);
+    emit pointRead(point);
 }
 
 void ReadGpxPlugin::read(QFile *file)
