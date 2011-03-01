@@ -8,7 +8,7 @@ class Log : public DatabaseObject
 {
     Q_OBJECT
 public:
-    explicit Log(QObject *parent = 0);
+    explicit Log(Database *db);
 
 signals:
 

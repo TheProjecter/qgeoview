@@ -1,3 +1,4 @@
+#include <iostream>
 #include "readplugin.h"
 
 ReadPlugin::ReadPlugin(Database *db) :

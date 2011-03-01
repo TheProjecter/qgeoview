@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "databaseobject.h"
-#include "accuracy.h"
 #include "db/exceptions.h"
 
 // NULLMASK_ID is set in db/databaseobject.h ans is 0x1 DO NOT USE 0x1 HERE!!!
@@ -27,9 +26,15 @@ class Point : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Point(QObject *parent = 0);
+    Point(Database *db);
     ~Point();
     void addBindValues(QSqlQuery query);
+    void setQStringValue(int mask, QString value);
+    void setFloatValue(int mask, float value);
+    void setIntValue(int mask, int value);
+    QString getQStringValue(int mask);
+    float getFloatValue(int mask);
+    int getIntValue(int mask);
 
 signals:
 
@@ -37,6 +42,7 @@ public slots:
 protected:
     QStringList fields();
 private:
+    QString table();
     QString _time;
     float _elevation;
     float _magneticVariation;
@@ -51,8 +57,6 @@ private:
     float _positionDOP;
     float _ageOfDGPSData;
     int _DGPSID;
-
-    Accuracy *_accuracy;
 
 };
 #endif // POINT_H

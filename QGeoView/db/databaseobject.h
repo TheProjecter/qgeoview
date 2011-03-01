@@ -11,23 +11,24 @@ class DatabaseObject : public QObject
 {
     Q_OBJECT
 public:
-    explicit DatabaseObject(QObject *parent = 0);
     DatabaseObject(Database *db);
-    bool isSet(int value);
-
+    bool isSet(int mask);
+    void set(int mask);
+protected:
+    Database *_db;
 signals:
     void saved();
     void changed();
     void removed();
 public slots:
-    virtual void save() = 0;
-    virtual void remove() = 0;
+    virtual void save();
+    virtual void remove();
 private:
     int _id;
     int _nullMask;
     virtual QStringList fields() = 0;
     virtual void addBindValues(QSqlQuery query) = 0;
-    Database *_db;
+    virtual QString table() = 0;
 };
 
 #endif // DATABASEOBJECT_H

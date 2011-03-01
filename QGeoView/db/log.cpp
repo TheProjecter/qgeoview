@@ -1,6 +1,6 @@
 #include "log.h"
 
-Log::Log(QObject *parent) :
-    DatabaseObject(parent)
+Log::Log(Database *db) :
+    DatabaseObject(db)
 {
 }

@@ -3,6 +3,10 @@
 
 class DBException {};
 
-class DBValueNotSet : public DBException {};
+class InvalidMaskException : public DBException {};
+class NoDatabaseFoundException : public DBException {};
+class WrongDatatypeForMakeException : public DBException {};
+class MaskNotFoundException : public DBException {};
+class DBValueNotSetException : public DBException {};
 
 #endif // EXCEPTIONS_H

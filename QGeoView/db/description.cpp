@@ -1,6 +1,6 @@
 #include "description.h"
 
-Description::Description(QObject *parent) :
-    DatabaseObject(parent)
+Description::Description(Database *db) :
+    DatabaseObject(db)
 {
 }
