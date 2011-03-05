@@ -20,6 +20,7 @@
 #include <QSqlQuery>
 #include <iostream>
 #include <QSqlError>
+#include <QFileDialog>
 
 #include "read_gpx.h"
 
@@ -35,62 +36,104 @@ QString ReadGpxPlugin::name()
 
 void ReadGpxPlugin::open()
 {
-    std::cout << "ReadGpxPlugin::open() called" << std::endl;
-    Point *point = new Point(_db);
-    point->setFloatValue(NULLMASK_LATITUDE, 49);
-    point->setFloatValue(NULLMASK_LONGITUDE, -122);
-    emit pointRead(point);
-}
-
-void ReadGpxPlugin::read(QFile *file)
-{
-    QDomDocument doc;
-    QSqlQuery query;
-    if (!doc.setContent(file)) {
-        std::cerr << "Unusable GPX file" << std::endl;
+    QString filename = QFileDialog::getOpenFileName();
+    if (filename.isNull())
+        return;
+    std::cout << "Opening: " << filename.toStdString() << std::endl;
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr << "Cannot open file" << std::endl;
         return;
     }
-    QDomElement gpx_element = doc.documentElement();
+    QDomDocument gpx_file;
+    if (!gpx_file.setContent(&file)) {
+        std::cerr << "Unusable file, not XML" << std::endl;
+        file.close();
+        return;
+    }
+    file.close();
+    read(&gpx_file);
+}
+
+void ReadGpxPlugin::read(QDomDocument *doc)
+{
+    QSqlQuery query;
+    QDomElement gpx_element = doc->documentElement();
     if (gpx_element.tagName() != "gpx")
     {
         std::cerr << "Not an XML file" << std::endl;
         return;
     }
-    _db->transaction();
 
     // read data
     QDomNodeList wpt_list = gpx_element.elementsByTagName("wpt");
-    int point_id, cache_id, waypoint_id, description_id;
+    Point *p;
     for (int wpt_i = 0; wpt_i < wpt_list.count(); ++wpt_i)
     {
         QDomElement wpt_element = wpt_list.item(wpt_i).toElement();
         QDomElement cache_element = wpt_element.elementsByTagName("groundspeak:cache").item(0).toElement();
         // Point
-        query.prepare("INSERT INTO Points (time, elevation, magneticVariation, geoIDHeight, symbol, fix, satelites, horizontalDOP, verticalDOP, positionDOP, ageofDGPSData, DGPSID, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
-        query.addBindValue(child_value(wpt_element.elementsByTagName("time"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("ele"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("magvar"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("geoidheight"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("sym"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("fix"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("sat"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("hdop"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("vdop"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("pdop"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("ageofdgpsdata"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("dgpsid"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(wpt_element.attribute("lat").toDouble());
-        query.addBindValue(wpt_element.attribute("lon").toDouble());
-        std::cout << "executing query 1" << std::endl;
-        if (query.exec()) {
-            std::cout << "query.exec() DONE" << std::endl;
-        } else {
-            std::cout << "query.exec() FAIL" << std::endl;
-            std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\" and \"" << query.lastError().databaseText().toStdString() << "\"" << std::endl;
-            return;
-        }
-        point_id = query.lastInsertId().toInt();
+        p = new Point(_db);
+        QDomNode node;
 
+        node = wpt_element.elementsByTagName("time").item(0).firstChild();
+        if (!node.isNull())
+            p->setQStringValue(NULLMASK_TIME, node.nodeValue());
+        
+        node = wpt_element.elementsByTagName("ele").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_ELEVATION, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("magvar").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_MAGNETICVARIATION, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("geoidheight").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_GEOIDHEIGHT, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("sym").item(0).firstChild();
+        if (!node.isNull())
+            p->setQStringValue(NULLMASK_SYMBOL, node.nodeValue());
+
+        node = wpt_element.elementsByTagName("fix").item(0).firstChild();
+        if (!node.isNull())
+            p->setQStringValue(NULLMASK_FIX, node.nodeValue());
+
+        node = wpt_element.elementsByTagName("sat").item(0).firstChild();
+        if (!node.isNull())
+            p->setIntValue(NULLMASK_SATELITES, node.nodeValue().toInt());
+
+        node = wpt_element.elementsByTagName("hdop").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_HORIZONTALDOP, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("vdop").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_VERTICALDOP, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("pdop").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_POSITIONDOP, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("ageofdgpsdata").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_AGEOFDGPSDATA, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("dgpsid").item(0).firstChild();
+        if (!node.isNull())
+            p->setIntValue(NULLMASK_DGPSID, node.nodeValue().toInt());
+
+        node = wpt_element.elementsByTagName("lat").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_LATITUDE, node.nodeValue().toFloat());
+
+        node = wpt_element.elementsByTagName("lon").item(0).firstChild();
+        if (!node.isNull())
+            p->setFloatValue(NULLMASK_LONGITUDE, node.nodeValue().toFloat());
+        p->save();
+
+        /*
         // Description
         query.prepare("INSERT INTO Descriptions (name, link_url, link_name, comments, source, type) VALUES (?,?,?,?,?,?)");
         query.addBindValue(child_value(wpt_element.elementsByTagName("name"), DATABASE_DATATYPE_STRING));
@@ -178,8 +221,8 @@ void ReadGpxPlugin::read(QFile *file)
                 return;
             }
         }
+    */
     }
-    _db->commit();
 }
 
 /*
