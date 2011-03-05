@@ -32,7 +32,7 @@ class ReadGpxPlugin : public ReadPlugin {
 public:
     ReadGpxPlugin(Database *db);
     QString name();
-    void read(QFile *file);
+    void read(QDomDocument *doc);
 signals:
     void pointRead(Point *point);
 public slots:

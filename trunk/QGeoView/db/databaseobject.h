@@ -21,6 +21,12 @@ signals:
     void changed();
     void removed();
 public slots:
+    void setQStringValue(int mask, QString value);
+    void setFloatValue(int mask, float value);
+    void setIntValue(int mask, int value);
+    QString getQStringValue(int mask);
+    float getFloatValue(int mask);
+    int getIntValue(int mask);
     virtual void save();
     virtual void remove();
 private:
