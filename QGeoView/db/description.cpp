@@ -11,7 +11,7 @@ Description::~Description()
 
 QString Description::table()
 {
-    return "Descriptions";
+    return "Description";
 }
 
 QStringList Description::fields()

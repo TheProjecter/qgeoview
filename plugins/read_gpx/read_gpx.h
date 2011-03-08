@@ -26,6 +26,8 @@
 #include "readplugin.h"
 #include "db/database.h"
 #include "db/point.h"
+#include "db/description.h"
+#include "db/waypoint.h"
 
 class ReadGpxPlugin : public ReadPlugin {
     Q_OBJECT
@@ -35,6 +37,8 @@ public:
     void read(QDomDocument *doc);
 signals:
     void pointRead(Point *point);
+    void descriptionRead(Description *description);
+    void readWaypoint(Waypoint *waypoint);
 public slots:
     void open();
 protected:

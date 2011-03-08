@@ -68,105 +68,62 @@ void ReadGpxPlugin::read(QDomDocument *doc)
     // read data
     QDomNodeList wpt_list = gpx_element.elementsByTagName("wpt");
     Point *p;
+    Description *d;
+    Waypoint *w;
     for (int wpt_i = 0; wpt_i < wpt_list.count(); ++wpt_i)
     {
         QDomElement wpt_element = wpt_list.item(wpt_i).toElement();
         QDomElement cache_element = wpt_element.elementsByTagName("groundspeak:cache").item(0).toElement();
+        QDomNode node;
+
         // Point
         p = new Point(_db);
-        QDomNode node;
 
         node = wpt_element.elementsByTagName("time").item(0).firstChild();
         if (!node.isNull())
-            p->setQStringValue(NULLMASK_TIME, node.nodeValue());
-        
-        node = wpt_element.elementsByTagName("ele").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_ELEVATION, node.nodeValue().toFloat());
-
-        node = wpt_element.elementsByTagName("magvar").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_MAGNETICVARIATION, node.nodeValue().toFloat());
-
-        node = wpt_element.elementsByTagName("geoidheight").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_GEOIDHEIGHT, node.nodeValue().toFloat());
+            p->setQStringValue(NULLMASK_POINT_TIME, node.nodeValue());
 
         node = wpt_element.elementsByTagName("sym").item(0).firstChild();
         if (!node.isNull())
-            p->setQStringValue(NULLMASK_SYMBOL, node.nodeValue());
+            p->setQStringValue(NULLMASK_POINT_SYMBOL, node.nodeValue());
 
-        node = wpt_element.elementsByTagName("fix").item(0).firstChild();
-        if (!node.isNull())
-            p->setQStringValue(NULLMASK_FIX, node.nodeValue());
+        p->setFloatValue(NULLMASK_POINT_LATITUDE, wpt_element.nodeValue().toFloat());
 
-        node = wpt_element.elementsByTagName("sat").item(0).firstChild();
-        if (!node.isNull())
-            p->setIntValue(NULLMASK_SATELITES, node.nodeValue().toInt());
+        p->setFloatValue(NULLMASK_POINT_LONGITUDE, wpt_element.nodeValue().toFloat());
 
-        node = wpt_element.elementsByTagName("hdop").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_HORIZONTALDOP, node.nodeValue().toFloat());
-
-        node = wpt_element.elementsByTagName("vdop").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_VERTICALDOP, node.nodeValue().toFloat());
-
-        node = wpt_element.elementsByTagName("pdop").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_POSITIONDOP, node.nodeValue().toFloat());
-
-        node = wpt_element.elementsByTagName("ageofdgpsdata").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_AGEOFDGPSDATA, node.nodeValue().toFloat());
-
-        node = wpt_element.elementsByTagName("dgpsid").item(0).firstChild();
-        if (!node.isNull())
-            p->setIntValue(NULLMASK_DGPSID, node.nodeValue().toInt());
-
-        node = wpt_element.elementsByTagName("lat").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_LATITUDE, node.nodeValue().toFloat());
-
-        node = wpt_element.elementsByTagName("lon").item(0).firstChild();
-        if (!node.isNull())
-            p->setFloatValue(NULLMASK_LONGITUDE, node.nodeValue().toFloat());
         p->save();
 
-        /*
         // Description
-        query.prepare("INSERT INTO Descriptions (name, link_url, link_name, comments, source, type) VALUES (?,?,?,?,?,?)");
-        query.addBindValue(child_value(wpt_element.elementsByTagName("name"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("link"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("link"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("cmt"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("src"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("type"), DATABASE_DATATYPE_STRING));
-        std::cout << "executing query 2" << std::endl;
-        if (query.exec()) {
-            std::cout << "query.exec() DONE" << std::endl;
-        } else {
-            std::cout << "query.exec() FAIL" << std::endl;
-            std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-            return;
-        }
-        description_id = query.lastInsertId().toInt();
+        d = new Description(_db);
+
+        node = wpt_element.elementsByTagName("name").item(0).firstChild();
+        if (!node.isNull())
+            d->setQStringValue(NULLMASK_DESCRIPTION_NAME, node.nodeValue());
+
+        node = wpt_element.elementsByTagName("linkname").item(0).firstChild();
+        if (!node.isNull())
+            d->setQStringValue(NULLMASK_DESCRIPTION_LINKNAME, node.nodeValue());
+
+        node = wpt_element.elementsByTagName("link").item(0).firstChild();
+        if (!node.isNull())
+            d->setQStringValue(NULLMASK_DESCRIPTION_LINKURL, node.nodeValue());
+
+        node = wpt_element.elementsByTagName("type").item(0).firstChild();
+        if (!node.isNull())
+            d->setQStringValue(NULLMASK_DESCRIPTION_SOURCE, node.nodeValue());
+
+        d->save();
 
         // Waypoint
-        query.prepare("INSERT INTO Waypoints (description, point) VALUES(?,?)");
-        query.addBindValue(description_id);
-        query.addBindValue(point_id);
-        std::cout << "executing query 3" << std::endl;
-        if (query.exec()) {
-            std::cout << "query.exec() DONE" << std::endl;
-        } else {
-            std::cout << "query.exec() FAIL" << std::endl;
-            std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-            return;
-        }
-        waypoint_id = query.lastInsertId().toInt();
+
+        w = new Waypoint(_db);
+
+        w->setIntValue(NULLMASK_WAYPOINT_POINT, p->getIntValue(NULLMASK_ID));
+        w->setIntValue(NULLMASK_WAYPOINT_DESCRIPTION, d->getIntValue(NULLMASK_ID));
+        w->save();
 
         // Cache
+        /*
         query.prepare("INSERT INTO Caches (name, placed_by, owner_id, owner_guid, owner_name, type, container, difficulty, terrain, country, state, short_description, short_description_html, long_description, long_description_html, encoded_hints, waypoint) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
         query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:name"), DATABASE_DATATYPE_STRING));
         query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:placed_by"), DATABASE_DATATYPE_STRING));

@@ -24,9 +24,11 @@ public slots:
     void setQStringValue(int mask, QString value);
     void setFloatValue(int mask, float value);
     void setIntValue(int mask, int value);
+    void setBoolValue(int mask, bool value);
     QString getQStringValue(int mask);
     float getFloatValue(int mask);
     int getIntValue(int mask);
+    bool getBoolValue(int mask);
     virtual void save();
     virtual void remove();
 private:
