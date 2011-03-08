@@ -11,7 +11,7 @@ Point::~Point()
 
 QString Point::table()
 {
-    return "Points";
+    return "Point";
 }
 
 QStringList Point::fields()

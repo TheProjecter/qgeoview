@@ -17,13 +17,13 @@ Waypoint::~Waypoint()
 
 QString Waypoint::table()
 {
-    return "Waypoints";
+    return "Waypoint";
 }
 
 QStringList Waypoint::fields()
 {
     QStringList list;
-    list << "point" << "description";
+    list << "fk_point" << "fk_description";
     return list;
 }
 

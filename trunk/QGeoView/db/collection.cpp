@@ -11,7 +11,7 @@ Collection::~Collection()
 
 QString Collection::table()
 {
-    return "Collections";
+    return "Collection";
 }
 
 QStringList Collection::fields()

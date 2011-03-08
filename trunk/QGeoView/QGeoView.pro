@@ -26,7 +26,8 @@ HEADERS        += \
     test_class.h \
     readplugin.h \
     dummyplugin.h \
-    db/exceptions.h
+    db/exceptions.h \
+    db/cache.h
 FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
@@ -41,5 +42,6 @@ SOURCES        += main.cpp \
                   db/waypoint.cpp \
     test_class.cpp \
     readplugin.cpp \
-    dummyplugin.cpp
+    dummyplugin.cpp \
+    db/cache.cpp
 RESOURCES      += QGeoView.qrc

@@ -80,6 +80,11 @@ void DatabaseObject::setIntValue(int mask, int value)
         throw InvalidMaskException();
 }
 
+void DatabaseObject::setBoolValue(int mask, bool value)
+{
+        throw InvalidMaskException();
+}
+
 QString DatabaseObject::getQStringValue(int mask)
 {
         throw InvalidMaskException();
@@ -95,4 +100,8 @@ int DatabaseObject::getIntValue(int mask)
         throw InvalidMaskException();
 }
 
+bool DatabaseObject::getBoolValue(int mask)
+{
+        throw InvalidMaskException();
+}
 
