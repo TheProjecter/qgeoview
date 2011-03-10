@@ -6,9 +6,8 @@
 #include "db/exceptions.h"
 
 
-// NULLMASK_ID is set in db/databaseobject.h and is 0x1 DO NOT USE 0x1 HERE!!!
-#define NULLMASK_COLLECTION_NAME        0x2
-#define NULLMASK_COLLECTION_DESCRIPTION 0x4
+#define NULLMASK_COLLECTION_NAME        0x1
+#define NULLMASK_COLLECTION_DESCRIPTION 0x2
 
 class Collection : public DatabaseObject
 {

@@ -5,8 +5,6 @@
 #include <QSqlQuery>
 #include "database.h"
 
-#define NULLMASK_ID                 0x1
-
 class DatabaseObject : public QObject
 {
     Q_OBJECT
@@ -25,12 +23,15 @@ public slots:
     void setFloatValue(int mask, float value);
     void setIntValue(int mask, int value);
     void setBoolValue(int mask, bool value);
+    int getID();
     QString getQStringValue(int mask);
     float getFloatValue(int mask);
     int getIntValue(int mask);
     bool getBoolValue(int mask);
     virtual void save();
     virtual void remove();
+protected:
+    void setID(int id);
 private:
     int _id;
     int _nullMask;

@@ -118,8 +118,8 @@ void ReadGpxPlugin::read(QDomDocument *doc)
 
         w = new Waypoint(_db);
 
-        w->setIntValue(NULLMASK_WAYPOINT_POINT, p->getIntValue(NULLMASK_ID));
-        w->setIntValue(NULLMASK_WAYPOINT_DESCRIPTION, d->getIntValue(NULLMASK_ID));
+        w->setIntValue(NULLMASK_WAYPOINT_POINT, p->getID());
+        w->setIntValue(NULLMASK_WAYPOINT_DESCRIPTION, d->getID());
         w->save();
 
         // Cache

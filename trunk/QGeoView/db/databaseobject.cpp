@@ -4,7 +4,8 @@
 #include "db/exceptions.h"
 
 DatabaseObject::DatabaseObject(Database *db) :
-    _db(db)
+    _db(db),
+    _id(0)
 {
 
 }
@@ -34,7 +35,7 @@ void DatabaseObject::save()
     QStringList field_names = fields();
     std::cout << "Performing save()" << std::endl;
 
-    if (isSet(NULLMASK_ID)) {   // update
+    if (_id) {   // update
         std::cout << "\tupdating" << std::endl;
         query_string = "UPDATE " + table() + " SET " + field_names.join("=?, ") + "=? WHERE id=" + _id + ";";
         query.prepare(query_string);
@@ -53,55 +54,85 @@ void DatabaseObject::save()
         std::cerr << "\tdatabaseText: " << error.databaseText().toStdString() << std::endl;
     }
     _db->commit();
+    if (!_id) {
+        setID(query.lastInsertId().toInt());
+    }
     std::cout << "\tdone" << std::endl;
 }
 
 void DatabaseObject::remove()
 {
-    if(isSet(NULLMASK_ID)) {
-        QSqlQuery query;
-        _db->transaction();
-        query.prepare("REMOVE FROM " + table() + " WHERE id=" + _id);
+    if (!_id)
+        throw NotInDatabaseException();
+    QSqlQuery query;
+    _db->transaction();
+    query.prepare("REMOVE FROM " + table() + " WHERE id=" + _id);
+}
+
+void DatabaseObject::setID(int value)
+{
+    if (_id) {
+        throw IDAlreadySetException();
     }
+    _id = value;
 }
 
 void DatabaseObject::setQStringValue(int mask, QString value)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    Q_UNUSED(value)
+    throw InvalidMaskException();
 }
 
 void DatabaseObject::setFloatValue(int mask, float value)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    Q_UNUSED(value)
+    throw InvalidMaskException();
 }
 
 void DatabaseObject::setIntValue(int mask, int value)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    Q_UNUSED(value)
+    throw InvalidMaskException();
 }
 
 void DatabaseObject::setBoolValue(int mask, bool value)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    Q_UNUSED(value)
+    throw InvalidMaskException();
+}
+
+int DatabaseObject::getID()
+{
+    if (!_id)
+        throw IDNotSetException();
+    return _id;
 }
 
 QString DatabaseObject::getQStringValue(int mask)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    throw InvalidMaskException();
 }
 
 float DatabaseObject::getFloatValue(int mask)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    throw InvalidMaskException();
 }
 
 int DatabaseObject::getIntValue(int mask)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    throw InvalidMaskException();
 }
 
 bool DatabaseObject::getBoolValue(int mask)
 {
-        throw InvalidMaskException();
+    Q_UNUSED(mask)
+    throw InvalidMaskException();
 }
 
