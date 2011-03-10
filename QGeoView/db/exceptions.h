@@ -8,5 +8,8 @@ class NoDatabaseFoundException : public DBException {};
 class WrongDatatypeForMakeException : public DBException {};
 class MaskNotFoundException : public DBException {};
 class DBValueNotSetException : public DBException {};
+class IDNotSetException : public DBException {};
+class IDAlreadySetException : public DBException {};
+class NotInDatabaseException : public DBException {};
 
 #endif // EXCEPTIONS_H

@@ -6,24 +6,23 @@
 #include "db/exceptions.h"
 #include "db/waypoint.h"
 
-// NULLMASK_ID is set in db/databaseobject.h and is 0x1 DO NOT USE 0x1 HERE!!!
-#define NULLMASK_CACHE_NAME                 0x2
-#define NULLMASK_CACHE_PLACEDBY             0x4
-#define NULLMASK_CACHE_OWNERID              0x8
-#define NULLMASK_CACHE_OWNERGUID            0x10
-#define NULLMASK_CACHE_OWNERNAME            0x20
-#define NULLMASK_CACHE_TYPE                 0x40
-#define NULLMASK_CACHE_CONTAINER            0x80
-#define NULLMASK_CACHE_DIFFICULTY           0x100
-#define NULLMASK_CACHE_TERRAIN              0x200
-#define NULLMASK_CACHE_COUNTRY              0x400
-#define NULLMASK_CACHE_STATE                0x800
-#define NULLMASK_CACHE_SHORTDESCRIPTION     0x1000
-#define NULLMASK_CACHE_SHORTDESCRIPTIONHTML 0x2000
-#define NULLMASK_CACHE_LONGDESCRIPTION      0x4000
-#define NULLMASK_CACHE_LONGDESCRIPTIONHTML  0x8000
-#define NULLMASK_CACHE_ENCODEDHINTS         0x10000
-#define NULLMASK_CACHE_WAYPOINT             0x20000
+#define NULLMASK_CACHE_NAME                 0x1
+#define NULLMASK_CACHE_PLACEDBY             0x2
+#define NULLMASK_CACHE_OWNERID              0x4
+#define NULLMASK_CACHE_OWNERGUID            0x8
+#define NULLMASK_CACHE_OWNERNAME            0x10
+#define NULLMASK_CACHE_TYPE                 0x20
+#define NULLMASK_CACHE_CONTAINER            0x40
+#define NULLMASK_CACHE_DIFFICULTY           0x80
+#define NULLMASK_CACHE_TERRAIN              0x100
+#define NULLMASK_CACHE_COUNTRY              0x200
+#define NULLMASK_CACHE_STATE                0x400
+#define NULLMASK_CACHE_SHORTDESCRIPTION     0x800
+#define NULLMASK_CACHE_SHORTDESCRIPTIONHTML 0x1000
+#define NULLMASK_CACHE_LONGDESCRIPTION      0x2000
+#define NULLMASK_CACHE_LONGDESCRIPTIONHTML  0x4000
+#define NULLMASK_CACHE_ENCODEDHINTS         0x8000
+#define NULLMASK_CACHE_WAYPOINT             0x10000
 
 
 class Cache : public DatabaseObject

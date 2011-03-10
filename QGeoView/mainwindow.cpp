@@ -133,7 +133,6 @@ void MainWindow::on_action_Quit_triggered()
 void MainWindow::on_actionTest_triggered()
 {
     std::cout << "Test Button Does Nothing" << std::endl;
-    _db->populate();
 }
 
 /*

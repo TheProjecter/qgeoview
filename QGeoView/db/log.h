@@ -5,18 +5,17 @@
 #include "databaseobject.h"
 #include "db/cache.h"
 
-//  NULLMASK_ID is set in db/databaseobject.h and is 0x1 DO NOT USE 0x1 HERE!!!
-#define NULLMASK_LOG_LOGGUID        0x2
-#define NULLMASK_LOG_DATE           0x4
-#define NULLMASK_LOG_TYPE           0x8
-#define NULLMASK_LOG_FINDERID       0x10
-#define NULLMASK_LOG_FINDERGUID     0x20
-#define NULLMASK_LOG_FINDERNAME     0x40
-#define NULLMASK_LOG_TEXT           0x80
-#define NULLMASK_LOG_TEXTENCODED    0x100
-#define NULLMASK_LOG_LATITUDE       0x200
-#define NULLMASK_LOG_LONGITUDE      0x400
-#define NULLMASK_LOG_CACHE          0x800
+#define NULLMASK_LOG_LOGGUID        0x1
+#define NULLMASK_LOG_DATE           0x2
+#define NULLMASK_LOG_TYPE           0x4
+#define NULLMASK_LOG_FINDERID       0x8
+#define NULLMASK_LOG_FINDERGUID     0x10
+#define NULLMASK_LOG_FINDERNAME     0x20
+#define NULLMASK_LOG_TEXT           0x40
+#define NULLMASK_LOG_TEXTENCODED    0x80
+#define NULLMASK_LOG_LATITUDE       0x100
+#define NULLMASK_LOG_LONGITUDE      0x200
+#define NULLMASK_LOG_CACHE          0x400
 
 class Log : public DatabaseObject
 {

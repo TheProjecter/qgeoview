@@ -5,13 +5,12 @@
 #include "databaseobject.h"
 #include "db/exceptions.h"
 
-// NULLMASK_ID is set in db/databaseobject.h and is 0x1 DO NOT USE 0x1 HERE!!
-#define NULLMASK_DESCRIPTION_NAME       0x2
-#define NULLMASK_DESCRIPTION_LINKURL    0x4
-#define NULLMASK_DESCRIPTION_LINKNAME   0x8
-#define NULLMASK_DESCRIPTION_COMMENTS   0x10
-#define NULLMASK_DESCRIPTION_SOURCE     0x20
-#define NULLMASK_DESCRIPTION_TYPE       0x40
+#define NULLMASK_DESCRIPTION_NAME       0x1
+#define NULLMASK_DESCRIPTION_LINKURL    0x2
+#define NULLMASK_DESCRIPTION_LINKNAME   0x4
+#define NULLMASK_DESCRIPTION_COMMENTS   0x8
+#define NULLMASK_DESCRIPTION_SOURCE     0x10
+#define NULLMASK_DESCRIPTION_TYPE       0x20
 
 class Description : public DatabaseObject
 {
