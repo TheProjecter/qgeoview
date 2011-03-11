@@ -29,8 +29,6 @@ void Collection::addBindValues(QSqlQuery query)
 
 void Collection::setQStringValue(int mask, QString value)
 {
-    if (!((NULLMASK_COLLECTION_NAME | NULLMASK_COLLECTION_DESCRIPTION) & mask))
-        throw InvalidMaskException();
     switch (mask) {
         case NULLMASK_COLLECTION_NAME:
             _name = value;
@@ -39,7 +37,7 @@ void Collection::setQStringValue(int mask, QString value)
             _description = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "QString");
     }
     set(mask);
 }
@@ -47,14 +45,12 @@ void Collection::setQStringValue(int mask, QString value)
 QString Collection::getQStringValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_COLLECTION_NAME | NULLMASK_COLLECTION_DESCRIPTION) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "QString");
     switch(mask) {
         case NULLMASK_COLLECTION_NAME:
             return _name;
         case NULLMASK_COLLECTION_DESCRIPTION:
             return _description;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "QString");
 }

@@ -19,10 +19,10 @@ public:
     void addBindValues(QSqlQuery query);
     void setIntValue(int mask, int value);
     int getIntValue(int mask);
+    QString table();
 protected:
     QStringList fields();
 private:
-    QString table();
     int _point;
     int _description;
     Point *_point_object;

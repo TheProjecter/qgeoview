@@ -34,11 +34,10 @@ public:
     QString getQStringValue(int mask);
     float getFloatValue(int mask);
     int getIntValue(int mask);
-
+    QString table();
 protected:
     QStringList fields();
 private:
-    QString table();
     QString _time;
     float _elevation;
     float _magneticVariation;

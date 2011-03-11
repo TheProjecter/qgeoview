@@ -24,8 +24,6 @@ void DatabaseObject::set(int mask)
 
 void DatabaseObject::save()
 {
-    if (_db == NULL)
-        throw NoDatabaseFoundException();
     std::cout << "save() called" << std::endl;
     QSqlQuery query;
     std::cout << "starting transaction" << std::endl;
@@ -63,7 +61,7 @@ void DatabaseObject::save()
 void DatabaseObject::remove()
 {
     if (!_id)
-        throw NotInDatabaseException();
+        throw NotInDatabaseException(this);
     QSqlQuery query;
     _db->transaction();
     query.prepare("REMOVE FROM " + table() + " WHERE id=" + _id);
@@ -72,7 +70,7 @@ void DatabaseObject::remove()
 void DatabaseObject::setID(int value)
 {
     if (_id) {
-        throw IDAlreadySetException();
+        throw IDAlreadySetException(this, value);
     }
     _id = value;
 }
@@ -81,58 +79,58 @@ void DatabaseObject::setQStringValue(int mask, QString value)
 {
     Q_UNUSED(mask)
     Q_UNUSED(value)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "QString");
 }
 
 void DatabaseObject::setFloatValue(int mask, float value)
 {
     Q_UNUSED(mask)
     Q_UNUSED(value)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "Float");
 }
 
 void DatabaseObject::setIntValue(int mask, int value)
 {
     Q_UNUSED(mask)
     Q_UNUSED(value)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "Int");
 }
 
 void DatabaseObject::setBoolValue(int mask, bool value)
 {
     Q_UNUSED(mask)
     Q_UNUSED(value)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "Bool");
 }
 
 int DatabaseObject::getID()
 {
     if (!_id)
-        throw IDNotSetException();
+        throw IDNotSetException(this);
     return _id;
 }
 
 QString DatabaseObject::getQStringValue(int mask)
 {
     Q_UNUSED(mask)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "QString");
 }
 
 float DatabaseObject::getFloatValue(int mask)
 {
     Q_UNUSED(mask)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "Float");
 }
 
 int DatabaseObject::getIntValue(int mask)
 {
     Q_UNUSED(mask)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "Int");
 }
 
 bool DatabaseObject::getBoolValue(int mask)
 {
     Q_UNUSED(mask)
-    throw InvalidMaskException();
+    throw MaskNotFoundException(this, mask, "Bool");
 }
 

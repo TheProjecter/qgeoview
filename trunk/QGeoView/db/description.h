@@ -21,11 +21,10 @@ public:
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     QString getQStringValue(int mask);
-
+    QString table();
 protected:
     QStringList fields();
 private:
-    QString table();
     QString _name;
     QString _link_url;
     QString _link_name;

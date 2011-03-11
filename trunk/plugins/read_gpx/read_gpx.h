@@ -28,6 +28,8 @@
 #include "db/point.h"
 #include "db/description.h"
 #include "db/waypoint.h"
+#include "db/cache.h"
+#include "db/log.h"
 
 class ReadGpxPlugin : public ReadPlugin {
     Q_OBJECT
@@ -39,6 +41,7 @@ signals:
     void pointRead(Point *point);
     void descriptionRead(Description *description);
     void readWaypoint(Waypoint *waypoint);
+    void readCache(Cache *cache);
 public slots:
     void open();
 protected:

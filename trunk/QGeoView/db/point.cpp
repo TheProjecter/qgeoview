@@ -41,8 +41,6 @@ void Point::addBindValues(QSqlQuery query)
 
 void Point::setQStringValue(int mask, QString value)
 {
-    if (!((NULLMASK_POINT_TIME | NULLMASK_POINT_SYMBOL | NULLMASK_POINT_FIX) & mask))
-        throw InvalidMaskException();
     switch(mask) {
         case NULLMASK_POINT_TIME:
             _time = value;
@@ -54,15 +52,13 @@ void Point::setQStringValue(int mask, QString value)
             _fix = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "QString");
     }
     set(mask);
 }
 
 void Point::setFloatValue(int mask, float value)
 {
-    if (!((NULLMASK_POINT_ELEVATION | NULLMASK_POINT_MAGNETICVARIATION | NULLMASK_POINT_GEOIDHEIGHT | NULLMASK_POINT_LATITUDE | NULLMASK_POINT_LONGITUDE | NULLMASK_POINT_HORIZONTALDOP | NULLMASK_POINT_VERTICALDOP | NULLMASK_POINT_POSITIONDOP | NULLMASK_POINT_AGEOFDGPSDATA) & mask))
-        throw InvalidMaskException();
     switch(mask) {
         case NULLMASK_POINT_ELEVATION:
             _elevation = value;
@@ -92,15 +88,13 @@ void Point::setFloatValue(int mask, float value)
             _ageOfDGPSData = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "Float");
     }
     set(mask);
 }
 
 void Point::setIntValue(int mask, int value)
 {
-    if (!((NULLMASK_POINT_SATELITES | NULLMASK_POINT_DGPSID) & mask))
-        throw InvalidMaskException();
     switch(mask) {
         case NULLMASK_POINT_SATELITES:
             _satelites = value;
@@ -109,7 +103,7 @@ void Point::setIntValue(int mask, int value)
             _DGPSID = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "Int");
     }
     set(mask);
 }
@@ -117,9 +111,7 @@ void Point::setIntValue(int mask, int value)
 QString Point::getQStringValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_POINT_TIME | NULLMASK_POINT_SYMBOL | NULLMASK_POINT_FIX) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "QString");
     switch(mask) {
         case NULLMASK_POINT_TIME:
             return _time;
@@ -128,15 +120,13 @@ QString Point::getQStringValue(int mask)
         case NULLMASK_POINT_FIX:
             return _fix;
         }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "QString");
 }
 
 float Point::getFloatValue(int mask)
 {
     if(!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_POINT_ELEVATION | NULLMASK_POINT_MAGNETICVARIATION | NULLMASK_POINT_GEOIDHEIGHT | NULLMASK_POINT_LATITUDE | NULLMASK_POINT_LONGITUDE | NULLMASK_POINT_HORIZONTALDOP | NULLMASK_POINT_VERTICALDOP | NULLMASK_POINT_POSITIONDOP | NULLMASK_POINT_AGEOFDGPSDATA) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "Float");
     switch(mask) {
         case NULLMASK_POINT_ELEVATION:
             return _elevation;
@@ -157,20 +147,18 @@ float Point::getFloatValue(int mask)
         case NULLMASK_POINT_AGEOFDGPSDATA:
             return _ageOfDGPSData;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "Float");
 }
 
 int Point::getIntValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_POINT_SATELITES | NULLMASK_POINT_DGPSID) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "Int");
     switch(mask) {
         case NULLMASK_POINT_SATELITES:
             return _satelites;
         case NULLMASK_POINT_DGPSID:
             return _DGPSID;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "Int");
 }

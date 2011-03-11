@@ -35,8 +35,6 @@ void Waypoint::addBindValues(QSqlQuery query)
 
 void Waypoint::setIntValue(int mask, int value)
 {
-    if (!((NULLMASK_WAYPOINT_POINT | NULLMASK_WAYPOINT_DESCRIPTION) & mask))
-        throw InvalidMaskException();
     switch(mask) {
         case NULLMASK_WAYPOINT_POINT:
             if (_point)
@@ -49,7 +47,7 @@ void Waypoint::setIntValue(int mask, int value)
             _description = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "Int");
     }
     set(mask);
 }
@@ -57,14 +55,12 @@ void Waypoint::setIntValue(int mask, int value)
 int Waypoint::getIntValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_WAYPOINT_POINT | NULLMASK_WAYPOINT_DESCRIPTION) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "Int");
     switch(mask) {
         case NULLMASK_WAYPOINT_POINT:
             return _point;
         case NULLMASK_WAYPOINT_DESCRIPTION:
             return _description;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "Int");
 }

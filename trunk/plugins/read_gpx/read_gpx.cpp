@@ -70,6 +70,8 @@ void ReadGpxPlugin::read(QDomDocument *doc)
     Point *p;
     Description *d;
     Waypoint *w;
+    Cache *c;
+    Log *l;
     for (int wpt_i = 0; wpt_i < wpt_list.count(); ++wpt_i)
     {
         QDomElement wpt_element = wpt_list.item(wpt_i).toElement();
@@ -123,62 +125,62 @@ void ReadGpxPlugin::read(QDomDocument *doc)
         w->save();
 
         // Cache
-        /*
-        query.prepare("INSERT INTO Caches (name, placed_by, owner_id, owner_guid, owner_name, type, container, difficulty, terrain, country, state, short_description, short_description_html, long_description, long_description_html, encoded_hints, waypoint) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:name"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:placed_by"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:owner").item(0).toElement().attribute("id"));
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:owner").item(0).toElement().attribute("guid"));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:owner"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:type"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:container"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:difficulty"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:terrain"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:country"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:state"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:short_description"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:short_description").item(0).toElement().attribute("html").toInt());
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:long_description"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(cache_element.elementsByTagName("groundspeak:long_description").item(0).toElement().attribute("html").toInt());
-        query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:encoded_hints"), DATABASE_DATATYPE_STRING));
-        query.addBindValue(waypoint_id);
-        std::cout << "executing query 4" << std::endl;
-        if (query.exec()) {
-            std::cout << "query.exec() DONE" << std::endl;
-        } else {
-            std::cout << "query.exec() FAIL" << std::endl;
-            std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-            return;
-        }
-        cache_id = query.lastInsertId().toInt();
+
+        c = new Cache(_db);
+
+        c->setQStringValue(NULLMASK_CACHE_NAME, cache_element.elementsByTagName("groundspeak:name").item(0).firstChild().nodeValue());
+        c->setQStringValue(NULLMASK_CACHE_PLACEDBY, cache_element.elementsByTagName("groundspeak:placed_by").item(0).firstChild().nodeValue());
+
+        node = cache_element.elementsByTagName("groundspeak:owner").item(0).firstChild();
+        c->setQStringValue(NULLMASK_CACHE_OWNERNAME, node.nodeValue());
+        c->setIntValue(NULLMASK_CACHE_OWNERID, node.toElement().attribute("id").toInt());
+        c->setQStringValue(NULLMASK_CACHE_OWNERGUID, node.toElement().attribute("guid"));
+
+        c->setQStringValue(NULLMASK_CACHE_TYPE, cache_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
+        c->setQStringValue(NULLMASK_CACHE_CONTAINER, cache_element.elementsByTagName("groundspeak:container").item(0).firstChild().nodeValue());
+        c->setFloatValue(NULLMASK_CACHE_DIFFICULTY, cache_element.elementsByTagName("groundspeak:difficulty").item(0).firstChild().nodeValue().toDouble());
+        c->setFloatValue(NULLMASK_CACHE_TERRAIN, cache_element.elementsByTagName("groundspeak:terrain").item(0).firstChild().nodeValue().toDouble());
+        c->setQStringValue(NULLMASK_CACHE_COUNTRY, cache_element.elementsByTagName("groundspeak:country").item(0).firstChild().nodeValue());
+        c->setQStringValue(NULLMASK_CACHE_STATE, cache_element.elementsByTagName("groundspeak:state").item(0).firstChild().nodeValue());
+        c->setQStringValue(NULLMASK_CACHE_SHORTDESCRIPTION, cache_element.elementsByTagName("groundspeak:short_description").item(0).firstChild().nodeValue());
+        c->setBoolValue(NULLMASK_CACHE_SHORTDESCRIPTIONHTML, cache_element.elementsByTagName("groundspeak:short_description").item(0).firstChild().toElement().attribute("html", "False") == "True");
+        c->setQStringValue(NULLMASK_CACHE_LONGDESCRIPTION, cache_element.elementsByTagName("groundspeak:long_description").item(0).firstChild().nodeValue());
+        c->setBoolValue(NULLMASK_CACHE_LONGDESCRIPTIONHTML, cache_element.elementsByTagName("groundspeak:long_description").item(0).firstChild().toElement().attribute("html", "False") == "True");
+        c->setQStringValue(NULLMASK_CACHE_ENCODEDHINTS, cache_element.elementsByTagName("groundspeak:encoded_hints").item(0).firstChild().nodeValue());
+
+        c->save();
+
+
+        // Logs
 
         QDomNodeList cache_log_list = cache_element.elementsByTagName("groundspeak:logs").item(0).toElement().elementsByTagName("groundspeak:log");
         for (int cache_log_i = 0; cache_log_i < cache_log_list.count(); ++cache_log_i)
         {
             QDomElement log_element = cache_log_list.item(cache_log_i).toElement();
-            query.prepare("INSERT INTO Logs (log_id, log_guid, date, type, finder_id, finder_guid, finder_name, text, text_encoded, latitude, longitude, cache) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-            query.addBindValue(cache_element.attribute("id"));
-            query.addBindValue(cache_element.attribute("guid"));
-            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:date"), DATABASE_DATATYPE_STRING));
-            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:type"), DATABASE_DATATYPE_STRING));
-            query.addBindValue(cache_element.elementsByTagName("groundspeak:finder").item(0).toElement().attribute("id"));
-            query.addBindValue(cache_element.elementsByTagName("groundspeak:finder").item(0).toElement().attribute("guid"));
-            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:finder"), DATABASE_DATATYPE_STRING));
-            query.addBindValue(child_value(wpt_element.elementsByTagName("groundspeak:text"), DATABASE_DATATYPE_STRING));
-            query.addBindValue(cache_element.elementsByTagName("groundspeak:text").item(0).toElement().attribute("encoded").toInt());
-            query.addBindValue(cache_element.attribute("lat"));
-            query.addBindValue(cache_element.attribute("lon"));
-            query.addBindValue(cache_id);
-            std::cout << "executing query 5" << std::endl;
-            if (query.exec()) {
-                std::cout << "query.exec() DONE" << std::endl;
-            } else {
-                std::cout << "query.exec() FAIL" << std::endl;
-                std::cout << "ERROR Message: \"" << query.lastError().driverText().toStdString() << "\"" << std::endl;
-                return;
-            }
+            l = new Log(_db);
+            l->setIntValue(NULLMASK_LOG_CACHE, c->getID());
+            l->setIntValue(NULLMASK_LOG_LATITUDE, log_element.attribute("lat").toDouble());
+            l->setIntValue(NULLMASK_LOG_LONGITUDE, log_element.attribute("lon").toDouble());
+            l->setIntValue(NULLMASK_LOG_LOGID, log_element.attribute("id").toInt());
+            l->setQStringValue(NULLMASK_LOG_LOGGUID, log_element.attribute("guid"));
+            l->setQStringValue(NULLMASK_LOG_DATE, log_element.elementsByTagName("groundspeak:date").item(0).firstChild().nodeValue());
+            l->setQStringValue(NULLMASK_LOG_TYPE, log_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
+
+            node = log_element.elementsByTagName("groundspeak:finder").item(0).firstChild();
+            l->setIntValue(NULLMASK_LOG_FINDERID, node.toElement().attribute("id").toInt());
+            l->setQStringValue(NULLMASK_LOG_FINDERGUID, node.toElement().attribute("guid"));
+            l->setQStringValue(NULLMASK_LOG_FINDERNAME, node.nodeValue());
+
+            node = log_element.elementsByTagName("groundspeak:text").item(0).firstChild();
+            l->setQStringValue(NULLMASK_LOG_TEXT, node.toElement().nodeValue());
+            l->setBoolValue(NULLMASK_LOG_TEXTENCODED, node.toElement().attribute("encoded", "False") == "True");
+            l->save();
+            delete l;
         }
-    */
+        delete c;
+        delete w;
+        delete d;
+        delete p;
     }
 }
 

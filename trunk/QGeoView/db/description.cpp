@@ -32,8 +32,6 @@ void Description::addBindValues(QSqlQuery query)
 
 void Description::setQStringValue(int mask, QString value)
 {
-    if (!((NULLMASK_DESCRIPTION_NAME | NULLMASK_DESCRIPTION_LINKURL | NULLMASK_DESCRIPTION_LINKNAME | NULLMASK_DESCRIPTION_COMMENTS | NULLMASK_DESCRIPTION_SOURCE | NULLMASK_DESCRIPTION_TYPE) & mask))
-        throw InvalidMaskException();
     switch(mask) {
         case NULLMASK_DESCRIPTION_NAME:
             _name = value;
@@ -54,7 +52,7 @@ void Description::setQStringValue(int mask, QString value)
             _type = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "QString");
     }
     set(mask);
 }
@@ -62,9 +60,7 @@ void Description::setQStringValue(int mask, QString value)
 QString Description::getQStringValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_DESCRIPTION_NAME | NULLMASK_DESCRIPTION_LINKURL | NULLMASK_DESCRIPTION_LINKNAME | NULLMASK_DESCRIPTION_COMMENTS | NULLMASK_DESCRIPTION_SOURCE | NULLMASK_DESCRIPTION_TYPE) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "QString");
     switch(mask) {
         case NULLMASK_DESCRIPTION_NAME:
             return _name;
@@ -79,5 +75,5 @@ QString Description::getQStringValue(int mask)
         case NULLMASK_DESCRIPTION_TYPE:
             return _type;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "QString");
 }

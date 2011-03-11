@@ -30,6 +30,7 @@ public slots:
     bool getBoolValue(int mask);
     virtual void save();
     virtual void remove();
+    virtual QString table() = 0;
 protected:
     void setID(int id);
 private:
@@ -37,7 +38,6 @@ private:
     int _nullMask;
     virtual QStringList fields() = 0;
     virtual void addBindValues(QSqlQuery query) = 0;
-    virtual QString table() = 0;
 };
 
 #endif // DATABASEOBJECT_H
