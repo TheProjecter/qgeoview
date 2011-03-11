@@ -32,35 +32,35 @@ public:
     Cache(Database *db);
     ~Cache();
     void addBindValues(QSqlQuery query);
+    void setQStringValue(int mask, QString value);
     void setIntValue(int mask, int value);
     void setFloatValue(int mask, float value);
-    void setQStringValue(int mask, QString value);
     void setBoolValue(int mask, bool value);
     int getIntValue(int mask);
     float getFloatValue(int mask);
     QString getQStringValue(int mask);
     bool getBoolValue(int mask);
+    QString table();
 protected:
     QStringList fields();
 private:
-    QString table();
     QString _name;
     QString _placed_by;
-    int _owner_id;
     QString _owner_guid;
     QString _owner_name;
     QString _type;
     QString _container;
-    float _difficulty;
-    float _terrain;
-    QString _country;;
+    QString _country;
     QString _state;
     QString _short_description;
-    bool _short_description_html;
     QString _long_description;
-    bool _long_description_html;
     QString _encoded_hints;
+    float _difficulty;
+    float _terrain;
+    int _owner_id;
     int _waypoint;
+    bool _long_description_html;
+    bool _short_description_html;
     Waypoint *_waypoint_object;
 
 signals:

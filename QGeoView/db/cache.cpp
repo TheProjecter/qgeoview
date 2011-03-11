@@ -48,8 +48,6 @@ void Cache::addBindValues(QSqlQuery query)
 
 void Cache::setQStringValue(int mask, QString value)
 {
-    if (!((NULLMASK_CACHE_NAME | NULLMASK_CACHE_PLACEDBY | NULLMASK_CACHE_OWNERGUID | NULLMASK_CACHE_OWNERNAME | NULLMASK_CACHE_TYPE | NULLMASK_CACHE_CONTAINER | NULLMASK_CACHE_COUNTRY | NULLMASK_CACHE_STATE | NULLMASK_CACHE_SHORTDESCRIPTION | NULLMASK_CACHE_LONGDESCRIPTION | NULLMASK_CACHE_ENCODEDHINTS) & mask))
-        throw InvalidMaskException();
     switch (mask) {
         case NULLMASK_CACHE_NAME:
             _name = value;
@@ -85,15 +83,13 @@ void Cache::setQStringValue(int mask, QString value)
             _encoded_hints = value;
             break;
         default:
-        throw MaskNotFoundException();
+        throw MaskNotFoundException(this, mask, "QString");
     }
     set(mask);
 }
 
 void Cache::setFloatValue(int mask, float value)
 {
-    if (!((NULLMASK_CACHE_DIFFICULTY | NULLMASK_CACHE_TERRAIN) & mask))
-        throw InvalidMaskException();
     switch(mask) {
         case NULLMASK_CACHE_DIFFICULTY:
             _difficulty = value;
@@ -102,7 +98,7 @@ void Cache::setFloatValue(int mask, float value)
             _terrain = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "Float");
     }
     set(mask);
 }
@@ -110,8 +106,6 @@ void Cache::setFloatValue(int mask, float value)
 
 void Cache::setIntValue(int mask, int value)
 {
-    if (!((NULLMASK_CACHE_OWNERID | NULLMASK_CACHE_WAYPOINT) & mask))
-        throw InvalidMaskException();
     switch (mask) {
         case NULLMASK_CACHE_OWNERID:
             _owner_id = value;
@@ -120,15 +114,13 @@ void Cache::setIntValue(int mask, int value)
             _waypoint = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "Int");
     }
     set(mask);
 }
 
 void Cache::setBoolValue(int mask, bool value)
 {
-    if (!((NULLMASK_CACHE_SHORTDESCRIPTIONHTML | NULLMASK_CACHE_LONGDESCRIPTIONHTML) & mask))
-        throw InvalidMaskException();
     switch(mask) {
         case NULLMASK_CACHE_SHORTDESCRIPTIONHTML:
             _short_description_html = value;
@@ -137,7 +129,7 @@ void Cache::setBoolValue(int mask, bool value)
             _long_description_html = value;
             break;
         default:
-            throw MaskNotFoundException();
+            throw MaskNotFoundException(this, mask, "Bool");
     }
     set(mask);
 }
@@ -145,9 +137,7 @@ void Cache::setBoolValue(int mask, bool value)
 QString Cache::getQStringValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_CACHE_NAME | NULLMASK_CACHE_PLACEDBY | NULLMASK_CACHE_OWNERGUID | NULLMASK_CACHE_OWNERNAME | NULLMASK_CACHE_TYPE | NULLMASK_CACHE_CONTAINER | NULLMASK_CACHE_COUNTRY | NULLMASK_CACHE_STATE | NULLMASK_CACHE_SHORTDESCRIPTION | NULLMASK_CACHE_LONGDESCRIPTION | NULLMASK_CACHE_ENCODEDHINTS) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "QString");
     switch (mask) {
         case NULLMASK_CACHE_NAME:
             return _name;
@@ -172,50 +162,44 @@ QString Cache::getQStringValue(int mask)
         case NULLMASK_CACHE_ENCODEDHINTS:
             return _encoded_hints;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "QString");
 }
 
 float Cache::getFloatValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_CACHE_DIFFICULTY | NULLMASK_CACHE_TERRAIN) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "Float");
     switch(mask) {
         case NULLMASK_CACHE_DIFFICULTY:
             return _difficulty;
         case NULLMASK_CACHE_TERRAIN:
             return _terrain;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "Float");
 }
 
 int Cache::getIntValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_CACHE_SHORTDESCRIPTIONHTML | NULLMASK_CACHE_LONGDESCRIPTIONHTML) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "Int");
     switch(mask) {
         case NULLMASK_CACHE_SHORTDESCRIPTIONHTML:
             return _short_description_html;
         case NULLMASK_CACHE_LONGDESCRIPTIONHTML:
             return _long_description_html;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "Int");
 }
 
 bool Cache::getBoolValue(int mask)
 {
     if (!isSet(mask))
-        throw DBValueNotSetException();
-    if (!((NULLMASK_CACHE_SHORTDESCRIPTIONHTML | NULLMASK_CACHE_LONGDESCRIPTIONHTML) & mask))
-        throw InvalidMaskException();
+        throw DBValueNotSetException(this, mask, "Bool");
     switch(mask) {
         case NULLMASK_CACHE_SHORTDESCRIPTIONHTML:
             return _short_description_html;
         case NULLMASK_CACHE_LONGDESCRIPTIONHTML:
             return _long_description_html;
     }
-    throw MaskNotFoundException();
+    throw MaskNotFoundException(this, mask, "Bool");
 }

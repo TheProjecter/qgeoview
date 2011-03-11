@@ -22,6 +22,7 @@
 #include <QObject>
 #include "mainwindow.h"
 #include <QMessageBox>
+#include "myapplication.h"
 
 
 /*
@@ -29,7 +30,7 @@
 */
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    MyApplication a(argc, argv);
     MainWindow w;
     w.show();
     w.connect(&w, SIGNAL(quit()), &a, SLOT(quit()));
