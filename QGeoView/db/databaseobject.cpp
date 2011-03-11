@@ -24,22 +24,15 @@ void DatabaseObject::set(int mask)
 
 void DatabaseObject::save()
 {
-    std::cout << "save() called" << std::endl;
     QSqlQuery query;
-    std::cout << "starting transaction" << std::endl;
     _db->transaction();
-    std::cout << "\ttransaction started" << std::endl;
     QString query_string;
     QStringList field_names = fields();
-    std::cout << "Performing save()" << std::endl;
-
     if (_id) {   // update
-        std::cout << "\tupdating" << std::endl;
         query_string = "UPDATE " + table() + " SET " + field_names.join("=?, ") + "=? WHERE id=" + _id + ";";
         query.prepare(query_string);
         query.addBindValue(_id);
     } else {                    // insert
-        std::cout << "\tinserting" << std::endl;
         query_string = "INSERT INTO " + table() + " (" + field_names.join(", ") + ") VALUES (?" + QString(", ?").repeated(field_names.count() - 1) + ");";
         query.prepare(query_string);
     }
@@ -47,7 +40,8 @@ void DatabaseObject::save()
     if (!query.exec()) {
         QSqlError error = query.lastError();
         std::cerr << "Query Error: " << std::endl;
-        std::cerr << "\t Query: " << query.lastQuery().toStdString() << std::endl;
+        std::cerr << "\t Last Query:" << std::endl << "\t\t" << query.lastQuery().toStdString() << std::endl;
+        std::cerr << "\t Executed Query:" << std::endl << "\t\t" << query.executedQuery().toStdString() << std::endl;
         std::cerr << "\tdriverText: " << error.driverText().toStdString() << std::endl;
         std::cerr << "\tdatabaseText: " << error.databaseText().toStdString() << std::endl;
     }
@@ -55,7 +49,6 @@ void DatabaseObject::save()
     if (!_id) {
         setID(query.lastInsertId().toInt());
     }
-    std::cout << "\tdone" << std::endl;
 }
 
 void DatabaseObject::remove()
