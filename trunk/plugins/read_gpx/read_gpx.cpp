@@ -159,8 +159,8 @@ void ReadGpxPlugin::read(QDomDocument *doc)
             QDomElement log_element = cache_log_list.item(cache_log_i).toElement();
             l = new Log(_db);
             l->setIntValue(NULLMASK_LOG_CACHE, c->getID());
-            l->setIntValue(NULLMASK_LOG_LATITUDE, log_element.attribute("lat").toDouble());
-            l->setIntValue(NULLMASK_LOG_LONGITUDE, log_element.attribute("lon").toDouble());
+            l->setFloatValue(NULLMASK_LOG_LATITUDE, log_element.attribute("lat").toDouble());
+            l->setFloatValue(NULLMASK_LOG_LONGITUDE, log_element.attribute("lon").toDouble());
             l->setIntValue(NULLMASK_LOG_LOGID, log_element.attribute("id").toInt());
             l->setQStringValue(NULLMASK_LOG_LOGGUID, log_element.attribute("guid"));
             l->setQStringValue(NULLMASK_LOG_DATE, log_element.elementsByTagName("groundspeak:date").item(0).firstChild().nodeValue());
