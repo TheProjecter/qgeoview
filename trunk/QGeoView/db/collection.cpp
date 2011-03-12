@@ -32,6 +32,13 @@ void Collection::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_COLLECTION_DESCRIPTION) ? _description : QVariant(QVariant::String));
 }
 
+void Collection::loadValues(QSqlQuery query)
+{
+    int i=0;
+    _name = query.value(i++).toString();
+    _description = query.value(i++).toString();
+}
+
 void Collection::setQStringValue(int mask, QString value)
 {
     switch (mask) {

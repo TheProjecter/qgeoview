@@ -34,6 +34,7 @@ protected:
     void setID(int id);
     virtual QStringList fields() = 0;
     virtual void addBindValues(QSqlQuery query) = 0;
+    virtual void loadValues(QSqlQuery query) = 0;
     void load();
     Database *_db;
     int _id;

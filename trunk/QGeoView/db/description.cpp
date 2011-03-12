@@ -40,6 +40,17 @@ void Description::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_DESCRIPTION_TYPE) ? _type : QVariant(QVariant::String));
 }
 
+void Description::loadValues(QSqlQuery query)
+{
+    int i=0;
+    _name = query.value(i++).toString();
+    _link_url = query.value(i++).toString();
+    _link_name = query.value(i++).toString();
+    _comments = query.value(i++).toString();
+    _source = query.value(i++).toString();
+    _type = query.value(i++).toString();
+}
+
 void Description::setQStringValue(int mask, QString value)
 {
     switch(mask) {

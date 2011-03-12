@@ -36,6 +36,7 @@ public:
     QString table();
 protected:
     QStringList fields();
+    void loadValues(QSqlQuery query);
 private:
     QString _log_guid;
     QString _date;
@@ -47,7 +48,7 @@ private:
     float _longitude;
     int _log_id;
     int _finder_id;
-    int _cache;
+    int _fk_cache;
     bool _text_encoded;
 };
 

@@ -2,6 +2,7 @@
 #define CACHE_H
 
 #include <QObject>
+#include <QList>
 #include "databaseobject.h"
 #include "db/exceptions.h"
 #include "db/waypoint.h"
@@ -42,8 +43,10 @@ public:
     QString getQStringValue(int mask);
     bool getBoolValue(int mask);
     Waypoint getWaypoint();
+    QList<int> getLogIDs();
 protected:
     QStringList fields();
+    void loadValues(QSqlQuery query);
 private:
     QString _name;
     QString _placed_by;
@@ -59,7 +62,7 @@ private:
     float _difficulty;
     float _terrain;
     int _owner_id;
-    int _waypoint;
+    int _fk_waypoint;
     bool _long_description_html;
     bool _short_description_html;
 

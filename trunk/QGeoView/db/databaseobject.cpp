@@ -21,7 +21,11 @@ void DatabaseObject::load()
 {
     if (!_id)
         throw IDNotSetException(this);
-    // TODO Load From Database
+    QSqlQuery query;
+    QString query_string = "SELECT " + fields().join(",") + " FROM " + table() + " WHERE id=" + getID() + ";";
+    query.prepare(query_string);
+    if (query.first())
+        loadValues(query);
 }
 
 

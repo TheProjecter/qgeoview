@@ -23,7 +23,7 @@ Cache::Cache(const Cache &original) :
     _difficulty(original._difficulty),
     _terrain(original._terrain),
     _owner_id(original._owner_id),
-    _waypoint(original._waypoint),
+    _fk_waypoint(original._fk_waypoint),
     _long_description_html(original._long_description_html),
     _short_description_html(original._short_description_html)
 {
@@ -59,7 +59,29 @@ void Cache::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_CACHE_LONGDESCRIPTION) ? _long_description : QVariant(QVariant::String));
     query.addBindValue(isSet(NULLMASK_CACHE_LONGDESCRIPTIONHTML) ? _long_description_html : QVariant(QVariant::Bool));
     query.addBindValue(isSet(NULLMASK_CACHE_ENCODEDHINTS) ? _encoded_hints : QVariant(QVariant::String));
-    query.addBindValue(isSet(NULLMASK_CACHE_WAYPOINT) ? _waypoint : QVariant(QVariant::Int));
+    query.addBindValue(isSet(NULLMASK_CACHE_WAYPOINT) ? _fk_waypoint : QVariant(QVariant::Int));
+}
+
+void Cache::loadValues(QSqlQuery query)
+{
+    int i=0;
+    _name = query.value(i++).toString();
+    _placed_by = query.value(i++).toString();
+    _owner_id = query.value(i++).toInt();
+    _owner_guid = query.value(i++).toString();
+    _owner_name = query.value(i++).toString();
+    _type = query.value(i++).toString();
+    _container = query.value(i++).toString();
+    _difficulty = query.value(i++).toDouble();
+    _terrain = query.value(i++).toDouble();
+    _country = query.value(i++).toString();
+    _state = query.value(i++).toString();
+    _short_description = query.value(i++).toString();
+    _short_description_html = query.value(i++).toBool();
+    _long_description = query.value(i++).toString();
+    _long_description_html = query.value(i++).toBool();
+    _encoded_hints = query.value(i++).toString();
+    _fk_waypoint = query.value(i++).toInt();
 }
 
 
@@ -128,7 +150,7 @@ void Cache::setIntValue(int mask, int value)
             _owner_id = value;
             break;
         case NULLMASK_CACHE_WAYPOINT:
-            _waypoint = value;
+            _fk_waypoint = value;
             break;
         default:
             throw MaskNotFoundException(this, mask, "Int");
@@ -223,5 +245,19 @@ bool Cache::getBoolValue(int mask)
 
 Waypoint Cache::getWaypoint()
 {
-    return Waypoint(_db, _waypoint);
+    return Waypoint(_db, _fk_waypoint);
+}
+
+QList<int> Cache::getLogIDs()
+{
+    QList<int> ids;
+    QSqlQuery query;
+    _db->transaction();
+    query.prepare("SELECT id FROM Log where fk_cache=?");
+    query.addBindValue(getID());
+    query.exec();
+    while (query.next()) {
+        ids.append(query.value(0).toInt());
+    }
+    return ids;
 }

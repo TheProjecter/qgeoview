@@ -19,7 +19,7 @@ Log::Log(const Log &original) :
     _longitude(original._longitude),
     _log_id(original._log_id),
     _finder_id(original._finder_id),
-    _cache(original._cache),
+    _fk_cache(original._fk_cache),
     _text_encoded(original._text_encoded)
 {
 }
@@ -32,13 +32,14 @@ QString Log::table()
 QStringList Log::fields()
 {
     QStringList list;
-    list << "log_id" << "log_guid" << "date" << "type" << "finder_id" << "finder_guid" << "finder_name" << "text" << "text_encoded" << "latitude" << "longitude";
+    list << "fk_cache" << "log_id" << "log_guid" << "date" << "type" << "finder_id" << "finder_guid" << "finder_name" << "text" << "text_encoded" << "latitude" << "longitude";
     return list;
 }
 
 void Log::addBindValues(QSqlQuery query)
 {
-    query.addBindValue(isSet(NULLMASK_LOG_LOGID) ? _log_id : QVariant(QVariant::String));
+    query.addBindValue(isSet(NULLMASK_LOG_CACHE) ? _fk_cache : QVariant(QVariant::Int));
+    query.addBindValue(isSet(NULLMASK_LOG_LOGID) ? _log_id : QVariant(QVariant::Int));
     query.addBindValue(isSet(NULLMASK_LOG_LOGGUID) ? _log_guid : QVariant(QVariant::String));
     query.addBindValue(isSet(NULLMASK_LOG_DATE) ? _date : QVariant(QVariant::String));
     query.addBindValue(isSet(NULLMASK_LOG_TYPE) ? _type : QVariant(QVariant::String));
@@ -48,7 +49,25 @@ void Log::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_LOG_TEXT) ? _text : QVariant(QVariant::String));
     query.addBindValue(isSet(NULLMASK_LOG_TEXTENCODED) ? _text_encoded : QVariant(QVariant::Bool));
     query.addBindValue(isSet(NULLMASK_LOG_LATITUDE) ? _latitude : QVariant(QVariant::Double));
-    query.addBindValue(isSet(NULLMASK_LOG_LONGITUDE) ? _longitude : QVariant(QVariant::Double)); }
+    query.addBindValue(isSet(NULLMASK_LOG_LONGITUDE) ? _longitude : QVariant(QVariant::Double));
+}
+
+void Log::loadValues(QSqlQuery query)
+{
+    int i=0;
+    _fk_cache = query.value(i++).toInt();
+    _log_id = query.value(i++).toInt();
+    _log_guid = query.value(i++).toString();
+    _date = query.value(i++).toString();
+    _type = query.value(i++).toString();
+    _finder_id = query.value(i++).toInt();
+    _finder_guid = query.value(i++).toString();
+    _finder_name = query.value(i++).toString();
+    _text = query.value(i++).toString();
+    _text_encoded = query.value(i++).toBool();
+    _latitude = query.value(i++).toDouble();
+    _longitude = query.value(i++).toDouble();
+}
 
 void Log::setQStringValue(int mask, QString value)
 {
@@ -102,7 +121,7 @@ void Log::setIntValue(int mask, int value)
             _finder_id = value;
             break;
         case NULLMASK_LOG_CACHE:
-            _cache = value;
+            _fk_cache = value;
             break;
         default:
             throw MaskNotFoundException(this, mask, "Int");
@@ -166,7 +185,7 @@ int Log::getIntValue(int mask)
         case NULLMASK_LOG_FINDERID:
             return _finder_id;
         case NULLMASK_LOG_CACHE:
-            return _cache;
+            return _fk_cache;
     }
     throw MaskNotFoundException(this, mask, "Int");
 }

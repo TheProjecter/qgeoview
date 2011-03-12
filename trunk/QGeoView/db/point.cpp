@@ -56,6 +56,25 @@ void Point::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_POINT_LONGITUDE) ? _longitude : QVariant(QVariant::Double));
 }
 
+void Point::loadValues(QSqlQuery query)
+{
+    int i=0;
+    _time = query.value(i++).toString();
+    _elevation = query.value(i++).toDouble();
+    _magneticVariation = query.value(i++).toDouble();
+    _geoIDHeight = query.value(i++).toDouble();
+    _symbol = query.value(i++).toString();
+    _fix = query.value(i++).toString();
+    _satelites = query.value(i++).toInt();
+    _horizontalDOP = query.value(i++).toDouble();
+    _verticalDOP = query.value(i++).toDouble();
+    _positionDOP = query.value(i++).toDouble();
+    _ageOfDGPSData = query.value(i++).toDouble();
+    _DGPSID = query.value(i++).toInt();
+    _latitude = query.value(i++).toDouble();
+    _longitude = query.value(i++).toDouble();
+}
+
 void Point::setQStringValue(int mask, QString value)
 {
     switch(mask) {
