@@ -22,9 +22,10 @@ void DatabaseObject::load()
     if (!_id)
         throw IDNotSetException(this);
     QSqlQuery query;
-    QString query_string = "SELECT " + fields().join(",") + " FROM " + table() + " WHERE id=" + getID() + ";";
+    QString query_string = "SELECT " + fields().join(",") + " FROM " + table() + " WHERE id=?;";
     query.prepare(query_string);
-    if (query.first())
+    query.addBindValue(getID());
+    if (query.exec() && query.first())
         loadValues(query);
 }
 

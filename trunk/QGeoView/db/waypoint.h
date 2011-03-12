@@ -22,6 +22,7 @@ public:
     QString table();
     Point getPoint();
     Description getDescription();
+    QString treeDisplay();
 protected:
     QStringList fields();
     void loadValues(QSqlQuery query);

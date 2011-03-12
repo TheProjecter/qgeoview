@@ -25,6 +25,8 @@
 #include <QCoreApplication>
 #include <QPluginLoader>
 #include <QSqlError>
+#include <QStandardItem>
+#include <QStandardItemModel>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "treemodel.h"
@@ -59,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     
     // Plugins
     loadPlugins();
+    refreshTree();
 }
 
 /*
@@ -125,16 +128,6 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::on_action_Quit_triggered()
 {
     emit quit();
-}
-
-
-/*
- Test function for developement
- Called when "Test" is clicked on the toolbar
-*/
-void MainWindow::on_actionTest_triggered()
-{
-    std::cout << "Test Button Does Nothing" << std::endl;
 }
 
 /*
@@ -220,6 +213,39 @@ void MainWindow::pointRead(Point *point) {
     point->save();
     emit newPoint(point);
 }
+
+void MainWindow::refreshTree()
+{
+    QStandardItemModel *model = new QStandardItemModel();
+
+    // Caches
+    QStandardItem *caches = new QStandardItem("Caches");
+    model->appendRow(caches);
+    foreach (int i, _db->getCacheIDs()) {
+        Cache cache(_db, i);
+        QStandardItem *item = new QStandardItem(cache.treeDisplay());
+        caches->appendRow(item);
+    }
+
+    // Waypoints
+    QStandardItem *waypoints = new QStandardItem("Waypoints");
+    model->appendRow(waypoints);
+    foreach (int i, _db->getWaypointIDs()) {
+        Waypoint waypoint(_db, i);
+        QStandardItem *item = new QStandardItem(waypoint.treeDisplay());
+        waypoints->appendRow(item);
+    }
+
+    ui->tree->setModel(model);
+    ui->tree->expandAll();
+}
+
+
+void MainWindow::on_comboBox_activated(int index)
+{
+    refreshTree();
+}
+
 
 void MainWindow::on_action_Test_triggered()
 {

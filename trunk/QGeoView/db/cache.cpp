@@ -1,3 +1,4 @@
+#include <iostream>
 #include "cache.h"
 
 Cache::Cache(Database *db, int id) :
@@ -27,6 +28,16 @@ Cache::Cache(const Cache &original) :
     _long_description_html(original._long_description_html),
     _short_description_html(original._short_description_html)
 {
+}
+
+QString Cache::treeDisplay()
+{
+    QString str;
+    str.append(getQStringValue(NULLMASK_CACHE_NAME));
+    str.append(" (");
+    str.append(getWaypoint().treeDisplay());
+    str.append(")");
+    return str;
 }
 
 QString Cache::table()
@@ -64,24 +75,41 @@ void Cache::addBindValues(QSqlQuery query)
 
 void Cache::loadValues(QSqlQuery query)
 {
-    int i=0;
-    _name = query.value(i++).toString();
-    _placed_by = query.value(i++).toString();
-    _owner_id = query.value(i++).toInt();
-    _owner_guid = query.value(i++).toString();
-    _owner_name = query.value(i++).toString();
-    _type = query.value(i++).toString();
-    _container = query.value(i++).toString();
-    _difficulty = query.value(i++).toDouble();
-    _terrain = query.value(i++).toDouble();
-    _country = query.value(i++).toString();
-    _state = query.value(i++).toString();
-    _short_description = query.value(i++).toString();
-    _short_description_html = query.value(i++).toBool();
-    _long_description = query.value(i++).toString();
-    _long_description_html = query.value(i++).toBool();
-    _encoded_hints = query.value(i++).toString();
-    _fk_waypoint = query.value(i++).toInt();
+    int i=-1;
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_NAME, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_PLACEDBY, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setIntValue(NULLMASK_CACHE_OWNERID, query.value(i).toInt());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_OWNERGUID, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_OWNERNAME, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_TYPE, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_CONTAINER, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setFloatValue(NULLMASK_CACHE_DIFFICULTY, query.value(i).toDouble());
+    if (query.value(++i).isValid())
+        setFloatValue(NULLMASK_CACHE_TERRAIN, query.value(i).toDouble());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_COUNTRY, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_STATE, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_SHORTDESCRIPTION, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setBoolValue(NULLMASK_CACHE_SHORTDESCRIPTIONHTML, query.value(i).toBool());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_LONGDESCRIPTION, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setBoolValue(NULLMASK_CACHE_LONGDESCRIPTIONHTML, query.value(i).toBool());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_CACHE_ENCODEDHINTS, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setIntValue(NULLMASK_CACHE_WAYPOINT, query.value(i).toInt());
 }
 
 

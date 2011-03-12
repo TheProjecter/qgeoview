@@ -1,3 +1,4 @@
+#include <iostream>
 #include "description.h"
 
 Description::Description(Database *db, int id) :
@@ -42,13 +43,19 @@ void Description::addBindValues(QSqlQuery query)
 
 void Description::loadValues(QSqlQuery query)
 {
-    int i=0;
-    _name = query.value(i++).toString();
-    _link_url = query.value(i++).toString();
-    _link_name = query.value(i++).toString();
-    _comments = query.value(i++).toString();
-    _source = query.value(i++).toString();
-    _type = query.value(i++).toString();
+    int i=-1;
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_DESCRIPTION_NAME, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_DESCRIPTION_LINKURL, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_DESCRIPTION_LINKNAME, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_DESCRIPTION_COMMENTS, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_DESCRIPTION_SOURCE, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_DESCRIPTION_TYPE, query.value(i).toString());
 }
 
 void Description::setQStringValue(int mask, QString value)

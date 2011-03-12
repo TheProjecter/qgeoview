@@ -34,9 +34,11 @@ void Collection::addBindValues(QSqlQuery query)
 
 void Collection::loadValues(QSqlQuery query)
 {
-    int i=0;
-    _name = query.value(i++).toString();
-    _description = query.value(i++).toString();
+    int i=-1;
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_COLLECTION_NAME, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_COLLECTION_DESCRIPTION, query.value(i).toString());
 }
 
 void Collection::setQStringValue(int mask, QString value)

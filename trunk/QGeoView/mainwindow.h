@@ -66,11 +66,13 @@ private:
 private slots:
     void on_actionSave_triggered();
     void on_action_Open_triggered();
-    void on_actionTest_triggered();
     void on_action_Quit_triggered();
     void pointRead(Point *point);
 
     void on_action_Test_triggered();
+    void refreshTree();
+
+    void on_comboBox_activated(int index);
 
 signals:
     void quit();
