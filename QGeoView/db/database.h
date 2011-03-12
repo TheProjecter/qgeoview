@@ -18,6 +18,8 @@ public:
     explicit Database(QString location, QTreeView *list, QObject *parent=NULL);
     void transaction();
     void commit();
+    QList<int> getCacheIDs();
+    QList<int> getWaypointIDs(bool orphan=false);
     ~Database();
 private:
     QSqlDatabase _db;

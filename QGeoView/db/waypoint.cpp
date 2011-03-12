@@ -1,3 +1,4 @@
+#include <iostream>
 #include "waypoint.h"
 
 Waypoint::Waypoint(Database *db, int id) :
@@ -12,6 +13,11 @@ Waypoint::Waypoint(const Waypoint &original) :
     _fk_point(original._fk_point),
     _fk_description(original._fk_description)
 {
+}
+
+QString Waypoint::treeDisplay()
+{
+    return getDescription().getQStringValue(NULLMASK_DESCRIPTION_NAME);
 }
 
 QString Waypoint::table()
@@ -34,9 +40,11 @@ void Waypoint::addBindValues(QSqlQuery query)
 
 void Waypoint::loadValues(QSqlQuery query)
 {
-    int i=0;
-    _fk_point = query.value(i++).toInt();
-    _fk_description = query.value(i++).toInt();
+    int i=-1;
+    if (query.value(++i).isValid())
+        setIntValue(NULLMASK_WAYPOINT_POINT, query.value(i).toInt());
+    if (query.value(++i).isValid())
+        setIntValue(NULLMASK_WAYPOINT_DESCRIPTION, query.value(i).toInt());
 }
 
 void Waypoint::setIntValue(int mask, int value)
@@ -74,5 +82,8 @@ Point Waypoint::getPoint()
 
 Description Waypoint::getDescription()
 {
+    if (!isSet(NULLMASK_WAYPOINT_DESCRIPTION)) {
+        throw DBValueNotSetException(this, NULLMASK_WAYPOINT_DESCRIPTION, "fk_description");
+    }
     return Description(_db, _fk_description);
 }

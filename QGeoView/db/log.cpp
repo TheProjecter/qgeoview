@@ -54,19 +54,31 @@ void Log::addBindValues(QSqlQuery query)
 
 void Log::loadValues(QSqlQuery query)
 {
-    int i=0;
-    _fk_cache = query.value(i++).toInt();
-    _log_id = query.value(i++).toInt();
-    _log_guid = query.value(i++).toString();
-    _date = query.value(i++).toString();
-    _type = query.value(i++).toString();
-    _finder_id = query.value(i++).toInt();
-    _finder_guid = query.value(i++).toString();
-    _finder_name = query.value(i++).toString();
-    _text = query.value(i++).toString();
-    _text_encoded = query.value(i++).toBool();
-    _latitude = query.value(i++).toDouble();
-    _longitude = query.value(i++).toDouble();
+    int i=-1;
+    if (query.value(++i).isValid())
+        setIntValue(NULLMASK_LOG_CACHE, query.value(i).toInt());
+    if (query.value(++i).isValid())
+        setIntValue(NULLMASK_LOG_LOGID, query.value(i).toInt());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_LOG_LOGGUID, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_LOG_DATE, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_LOG_TYPE, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setIntValue(NULLMASK_LOG_FINDERID, query.value(i).toInt());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_LOG_FINDERGUID, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_LOG_FINDERNAME, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setQStringValue(NULLMASK_LOG_TEXT, query.value(i).toString());
+    if (query.value(++i).isValid())
+        setBoolValue(NULLMASK_LOG_TEXTENCODED, query.value(i).toBool());
+    if (query.value(++i).isValid())
+        setFloatValue(NULLMASK_LOG_LATITUDE, query.value(i).toDouble());
+    if (query.value(++i).isValid())
+        setFloatValue(NULLMASK_LOG_LONGITUDE, query.value(i).toDouble());
 }
 
 void Log::setQStringValue(int mask, QString value)

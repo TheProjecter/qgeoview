@@ -128,6 +128,8 @@ void ReadGpxPlugin::read(QDomDocument *doc)
 
         c = new Cache(_db);
 
+        c->setIntValue(NULLMASK_CACHE_WAYPOINT, w->getID());
+
         c->setQStringValue(NULLMASK_CACHE_NAME, cache_element.elementsByTagName("groundspeak:name").item(0).firstChild().nodeValue());
         c->setQStringValue(NULLMASK_CACHE_PLACEDBY, cache_element.elementsByTagName("groundspeak:placed_by").item(0).firstChild().nodeValue());
 

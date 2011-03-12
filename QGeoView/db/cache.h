@@ -44,6 +44,7 @@ public:
     bool getBoolValue(int mask);
     Waypoint getWaypoint();
     QList<int> getLogIDs();
+    QString treeDisplay();
 protected:
     QStringList fields();
     void loadValues(QSqlQuery query);
