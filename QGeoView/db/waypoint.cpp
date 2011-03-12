@@ -1,18 +1,17 @@
 #include "waypoint.h"
 
-Waypoint::Waypoint(Database *db) :
-    DatabaseObject(db),
-    _point_object(NULL),
-    _description_object(NULL)
+Waypoint::Waypoint(Database *db, int id) :
+    DatabaseObject(db, id)
 {
+    if (id)
+        load();
 }
 
-Waypoint::~Waypoint()
+Waypoint::Waypoint(const Waypoint &original) :
+    DatabaseObject(original),
+    _point(original._point),
+    _description(original._description)
 {
-    if (_point_object)
-        delete _point_object;
-    if (_description_object)
-        delete _description_object;
 }
 
 QString Waypoint::table()
@@ -37,13 +36,9 @@ void Waypoint::setIntValue(int mask, int value)
 {
     switch(mask) {
         case NULLMASK_WAYPOINT_POINT:
-            if (_point)
-                delete _point_object;
             _point = value;
             break;
         case NULLMASK_WAYPOINT_DESCRIPTION:
-            if (_description_object)
-                delete _description_object;
             _description = value;
             break;
         default:
@@ -63,4 +58,14 @@ int Waypoint::getIntValue(int mask)
             return _description;
     }
     throw MaskNotFoundException(this, mask, "Int");
+}
+
+Point Waypoint::getPoint()
+{
+    return Point(_db, _point);
+}
+
+Description Waypoint::getDescription()
+{
+    return Description(_db, _description);
 }

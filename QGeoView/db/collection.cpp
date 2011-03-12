@@ -1,11 +1,16 @@
 #include "collection.h"
 
-Collection::Collection(Database *db) :
-    DatabaseObject(db)
+Collection::Collection(Database *db, int id) :
+    DatabaseObject(db, id)
 {
+    if (id)
+        load();
 }
 
-Collection::~Collection()
+Collection::Collection(const Collection &original) :
+    DatabaseObject(original),
+    _name(original._name),
+    _description(original._description)
 {
 }
 

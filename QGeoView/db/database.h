@@ -15,7 +15,7 @@ class Database : public QObject
 {
 Q_OBJECT
 public:
-    explicit Database(QString location, QTreeView *list, QObject *parent = 0);
+    explicit Database(QString location, QTreeView *list, QObject *parent=NULL);
     void transaction();
     void commit();
     ~Database();

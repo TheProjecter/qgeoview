@@ -25,8 +25,8 @@ class Point : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Point(Database *db);
-    ~Point();
+    Point(Database *db, int id=0);
+    Point(const Point &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     void setFloatValue(int mask, float value);
@@ -39,18 +39,18 @@ protected:
     QStringList fields();
 private:
     QString _time;
+    QString _symbol;
+    QString _fix;
     float _elevation;
     float _magneticVariation;
     float _geoIDHeight;
-    QString _symbol;
     float _latitude;
     float _longitude;
-    QString _fix;
-    int _satelites;
     float _horizontalDOP;
     float _verticalDOP;
     float _positionDOP;
     float _ageOfDGPSData;
+    int _satelites;
     int _DGPSID;
 
 };

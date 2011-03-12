@@ -1,16 +1,27 @@
 #include "log.h"
 
-Log::Log(Database *db) :
-    DatabaseObject(db),
-    _cache_object(NULL)
+Log::Log(Database *db, int id) :
+    DatabaseObject(db, id)
 {
+    if (id)
+        load();
 }
 
-
-Log::~Log()
+Log::Log(const Log &original) :
+    DatabaseObject(original),
+    _log_guid(original._log_guid),
+    _date(original._date),
+    _type(original._type),
+    _finder_guid(original._finder_guid),
+    _finder_name(original._finder_name),
+    _text(original._text),
+    _latitude(original._latitude),
+    _longitude(original._longitude),
+    _log_id(original._log_id),
+    _finder_id(original._finder_id),
+    _cache(original._cache),
+    _text_encoded(original._text_encoded)
 {
-    if (_cache_object)
-        delete _cache_object;
 }
 
 QString Log::table()
