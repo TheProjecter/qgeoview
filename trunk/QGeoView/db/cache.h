@@ -29,8 +29,9 @@ class Cache : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Cache(Database *db);
-    ~Cache();
+    Cache(Database *db, int id=0);
+    Cache(const Cache &original);
+    QString table();
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     void setIntValue(int mask, int value);
@@ -40,7 +41,7 @@ public:
     float getFloatValue(int mask);
     QString getQStringValue(int mask);
     bool getBoolValue(int mask);
-    QString table();
+    Waypoint getWaypoint();
 protected:
     QStringList fields();
 private:
@@ -61,7 +62,6 @@ private:
     int _waypoint;
     bool _long_description_html;
     bool _short_description_html;
-    Waypoint *_waypoint_object;
 
 signals:
 

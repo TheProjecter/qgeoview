@@ -13,8 +13,8 @@ class Collection : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Collection(Database *db);
-    ~Collection();
+    Collection(Database *db, int id=0);
+    Collection(const Collection &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     QString getQStringValue(int mask);

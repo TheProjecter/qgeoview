@@ -22,8 +22,8 @@ class Log : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Log(Database *db);
-    ~Log();
+    Log(Database *db, int id=0);
+    Log(const Log &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     void setFloatValue(int mask, float value);
@@ -49,7 +49,6 @@ private:
     int _finder_id;
     int _cache;
     bool _text_encoded;
-    Cache *_cache_object;
 };
 
 #endif // LOG_H

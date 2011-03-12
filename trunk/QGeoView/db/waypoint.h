@@ -14,19 +14,19 @@ class Waypoint : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Waypoint(Database *db);
-    ~Waypoint();
+    Waypoint(Database *db, int id=0);
+    Waypoint(const Waypoint &original);
     void addBindValues(QSqlQuery query);
     void setIntValue(int mask, int value);
     int getIntValue(int mask);
     QString table();
+    Point getPoint();
+    Description getDescription();
 protected:
     QStringList fields();
 private:
     int _point;
     int _description;
-    Point *_point_object;
-    Description *_description_object;
 };
 
 #endif

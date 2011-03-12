@@ -3,11 +3,25 @@
 #include "databaseobject.h"
 #include "db/exceptions.h"
 
-DatabaseObject::DatabaseObject(Database *db) :
+DatabaseObject::DatabaseObject(Database *db, int id) :
     _db(db),
-    _id(0)
+    _id(id)
+{
+}
+
+DatabaseObject::DatabaseObject(const DatabaseObject &original) :
+    _db(original._db),
+    _id(original._id),
+    _nullMask(original._nullMask)
 {
 
+}
+
+void DatabaseObject::load()
+{
+    if (!_id)
+        throw IDNotSetException(this);
+    // TODO Load From Database
 }
 
 

@@ -1,11 +1,28 @@
 #include "point.h"
 
-Point::Point(Database *db) :
-    DatabaseObject(db)
+Point::Point(Database *db, int id) :
+    DatabaseObject(db, id)
 {
+    if (id)
+        load();
 }
 
-Point::~Point()
+Point::Point(const Point &original) :
+    DatabaseObject(original),
+    _time(original._time),
+    _symbol(original._symbol),
+    _fix(original._fix),
+    _elevation(original._elevation),
+    _magneticVariation(original._elevation),
+    _geoIDHeight(original._geoIDHeight),
+    _latitude(original._latitude),
+    _longitude(original._longitude),
+    _horizontalDOP(original._horizontalDOP),
+    _verticalDOP(original._verticalDOP),
+    _positionDOP(original._positionDOP),
+    _ageOfDGPSData(original._ageOfDGPSData),
+    _satelites(original._satelites),
+    _DGPSID(original._DGPSID)
 {
 }
 
