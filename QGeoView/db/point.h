@@ -37,6 +37,7 @@ public:
     QString table();
 protected:
     QStringList fields();
+    void loadValues(QSqlQuery query);
 private:
     QString _time;
     QString _symbol;

@@ -24,9 +24,11 @@
 #include <QTextStream>
 #include <QCoreApplication>
 #include <QPluginLoader>
+#include <QSqlError>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "treemodel.h"
+#include "db/cache.h"
 
 #include <QDesktopServices>
 
@@ -217,4 +219,8 @@ void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
 void MainWindow::pointRead(Point *point) {
     point->save();
     emit newPoint(point);
+}
+
+void MainWindow::on_action_Test_triggered()
+{
 }

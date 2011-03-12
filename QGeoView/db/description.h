@@ -24,6 +24,7 @@ public:
     QString table();
 protected:
     QStringList fields();
+    void loadValues(QSqlQuery);
 private:
     QString _name;
     QString _link_url;

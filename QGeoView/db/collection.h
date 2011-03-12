@@ -21,6 +21,7 @@ public:
     QString table();
 protected:
     QStringList fields();
+    void loadValues(QSqlQuery query);
 private:
     QString _name;
     QString _description;

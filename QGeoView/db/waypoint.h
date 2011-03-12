@@ -24,9 +24,10 @@ public:
     Description getDescription();
 protected:
     QStringList fields();
+    void loadValues(QSqlQuery query);
 private:
-    int _point;
-    int _description;
+    int _fk_point;
+    int _fk_description;
 };
 
 #endif

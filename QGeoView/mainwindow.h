@@ -70,6 +70,8 @@ private slots:
     void on_action_Quit_triggered();
     void pointRead(Point *point);
 
+    void on_action_Test_triggered();
+
 signals:
     void quit();
     void newPoint(Point *point);
