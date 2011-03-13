@@ -145,12 +145,15 @@ void MainWindow::loadPlugins()
             DummyPluginFactory *dummyPluginFactory = qobject_cast<DummyPluginFactory*>(plugin);
             ReadPluginFactory *readPluginFactory = qobject_cast<ReadPluginFactory*>(plugin);
             WritePluginFactory *writePluginFactory = qobject_cast<WritePluginFactory*>(plugin);
+            TabPluginFactory *tabPluginFactory = qobject_cast<TabPluginFactory*>(plugin);
             if (dummyPluginFactory)
                 loadDummyPlugin(dummyPluginFactory->get_plugin());
             if (readPluginFactory)
                 loadReadPlugin(readPluginFactory->get_plugin(_db));
             if (writePluginFactory)
                 loadWritePlugin(writePluginFactory->get_plugin(_db));
+            if (tabPluginFactory)
+                loadTabPlugin(tabPluginFactory->get_plugin(_db));
         } else {
             std::cout << "Loading " << fileName.toStdString() << " failed: " << pluginLoader.errorString().toStdString() << std::endl;
             std::cout << "\tyou should fix this" << std::endl;
@@ -160,6 +163,7 @@ void MainWindow::loadPlugins()
     std::cout << "\tDummy Plugins: \t" << _dummyPlugins.count() << std::endl;
     std::cout << "\tRead Plugins: \t" << _readPlugins.count() << std::endl;
     std::cout << "\tWrite Plugins: \t" << _writePlugins.count() << std::endl;
+    std::cout << "\tTab Plugins: \t" << _tabPlugins.count() << std::endl;
 }
 
 void MainWindow::loadDummyPlugin(DummyPlugin *plugin) {
@@ -177,6 +181,12 @@ void MainWindow::loadWritePlugin(WritePlugin *plugin) {
     std::cout << "Loading Write Plugin: " << plugin->name().toStdString() << std::endl;
     _writePlugins.append(plugin);
     ui->menu_Write->addAction(plugin->name(), plugin, SLOT(save()));
+}
+
+void MainWindow::loadTabPlugin(TabPlugin *plugin) {
+    std::cout << "Loading Tab Plugin: " << plugin->name().toStdString() << std::endl;
+    _tabPlugins.append(plugin);
+    ui->menu_Plugins->addAction(plugin->name(), plugin, SLOT(toggle()));
 }
 
 void MainWindow::refreshTree()

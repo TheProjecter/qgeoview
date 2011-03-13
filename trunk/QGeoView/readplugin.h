@@ -4,7 +4,6 @@
 #include <QtPlugin>
 
 #include "db/database.h"
-#include "db/point.h"
 
 class ReadPlugin : public QObject
 {
