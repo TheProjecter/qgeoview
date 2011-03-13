@@ -184,23 +184,23 @@ void MainWindow::refreshTree()
 
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
-    caches->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_CATEGORY, TREE_CATEGORY_CACHES)));
+    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_CACHES));
     model->appendRow(caches);
     foreach (int i, _db->getCacheIDs()) {
         Cache cache(_db, i);
         QStandardItem *item = new QStandardItem(cache.treeDisplay());
-        item->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_CACHE, cache.getID())));
+        item->setData(QVariant::fromValue<int>(cache.getID()));
         caches->appendRow(item);
     }
 
     // Waypoints
     QStandardItem *waypoints = new QStandardItem("Waypoints");
-    caches->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_CATEGORY, TREE_CATEGORY_WAYPOINTS)));
+    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_WAYPOINTS));
     model->appendRow(waypoints);
     foreach (int i, _db->getWaypointIDs()) {
         Waypoint waypoint(_db, i);
         QStandardItem *item = new QStandardItem(waypoint.treeDisplay());
-        item->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_WAYPOINT, waypoint.getID())));
+        item->setData(QVariant::fromValue<int>(waypoint.getID()));
         waypoints->appendRow(item);
     }
 
@@ -210,28 +210,29 @@ void MainWindow::refreshTree()
 
 void MainWindow::on_tree_clicked(QModelIndex index)
 {
-    std::cout << "Tree Clicked" << std::endl;
-    if (!index.data().canConvert<TreeItemIdentifier>()) {
-        std::cout << "Cannont Convert :(" << std::endl;
-        return;
-    }
-    TreeItemIdentifier treeItemIdentifier = index.data().value<TreeItemIdentifier>();
-    std::cout << "Got Identifier" << std::endl;
-    std::cout << "Got Identifier" << treeItemIdentifier.type() << std::endl;
-    switch(treeItemIdentifier.type()) {
-        case TREE_TYPE_CATEGORY:
-            break;
-        case TREE_TYPE_CACHE:
-            std::cout << "Selected Cache " << treeItemIdentifier.cache().getID() << std::endl;
-            emit cacheSelected(treeItemIdentifier.cache());
-            break;
-        case TREE_TYPE_WAYPOINT:
-            std::cout << "Selected Waypoint " << treeItemIdentifier.waypoint().getID() << std::endl;
-            emit waypointSelected(treeItemIdentifier.waypoint());
-            break;
-        default:
-        std::cout << "Uh OH!" << treeItemIdentifier.type() << std::endl;
-            throw InvalidTreeItemTypeException(treeItemIdentifier);
+    QVariant data = index.data();
+    QModelIndex parent = index.parent();
+    if (parent.isValid()) {
+        // Item
+        std::cout << "Found Item ";
+        if (data.canConvert<int>())
+            std::cout << data.value<int>();
+        else
+            std::cout << "invalid";
+        std::cout << " with parent ";
+        if (parent.data().canConvert<int>())
+            std::cout << parent.data().value<int>();
+        else
+            std::cout << "invalid";
+        std::cout << std::endl;
+    } else {
+        // Category
+        std::cout << "Found Category ";
+        if (data.canConvert<int>())
+            std::cout << data.value<int>();
+        else
+            std::cout << "invalid";
+        std::cout << std::endl;
     }
 }
 
@@ -246,4 +247,13 @@ void MainWindow::on_comboBox_activated(int index)
 
 void MainWindow::on_action_Test_triggered()
 {
+    QVariant q1 = 42;
+    QVariant q2 = QVariant::fromValue<TreeItemIdentifier>(TreeItemIdentifier(_db, TREE_TYPE_CATEGORY, TREE_CATEGORY_CACHES));
+    std::cout << "q1: " << (q1.canConvert<int>() ? "yes" : "no") << std::endl;
+    std::cout << "q2: " << (q2.canConvert<TreeItemIdentifier>() ? "yes" : "no") << std::endl;
+    std::cout << q2.value<TreeItemIdentifier>().categoryName().toStdString() << std::endl;
+    QStandardItem *caches = new QStandardItem("Caches");
+    caches->setData(QVariant::fromValue<int>(41));
+    std::cout << "int: " << (caches->data().canConvert<int>() ? "yes" : "no") << std::endl;
+    std::cout << caches->data().value<int>() << std::endl;
 }
