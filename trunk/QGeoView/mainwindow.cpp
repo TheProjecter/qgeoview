@@ -184,44 +184,45 @@ void MainWindow::refreshTree()
 
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
-    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_CACHES));
-    model->appendRow(caches);
+    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_CACHES), Qt::UserRole);
     foreach (int i, _db->getCacheIDs()) {
         Cache cache(_db, i);
         QStandardItem *item = new QStandardItem(cache.treeDisplay());
-        item->setData(QVariant::fromValue<int>(cache.getID()));
+        item->setData(QVariant::fromValue<int>(cache.getID()), Qt::UserRole);
         caches->appendRow(item);
     }
 
     // Waypoints
     QStandardItem *waypoints = new QStandardItem("Waypoints");
-    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_WAYPOINTS));
-    model->appendRow(waypoints);
+    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_CACHES), Qt::UserRole);
     foreach (int i, _db->getWaypointIDs()) {
         Waypoint waypoint(_db, i);
         QStandardItem *item = new QStandardItem(waypoint.treeDisplay());
-        item->setData(QVariant::fromValue<int>(waypoint.getID()));
+        item->setData(QVariant::fromValue<int>(waypoint.getID()), Qt::UserRole);
         waypoints->appendRow(item);
     }
 
+    model->appendRow(caches);
+    model->appendRow(waypoints);
     ui->tree->setModel(model);
     ui->tree->expandAll();
 }
 
 void MainWindow::on_tree_clicked(QModelIndex index)
 {
-    QVariant data = index.data();
+    QVariant data = index.data(Qt::UserRole);
     QModelIndex parent = index.parent();
     if (parent.isValid()) {
         // Item
+        QVariant parent_data = parent.data(Qt::UserRole);
         std::cout << "Found Item ";
         if (data.canConvert<int>())
             std::cout << data.value<int>();
         else
             std::cout << "invalid";
         std::cout << " with parent ";
-        if (parent.data().canConvert<int>())
-            std::cout << parent.data().value<int>();
+        if (parent_data.canConvert<int>())
+            std::cout << parent_data.value<int>();
         else
             std::cout << "invalid";
         std::cout << std::endl;
