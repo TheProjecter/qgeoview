@@ -1,4 +1,5 @@
 #include "log.h"
+#include "exceptions.h"
 
 Log::Log(Database *db, int id) :
     DatabaseObject(db, id)

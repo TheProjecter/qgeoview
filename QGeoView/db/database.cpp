@@ -3,7 +3,6 @@
 #include <QSqlQuery>
 #include <QVariant>
 #include <QSqlError>
-#include "treeitem.h"
 
 
 /*

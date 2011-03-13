@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "databaseobject.h"
-#include "db/exceptions.h"
 
 #define NULLMASK_POINT_TIME               0x1
 #define NULLMASK_POINT_ELEVATION          0x2

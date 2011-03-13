@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "databaseobject.h"
-#include "db/exceptions.h"
 #include "description.h"
 #include "point.h"
 

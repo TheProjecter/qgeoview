@@ -1,5 +1,6 @@
 #include <iostream>
 #include "cache.h"
+#include "exceptions.h"
 
 Cache::Cache(Database *db, int id) :
     DatabaseObject(db, id)

@@ -29,8 +29,9 @@
 #include <QStandardItemModel>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "treemodel.h"
 #include "db/cache.h"
+#include "treeitemidentifier.h"
+#include "exceptions.h"
 
 #include <QDesktopServices>
 
@@ -177,30 +178,29 @@ void MainWindow::loadWritePlugin(WritePlugin *plugin) {
     ui->menu_Write->addAction(plugin->name(), plugin, SLOT(save()));
 }
 
-void MainWindow::pointRead(Point *point) {
-    point->save();
-    emit newPoint(point);
-}
-
 void MainWindow::refreshTree()
 {
     QStandardItemModel *model = new QStandardItemModel();
 
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
+    caches->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_CATEGORY, TREE_CATEGORY_CACHES)));
     model->appendRow(caches);
     foreach (int i, _db->getCacheIDs()) {
         Cache cache(_db, i);
         QStandardItem *item = new QStandardItem(cache.treeDisplay());
+        item->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_CACHE, cache.getID())));
         caches->appendRow(item);
     }
 
     // Waypoints
     QStandardItem *waypoints = new QStandardItem("Waypoints");
+    caches->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_CATEGORY, TREE_CATEGORY_WAYPOINTS)));
     model->appendRow(waypoints);
     foreach (int i, _db->getWaypointIDs()) {
         Waypoint waypoint(_db, i);
         QStandardItem *item = new QStandardItem(waypoint.treeDisplay());
+        item->setData(qVariantFromValue(TreeItemIdentifier(_db, TREE_TYPE_WAYPOINT, waypoint.getID())));
         waypoints->appendRow(item);
     }
 
@@ -208,9 +208,38 @@ void MainWindow::refreshTree()
     ui->tree->expandAll();
 }
 
+void MainWindow::on_tree_clicked(QModelIndex index)
+{
+    std::cout << "Tree Clicked" << std::endl;
+    if (!index.data().canConvert<TreeItemIdentifier>()) {
+        std::cout << "Cannont Convert :(" << std::endl;
+        return;
+    }
+    TreeItemIdentifier treeItemIdentifier = index.data().value<TreeItemIdentifier>();
+    std::cout << "Got Identifier" << std::endl;
+    std::cout << "Got Identifier" << treeItemIdentifier.type() << std::endl;
+    switch(treeItemIdentifier.type()) {
+        case TREE_TYPE_CATEGORY:
+            break;
+        case TREE_TYPE_CACHE:
+            std::cout << "Selected Cache " << treeItemIdentifier.cache().getID() << std::endl;
+            emit cacheSelected(treeItemIdentifier.cache());
+            break;
+        case TREE_TYPE_WAYPOINT:
+            std::cout << "Selected Waypoint " << treeItemIdentifier.waypoint().getID() << std::endl;
+            emit waypointSelected(treeItemIdentifier.waypoint());
+            break;
+        default:
+        std::cout << "Uh OH!" << treeItemIdentifier.type() << std::endl;
+            throw InvalidTreeItemTypeException(treeItemIdentifier);
+    }
+}
+
+
 
 void MainWindow::on_comboBox_activated(int index)
 {
+    // TODO: Get collection ID.
     refreshTree();
 }
 

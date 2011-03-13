@@ -13,8 +13,6 @@ unix:target.path = /usr/bin
 win32:target.path = c:\Program\ Files\$$TARGET
 INSTALLS       += target
 HEADERS        += mainwindow.h \
-                  treeitem.h \
-                  treemodel.h \
                   db/collection.h \
                   db/database.h \
                   db/databaseobject.h \
@@ -24,14 +22,14 @@ HEADERS        += mainwindow.h \
                   db/waypoint.h \
                   readplugin.h \
                   dummyplugin.h \
-                  db/exceptions.h \
+                  exceptions.h \
                   db/cache.h \
-                  myapplication.h
+                  myapplication.h \
+    exceptions.h \
+    treeitemidentifier.h
 FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
-                  treeitem.cpp \
-                  treemodel.cpp \
                   db/collection.cpp \
                   db/database.cpp \
                   db/databaseobject.cpp \
@@ -42,5 +40,6 @@ SOURCES        += main.cpp \
                   readplugin.cpp \
                   dummyplugin.cpp \
                   db/cache.cpp \
-                  myapplication.cpp
+                  myapplication.cpp \
+    treeitemidentifier.cpp
 RESOURCES      += QGeoView.qrc

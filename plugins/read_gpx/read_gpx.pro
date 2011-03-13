@@ -11,7 +11,7 @@ HEADERS        += read_gpx.h \
                   ../../QGeoView/db/cache.h \
                   ../../QGeoView/db/collection.h \
                   ../../QGeoView/db/description.h \
-                  ../../QGeoView/db/exceptions.h \
+                  ../../QGeoView/exceptions.h \
                   ../../QGeoView/db/log.h \
                   ../../QGeoView/db/waypoint.h \
                   ../../QGeoView/db/databaseobject.h \

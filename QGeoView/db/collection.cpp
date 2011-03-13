@@ -1,4 +1,5 @@
 #include "collection.h"
+#include "exceptions.h"
 
 Collection::Collection(Database *db, int id) :
     DatabaseObject(db, id)
