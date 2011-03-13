@@ -2,7 +2,6 @@
 #define DB_EXCEPTIONS_H
 
 #include "db/databaseobject.h"
-#include "treeitemidentifier.h"
 
 class QGeoViewException {
 public:
@@ -86,16 +85,6 @@ protected:
     DatabaseObject *_o;
 };
 
-class InvalidTreeItemIdentifierException : QGeoViewException {
-public:
-    InvalidTreeItemIdentifierException(int type, int requested_type) : _type(type), _requested_type(requested_type) {}
-    QString name() {return "InvalidTreeItemIdentifierException";}
-    QString error() {return QString("Asked for ") + _requested_type + " but is of type " + _type;}
-private:
-    int _type;
-    int _requested_type;
-};
-
 class InvalidTreeItemCategoryException : QGeoViewException {
 public:
     InvalidTreeItemCategoryException(int id) : _id(id) {}
@@ -103,15 +92,6 @@ public:
     QString error() {return QString(_id) + "is not a valid TreeCategory";}
 private:
     int _id;
-};
-
-class InvalidTreeItemTypeException : QGeoViewException {
-public:
-    InvalidTreeItemTypeException(TreeItemIdentifier treeItemIdentifier) : _treeItemIdentifier(treeItemIdentifier) {}
-    QString name() {return "InvalidTreeTypeException";}
-    QString error() {return QString(_treeItemIdentifier.type()) + " is invalid";}
-private:
-    TreeItemIdentifier _treeItemIdentifier;
 };
 
 #endif // DB_EXCEPTIONS_H

@@ -36,9 +36,10 @@
 #include "db/waypoint.h"
 
 #define INFO_TYPE_NONE      1
-#define INFO_TYPE_WAYPOINT  2
-#define INFO_TYPE_ROUTE     3
-#define INFO_TYPE_TRACK     4
+#define INFO_TYPE_CACHE     2
+#define INFO_TYPE_WAYPOINT  3
+#define INFO_TYPE_ROUTE     4
+#define INFO_TYPE_TRACK     5
 
 namespace Ui {
     class MainWindow;
@@ -69,14 +70,12 @@ private:
 
 private slots:
     void on_action_Quit_triggered();
-
     void on_action_Test_triggered();
     void refreshTree();
-
     void on_comboBox_activated(int index);
-
     void on_tree_clicked(QModelIndex index);
-
+    void cacheSelectedSlot(Cache cache);
+    void waypointSelectedSot(Waypoint waypoint);
 signals:
     void quit();
     void waypointSelected(Waypoint waypoint);
