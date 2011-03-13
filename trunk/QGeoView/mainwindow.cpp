@@ -48,7 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QCoreApplication::setOrganizationDomain("http://code.google.com/p/qgeoview/");
     QCoreApplication::setApplicationName("QGeoView");
     _settings = new QSettings;
-    if (!_settings->contains("installed")) {
+    if (!_settings->value("installed", false).toBool()) {
         firstRun();
     }
 
@@ -62,8 +62,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Plugins
     loadPlugins();
     refreshTree();
-    connect(this, SIGNAL(cacheSelected(Cache)), this, SLOT(cacheSelectedSlot(Cache)));
-    connect(this, SIGNAL(waypointSelected(Waypoint)), this, SLOT(waypointSelectedSot(Waypoint)));
 }
 
 /*
@@ -139,7 +137,7 @@ void MainWindow::loadPlugins()
     std::cout << "Loading plugins from " << pluginsDir.absolutePath().toStdString() << std::endl;
     foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
         QPluginLoader pluginLoader(pluginsDir.absoluteFilePath(fileName));
-        std::cout << "Loading from " << pluginsDir.absoluteFilePath(fileName).toStdString() << std::endl;
+        std::cout << "\tLoading from " << pluginsDir.absoluteFilePath(fileName).toStdString() << std::endl;
         QObject *plugin = pluginLoader.instance();
         if (plugin) {
             DummyPluginFactory *dummyPluginFactory = qobject_cast<DummyPluginFactory*>(plugin);
@@ -153,7 +151,7 @@ void MainWindow::loadPlugins()
             if (writePluginFactory)
                 loadWritePlugin(writePluginFactory->get_plugin(_db));
             if (tabPluginFactory)
-                loadTabPlugin(tabPluginFactory->get_plugin(_db));
+                loadTabPlugin(tabPluginFactory->get_plugin(_db, ui->tabPluginsWidget));
         } else {
             std::cout << "Loading " << fileName.toStdString() << " failed: " << pluginLoader.errorString().toStdString() << std::endl;
             std::cout << "\tyou should fix this" << std::endl;
@@ -167,26 +165,29 @@ void MainWindow::loadPlugins()
 }
 
 void MainWindow::loadDummyPlugin(DummyPlugin *plugin) {
-    std::cout << "Loading Dummy Plugin: " << plugin->name().toStdString() << std::endl;
+    std::cout << "\t\tLoading Dummy Plugin: " << plugin->name().toStdString() << std::endl;
     _dummyPlugins.append(plugin);
 }
 
 void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
-    std::cout << "Loading Read Plugin: " << plugin->name().toStdString() << std::endl;
+    std::cout << "\t\tLoading Read Plugin: " << plugin->name().toStdString() << std::endl;
     _readPlugins.append(plugin);
     ui->menu_Read->addAction(plugin->name(), plugin, SLOT(open()));
+    connect(plugin, SIGNAL(done()), this, SLOT(refreshTree()));
 }
 
 void MainWindow::loadWritePlugin(WritePlugin *plugin) {
-    std::cout << "Loading Write Plugin: " << plugin->name().toStdString() << std::endl;
+    std::cout << "\t\tLoading Write Plugin: " << plugin->name().toStdString() << std::endl;
     _writePlugins.append(plugin);
     ui->menu_Write->addAction(plugin->name(), plugin, SLOT(save()));
 }
 
 void MainWindow::loadTabPlugin(TabPlugin *plugin) {
-    std::cout << "Loading Tab Plugin: " << plugin->name().toStdString() << std::endl;
+    std::cout << "\t\tLoading Tab Plugin: " << plugin->name().toStdString() << std::endl;
     _tabPlugins.append(plugin);
     ui->menu_Plugins->addAction(plugin->name(), plugin, SLOT(toggle()));
+    connect(this, SIGNAL(cacheSelected(Cache)), plugin, SLOT(cacheSelected(Cache)));
+    connect(this, SIGNAL(waypointSelected(Waypoint)), plugin, SLOT(waypointSelected(Waypoint)));
 }
 
 void MainWindow::refreshTree()
@@ -195,22 +196,26 @@ void MainWindow::refreshTree()
 
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
+    caches->setEditable(false);
     caches->setData(QVariant::fromValue<int>(INFO_TYPE_CACHE), Qt::UserRole);
     model->appendRow(caches);
     foreach (int i, _db->getCacheIDs()) {
         Cache cache(_db, i);
         QStandardItem *item = new QStandardItem(cache.treeDisplay());
+        item->setEditable(false);
         item->setData(QVariant::fromValue<int>(cache.getID()), Qt::UserRole);
         caches->appendRow(item);
     }
 
     // Waypoints
     QStandardItem *waypoints = new QStandardItem("Waypoints");
+    waypoints->setEditable(false);
     waypoints->setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
     model->appendRow(waypoints);
-    foreach (int i, _db->getWaypointIDs()) {
+    foreach (int i, _db->getWaypointIDs(true)) {
         Waypoint waypoint(_db, i);
         QStandardItem *item = new QStandardItem(waypoint.treeDisplay());
+        item->setEditable(false);
         item->setData(QVariant::fromValue<int>(waypoint.getID()), Qt::UserRole);
         waypoints->appendRow(item);
     }
@@ -219,7 +224,7 @@ void MainWindow::refreshTree()
     ui->tree->expandAll();
 }
 
-void MainWindow::on_tree_clicked(QModelIndex index)
+void MainWindow::item_selected(QModelIndex index)
 {
     QModelIndex parent = index.parent();
     if (parent.isValid()) {
@@ -254,14 +259,4 @@ void MainWindow::on_comboBox_activated(int index)
 
 void MainWindow::on_action_Test_triggered()
 {
-}
-
-void MainWindow::cacheSelectedSlot(Cache cache)
-{
-    std::cout << "You have selected " << cache.table().toStdString() << " " << cache.treeDisplay().toStdString() << std::endl;
-}
-
-void MainWindow::waypointSelectedSot(Waypoint waypoint)
-{
-    std::cout << "You have selected " << waypoint.table().toStdString() << " " << waypoint.treeDisplay().toStdString() << std::endl;
 }

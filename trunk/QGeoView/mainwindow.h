@@ -76,9 +76,7 @@ private slots:
     void on_action_Test_triggered();
     void refreshTree();
     void on_comboBox_activated(int index);
-    void on_tree_clicked(QModelIndex index);
-    void cacheSelectedSlot(Cache cache);
-    void waypointSelectedSot(Waypoint waypoint);
+    void item_selected(QModelIndex index);
 signals:
     void quit();
     void waypointSelected(Waypoint waypoint);

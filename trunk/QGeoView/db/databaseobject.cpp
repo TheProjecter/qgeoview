@@ -24,7 +24,7 @@ void DatabaseObject::load()
     QSqlQuery query;
     QString query_string = "SELECT " + fields().join(",") + " FROM " + table() + " WHERE id=?;";
     query.prepare(query_string);
-    query.addBindValue(getID());
+    query.addBindValue(_id);
     if (query.exec() && query.first())
         loadValues(query);
 }
@@ -57,12 +57,7 @@ void DatabaseObject::save()
     }
     addBindValues(query);
     if (!query.exec()) {
-        QSqlError error = query.lastError();
-        std::cerr << "Query Error: " << std::endl;
-        std::cerr << "\t Last Query:" << std::endl << "\t\t" << query.lastQuery().toStdString() << std::endl;
-        std::cerr << "\t Executed Query:" << std::endl << "\t\t" << query.executedQuery().toStdString() << std::endl;
-        std::cerr << "\tdriverText: " << error.driverText().toStdString() << std::endl;
-        std::cerr << "\tdatabaseText: " << error.databaseText().toStdString() << std::endl;
+        throw query;
     }
     _db->commit();
     if (!_id) {

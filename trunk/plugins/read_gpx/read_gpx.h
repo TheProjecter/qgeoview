@@ -42,6 +42,7 @@ signals:
     void descriptionRead(Description *description);
     void waypointRead(Waypoint *waypoint);
     void cacheRead(Cache *cache);
+    void done();
 public slots:
     void open();
 protected:

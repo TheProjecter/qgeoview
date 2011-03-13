@@ -1,3 +1,4 @@
+#include <iostream>
 #include "point.h"
 #include "exceptions.h"
 
