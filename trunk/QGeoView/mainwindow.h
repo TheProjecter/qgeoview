@@ -64,8 +64,6 @@ private:
     QList<ReadPlugin*> _readPlugins;
 
 private slots:
-    void on_actionSave_triggered();
-    void on_action_Open_triggered();
     void on_action_Quit_triggered();
     void pointRead(Point *point);
 

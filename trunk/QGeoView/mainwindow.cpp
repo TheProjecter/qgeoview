@@ -130,47 +130,6 @@ void MainWindow::on_action_Quit_triggered()
     emit quit();
 }
 
-/*
- Generates the "open dialog" and then sends the file for parsing.
- TODO: pick an appropriate ReadPlugin to use
-*/
-void MainWindow::on_action_Open_triggered()
-{
-    QString filename = QFileDialog::getOpenFileName();
-    if (filename.isNull())
-        return;
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly)) {
-        std::cerr << "Cannot open file" << std::endl;
-        return;
-    }
-    file.close();
-}
-
-
-/*
- Generates the "save dialog" and saves the database.
- TODO: make it ask for a collection ID.
-*/
-void MainWindow::on_actionSave_triggered()
-{
-    // get filename
-    QString filename = QFileDialog::getSaveFileName();
-    if (filename.isNull())
-        return;
-
-    // save file
-    QFile file(filename);
-    if (!file.open(QIODevice::WriteOnly)) {
-        std::cerr << "Cannot open file for saving." << std::endl;
-        return;
-    }
-    /*
-    WritePlugin *writer; // TODO: Get one!
-    writer->write(file, 0);  // TODO: replace 0 with collection_id
-    */
-    file.close();
-}
 
 void MainWindow::loadPlugins()
 {
