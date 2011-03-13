@@ -25,7 +25,7 @@
 #include "read_gpx.h"
 
 ReadGpxPlugin::ReadGpxPlugin(Database *db) :
-        ReadPlugin(db)
+    ReadPlugin(db)
 {
 }
 
