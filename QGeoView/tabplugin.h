@@ -1,28 +1,37 @@
 #ifndef TABPLUGIN_H
 #define TABPLUGIN_H
 
-#include <QObject>
+#include <QWidget>
+#include <QTabWidget>
 
 #include "db/database.h"
+#include "db/cache.h"
+#include "db/waypoint.h"
 
-class TabPlugin : public QObject
+class TabPlugin : public QWidget
 {
     Q_OBJECT
 public:
-    TabPlugin(Database *db);
+    TabPlugin(Database *db, QTabWidget *pluginsTabWidget);
     virtual QString name() = 0;
+    int active();
 public slots:
-    virtual void toggle() = 0;
-    virtual void activate() = 0;
-    virtual void deactivate() = 0;
+    void toggle();
+    void activate();
+    void deactivate();
+    void cacheSelected(Cache cache);
+    void waypointSelected(Waypoint waypoint);
 protected:
+    bool _active;
+    int _tab_id;
     Database *_db;
+    QTabWidget *_pluginsTabWidget;
 };
 
 class TabPluginFactory
 {
 public:
-    virtual TabPlugin *get_plugin(Database *db) = 0;
+    virtual TabPlugin *get_plugin(Database *db, QTabWidget *pluginsTabWidget) = 0;
 };
 
 Q_DECLARE_INTERFACE(TabPluginFactory, "org.homelinux.darwinsurvivor.QGeoView.TabPluginFactory");

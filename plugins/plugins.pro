@@ -1,8 +1,8 @@
 TEMPLATE    = subdirs
 SUBDIRS     = read_gpx \
               write_gpx \
+              details_tab \
 #              mydummy \
-#              item_details \
 #              geocaching_website \
 #              marble_map \
 #              new_item \

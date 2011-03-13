@@ -53,6 +53,7 @@ void ReadGpxPlugin::open()
     }
     file.close();
     read(&gpx_file);
+    emit done();
 }
 
 void ReadGpxPlugin::read(QDomDocument *doc)
@@ -89,9 +90,9 @@ void ReadGpxPlugin::read(QDomDocument *doc)
         if (!node.isNull())
             p->setQStringValue(NULLMASK_POINT_SYMBOL, node.nodeValue());
 
-        p->setFloatValue(NULLMASK_POINT_LATITUDE, wpt_element.nodeValue().toFloat());
+        p->setFloatValue(NULLMASK_POINT_LATITUDE, wpt_element.attribute("lat").toDouble());
 
-        p->setFloatValue(NULLMASK_POINT_LONGITUDE, wpt_element.nodeValue().toFloat());
+        p->setFloatValue(NULLMASK_POINT_LONGITUDE, wpt_element.attribute("lon").toDouble());
 
         p->save();
 

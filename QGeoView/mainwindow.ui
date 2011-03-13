@@ -77,6 +77,18 @@
             <family>Sans Serif</family>
            </font>
           </property>
+          <property name="editTriggers">
+           <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
           <property name="headerHidden">
            <bool>true</bool>
           </property>
@@ -84,7 +96,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QTabWidget" name="tabWidget">
+      <widget class="QTabWidget" name="tabPluginsWidget">
        <property name="font">
         <font>
          <family>Sans Serif</family>
@@ -178,7 +190,24 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>tree</sender>
+   <signal>clicked(QModelIndex)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>item_selected(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>365</x>
+     <y>126</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>597</x>
+     <y>33</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <signal>row_selected(QModelIndex)</signal>
   <signal>cache_lat_changed(double)</signal>
@@ -199,6 +228,6 @@
   <signal>cache_desc_short_changed(QString)</signal>
   <signal>cache_desc_shot_html_changed(QString)</signal>
   <signal>cache_hint_changed(QString)</signal>
-  <slot>MapSourceChanged(QString)</slot>
+  <slot>item_selected(QModelIndex)</slot>
  </slots>
 </ui>
