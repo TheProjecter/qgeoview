@@ -142,10 +142,13 @@ void MainWindow::loadPlugins()
         if (plugin) {
             DummyPluginFactory *dummyPluginFactory = qobject_cast<DummyPluginFactory*>(plugin);
             ReadPluginFactory *readPluginFactory = qobject_cast<ReadPluginFactory*>(plugin);
+            WritePluginFactory *writePluginFactory = qobject_cast<WritePluginFactory*>(plugin);
             if (dummyPluginFactory)
                 loadDummyPlugin(dummyPluginFactory->get_plugin());
             if (readPluginFactory)
                 loadReadPlugin(readPluginFactory->get_plugin(_db));
+            if (writePluginFactory)
+                loadWritePlugin(writePluginFactory->get_plugin(_db));
         } else {
             std::cout << "Loading " << fileName.toStdString() << " failed: " << pluginLoader.errorString().toStdString() << std::endl;
             std::cout << "\tyou should fix this" << std::endl;
@@ -154,6 +157,7 @@ void MainWindow::loadPlugins()
     std::cout << "Found: " << std::endl;
     std::cout << "\tDummy Plugins: \t" << _dummyPlugins.count() << std::endl;
     std::cout << "\tRead Plugins: \t" << _readPlugins.count() << std::endl;
+    std::cout << "\tWrite Plugins: \t" << _writePlugins.count() << std::endl;
 }
 
 void MainWindow::loadDummyPlugin(DummyPlugin *plugin) {
@@ -164,8 +168,13 @@ void MainWindow::loadDummyPlugin(DummyPlugin *plugin) {
 void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
     std::cout << "Loading Read Plugin: " << plugin->name().toStdString() << std::endl;
     _readPlugins.append(plugin);
-    connect(plugin, SIGNAL(pointRead(Point*)), this, SLOT(pointRead(Point*)));
     ui->menu_Read->addAction(plugin->name(), plugin, SLOT(open()));
+}
+
+void MainWindow::loadWritePlugin(WritePlugin *plugin) {
+    std::cout << "Loading Write Plugin: " << plugin->name().toStdString() << std::endl;
+    _writePlugins.append(plugin);
+    ui->menu_Write->addAction(plugin->name(), plugin, SLOT(save()));
 }
 
 void MainWindow::pointRead(Point *point) {
