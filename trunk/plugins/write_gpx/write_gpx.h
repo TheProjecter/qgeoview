@@ -17,13 +17,15 @@
 ** along with QGeoView.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#ifndef READ_GPX_H
-#define READ_GPX_H
+
+#ifndef WRITE_GPX_H
+#define WRITE_GPX_H
 
 #include <QDomNodeList>
 #include <QObject>
+#include <QFile>
 
-#include "readplugin.h"
+#include "writeplugin.h"
 #include "db/database.h"
 #include "db/point.h"
 #include "db/description.h"
@@ -31,29 +33,22 @@
 #include "db/cache.h"
 #include "db/log.h"
 
-class ReadGpxPlugin : public ReadPlugin {
+class WriteGpxPlugin : public WritePlugin {
     Q_OBJECT
 public:
-    ReadGpxPlugin(Database *db);
+    WriteGpxPlugin(Database *db);
     QString name();
-    void read(QDomDocument *doc);
-signals:
-    void pointRead(Point *point);
-    void descriptionRead(Description *description);
-    void waypointRead(Waypoint *waypoint);
-    void cacheRead(Cache *cache);
+    void write(QFile *file, int collection_id);
 public slots:
-    void open();
-protected:
-    QVariant child_value(QDomNodeList list, int format);
+    void save();
 };
 
-class ReadGpxPluginFactory : public QObject, public ReadPluginFactory
+class WriteGpxPluginFactory : public QObject, public WritePluginFactory
 {
     Q_OBJECT
-    Q_INTERFACES(ReadPluginFactory)
+    Q_INTERFACES(WritePluginFactory)
 public:
-    ReadPlugin *get_plugin(Database *db);
+    WritePlugin *get_plugin(Database *db);
 };
 
-#endif
+#endif 
