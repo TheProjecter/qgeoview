@@ -30,7 +30,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "db/cache.h"
-#include "treeitemidentifier.h"
 #include "exceptions.h"
 
 #include <QDesktopServices>
@@ -63,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // Plugins
     loadPlugins();
     refreshTree();
+    connect(this, SIGNAL(cacheSelected(Cache)), this, SLOT(cacheSelectedSlot(Cache)));
+    connect(this, SIGNAL(waypointSelected(Waypoint)), this, SLOT(waypointSelectedSot(Waypoint)));
 }
 
 /*
@@ -184,7 +185,7 @@ void MainWindow::refreshTree()
 
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
-    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_CACHES), Qt::UserRole);
+    caches->setData(QVariant::fromValue<int>(INFO_TYPE_CACHE), Qt::UserRole);
     model->appendRow(caches);
     foreach (int i, _db->getCacheIDs()) {
         Cache cache(_db, i);
@@ -195,7 +196,7 @@ void MainWindow::refreshTree()
 
     // Waypoints
     QStandardItem *waypoints = new QStandardItem("Waypoints");
-    waypoints->setData(QVariant::fromValue<int>(TREE_CATEGORY_WAYPOINTS), Qt::UserRole);
+    waypoints->setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
     model->appendRow(waypoints);
     foreach (int i, _db->getWaypointIDs()) {
         Waypoint waypoint(_db, i);
@@ -210,30 +211,25 @@ void MainWindow::refreshTree()
 
 void MainWindow::on_tree_clicked(QModelIndex index)
 {
-    QVariant data = index.data(Qt::UserRole);
     QModelIndex parent = index.parent();
     if (parent.isValid()) {
         // Item
-        QVariant parent_data = parent.data(Qt::UserRole);
-        std::cout << "Found Item ";
-        if (data.canConvert<int>())
-            std::cout << data.value<int>();
-        else
-            std::cout << "invalid";
-        std::cout << " with parent ";
-        if (parent_data.canConvert<int>())
-            std::cout << parent_data.value<int>();
-        else
-            std::cout << "invalid";
-        std::cout << std::endl;
+        int id = index.data(Qt::UserRole).value<int>();
+        int category = parent.data(Qt::UserRole).value<int>();
+        switch (category) {
+            case INFO_TYPE_CACHE:
+                emit cacheSelected(Cache(_db, id));
+                break;
+            case INFO_TYPE_WAYPOINT:
+                emit waypointSelected(Waypoint(_db, id));
+                break;
+            default:
+                throw InvalidTreeItemCategoryException(category);
+        }
     } else {
         // Category
-        std::cout << "Found Category ";
-        if (data.canConvert<int>())
-            std::cout << data.value<int>();
-        else
-            std::cout << "invalid";
-        std::cout << std::endl;
+        // int category = index.data(Qt::UserRole).value<int>();
+        // This can be later expanded in case something wants to know when a category is clicked.
     }
 }
 
@@ -248,13 +244,14 @@ void MainWindow::on_comboBox_activated(int index)
 
 void MainWindow::on_action_Test_triggered()
 {
-    QVariant q1 = 42;
-    QVariant q2 = QVariant::fromValue<TreeItemIdentifier>(TreeItemIdentifier(_db, TREE_TYPE_CATEGORY, TREE_CATEGORY_CACHES));
-    std::cout << "q1: " << (q1.canConvert<int>() ? "yes" : "no") << std::endl;
-    std::cout << "q2: " << (q2.canConvert<TreeItemIdentifier>() ? "yes" : "no") << std::endl;
-    std::cout << q2.value<TreeItemIdentifier>().categoryName().toStdString() << std::endl;
-    QStandardItem *caches = new QStandardItem("Caches");
-    caches->setData(QVariant::fromValue<int>(41));
-    std::cout << "int: " << (caches->data().canConvert<int>() ? "yes" : "no") << std::endl;
-    std::cout << caches->data().value<int>() << std::endl;
+}
+
+void MainWindow::cacheSelectedSlot(Cache cache)
+{
+    std::cout << "You have selected " << cache.table().toStdString() << " " << cache.treeDisplay().toStdString() << std::endl;
+}
+
+void MainWindow::waypointSelectedSot(Waypoint waypoint)
+{
+    std::cout << "You have selected " << waypoint.table().toStdString() << " " << waypoint.treeDisplay().toStdString() << std::endl;
 }
