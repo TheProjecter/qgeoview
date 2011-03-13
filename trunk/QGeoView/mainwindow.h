@@ -32,7 +32,8 @@
 #include "dummyplugin.h"
 #include "readplugin.h"
 #include "writeplugin.h"
-#include "db/point.h"
+#include "db/cache.h"
+#include "db/waypoint.h"
 
 #define INFO_TYPE_NONE      1
 #define INFO_TYPE_WAYPOINT  2
@@ -68,16 +69,18 @@ private:
 
 private slots:
     void on_action_Quit_triggered();
-    void pointRead(Point *point);
 
     void on_action_Test_triggered();
     void refreshTree();
 
     void on_comboBox_activated(int index);
 
+    void on_tree_clicked(QModelIndex index);
+
 signals:
     void quit();
-    void newPoint(Point *point);
+    void waypointSelected(Waypoint waypoint);
+    void cacheSelected(Cache cache);
 };
 
 #endif // MAINWINDOW_H

@@ -23,6 +23,7 @@
 #include "mainwindow.h"
 #include <QMessageBox>
 #include "myapplication.h"
+#include "treeitemidentifier.h"
 
 
 /*
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
 {
     MyApplication a(argc, argv);
     MainWindow w;
+    qRegisterMetaType<TreeItemIdentifier>();
     w.show();
     w.connect(&w, SIGNAL(quit()), &a, SLOT(quit()));
     return a.exec();

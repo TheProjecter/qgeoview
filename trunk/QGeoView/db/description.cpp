@@ -1,5 +1,6 @@
 #include <iostream>
 #include "description.h"
+#include "exceptions.h"
 
 Description::Description(Database *db, int id) :
     DatabaseObject(db, id)

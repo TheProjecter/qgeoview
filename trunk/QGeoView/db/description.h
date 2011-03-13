@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "databaseobject.h"
-#include "db/exceptions.h"
 
 #define NULLMASK_DESCRIPTION_NAME       0x1
 #define NULLMASK_DESCRIPTION_LINKURL    0x2

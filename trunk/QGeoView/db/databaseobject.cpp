@@ -1,7 +1,7 @@
 #include <iostream>
 #include <QSqlError>
 #include "databaseobject.h"
-#include "db/exceptions.h"
+#include "exceptions.h"
 
 DatabaseObject::DatabaseObject(Database *db, int id) :
     _db(db),

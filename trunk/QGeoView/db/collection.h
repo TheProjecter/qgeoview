@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include "databaseobject.h"
-#include "db/exceptions.h"
 
 
 #define NULLMASK_COLLECTION_NAME        0x1

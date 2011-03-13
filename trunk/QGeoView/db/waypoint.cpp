@@ -1,5 +1,6 @@
 #include <iostream>
 #include "waypoint.h"
+#include "exceptions.h"
 
 Waypoint::Waypoint(Database *db, int id) :
     DatabaseObject(db, id)

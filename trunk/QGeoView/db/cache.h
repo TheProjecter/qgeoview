@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QList>
 #include "databaseobject.h"
-#include "db/exceptions.h"
 #include "db/waypoint.h"
 
 #define NULLMASK_CACHE_NAME                 0x1

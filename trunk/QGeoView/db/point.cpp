@@ -1,4 +1,5 @@
 #include "point.h"
+#include "exceptions.h"
 
 Point::Point(Database *db, int id) :
     DatabaseObject(db, id)
