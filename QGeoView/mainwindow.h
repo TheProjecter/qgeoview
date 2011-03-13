@@ -31,6 +31,7 @@
 #include "database.h"
 #include "dummyplugin.h"
 #include "readplugin.h"
+#include "writeplugin.h"
 #include "db/point.h"
 
 #define INFO_TYPE_NONE      1
@@ -57,11 +58,13 @@ private:
     void loadPlugins();
     void loadDummyPlugin(DummyPlugin *plugin);
     void loadReadPlugin(ReadPlugin *plugin);
+    void loadWritePlugin(WritePlugin *plugin);
     Ui::MainWindow *ui;
     Database* _db;
     QSettings* _settings;
     QList<DummyPlugin*> _dummyPlugins;
     QList<ReadPlugin*> _readPlugins;
+    QList<WritePlugin*> _writePlugins;
 
 private slots:
     void on_action_Quit_triggered();
