@@ -25,7 +25,8 @@ HEADERS        += mainwindow.h \
                   exceptions.h \
                   db/cache.h \
                   myapplication.h \
-    exceptions.h
+    exceptions.h \
+    tabplugin.h
 FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
@@ -39,5 +40,6 @@ SOURCES        += main.cpp \
                   readplugin.cpp \
                   dummyplugin.cpp \
                   db/cache.cpp \
-                  myapplication.cpp
+                  myapplication.cpp \
+    tabplugin.cpp
 RESOURCES      += QGeoView.qrc

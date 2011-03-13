@@ -32,6 +32,7 @@
 #include "dummyplugin.h"
 #include "readplugin.h"
 #include "writeplugin.h"
+#include "tabplugin.h"
 #include "db/cache.h"
 #include "db/waypoint.h"
 
@@ -61,12 +62,14 @@ private:
     void loadDummyPlugin(DummyPlugin *plugin);
     void loadReadPlugin(ReadPlugin *plugin);
     void loadWritePlugin(WritePlugin *plugin);
+    void loadTabPlugin(TabPlugin *plugin);
     Ui::MainWindow *ui;
     Database* _db;
     QSettings* _settings;
     QList<DummyPlugin*> _dummyPlugins;
     QList<ReadPlugin*> _readPlugins;
     QList<WritePlugin*> _writePlugins;
+    QList<TabPlugin*> _tabPlugins;
 
 private slots:
     void on_action_Quit_triggered();

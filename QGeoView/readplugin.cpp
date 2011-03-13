@@ -2,6 +2,6 @@
 #include "readplugin.h"
 
 ReadPlugin::ReadPlugin(Database *db) :
-        _db(db)
+    _db(db)
 {
 }
