@@ -185,6 +185,7 @@ void MainWindow::refreshTree()
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
     caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_CACHES), Qt::UserRole);
+    model->appendRow(caches);
     foreach (int i, _db->getCacheIDs()) {
         Cache cache(_db, i);
         QStandardItem *item = new QStandardItem(cache.treeDisplay());
@@ -194,7 +195,8 @@ void MainWindow::refreshTree()
 
     // Waypoints
     QStandardItem *waypoints = new QStandardItem("Waypoints");
-    caches->setData(QVariant::fromValue<int>(TREE_CATEGORY_CACHES), Qt::UserRole);
+    waypoints->setData(QVariant::fromValue<int>(TREE_CATEGORY_WAYPOINTS), Qt::UserRole);
+    model->appendRow(waypoints);
     foreach (int i, _db->getWaypointIDs()) {
         Waypoint waypoint(_db, i);
         QStandardItem *item = new QStandardItem(waypoint.treeDisplay());
@@ -202,8 +204,6 @@ void MainWindow::refreshTree()
         waypoints->appendRow(item);
     }
 
-    model->appendRow(caches);
-    model->appendRow(waypoints);
     ui->tree->setModel(model);
     ui->tree->expandAll();
 }
