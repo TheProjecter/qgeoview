@@ -5,14 +5,14 @@
 
 class QGeoViewException {
 public:
-    virtual QString name() {return "QGeoViewException";}
-    virtual QString error() {return "unkown";}
+    QString name() {return "QGeoViewException";}
+    QString error() {return "unkown";}
 };
 
 class DBException : public QGeoViewException {
 public:
-    virtual QString name() {return "DBException";}
-    virtual QString error() {return "unkown";}
+    QString name() {return "DBException";}
+    QString error() {return "unkown";}
 };
 
 class NoDatabaseFoundException : public DBException {

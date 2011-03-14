@@ -1,6 +1,7 @@
 #ifndef WAYPOINT_H
 #define WAYPOINT_H
 
+#include <QSqlQuery>
 #include <QObject>
 #include "databaseobject.h"
 #include "description.h"
@@ -14,6 +15,7 @@ class Waypoint : public DatabaseObject
     Q_OBJECT
 public:
     Waypoint(Database *db, int id=0);
+    Waypoint(Database *db, QSqlQuery query);
     Waypoint(const Waypoint &original);
     void addBindValues(QSqlQuery query);
     void setIntValue(int mask, int value);
@@ -21,10 +23,11 @@ public:
     QString table();
     Point getPoint();
     Description getDescription();
-    QString treeDisplay();
-protected:
+    QString summary();
     QStringList fields();
-    void loadValues(QSqlQuery query);
+    static QStringList fieldNames();
+protected:
+    void loadValues(QSqlQuery query, bool loadID=false);
 private:
     int _fk_point;
     int _fk_description;

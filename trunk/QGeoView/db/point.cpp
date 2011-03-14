@@ -9,6 +9,12 @@ Point::Point(Database *db, int id) :
         load();
 }
 
+Point::Point(Database *db, QSqlQuery query) :
+    DatabaseObject(db)
+{
+    loadValues(query, true);
+}
+
 Point::Point(const Point &original) :
     DatabaseObject(original),
     _time(original._time),
@@ -35,6 +41,11 @@ QString Point::table()
 
 QStringList Point::fields()
 {
+    return Point::fieldNames();
+}
+
+QStringList Point::fieldNames()
+{
     QStringList list;
     list << "time" << "elevation" << "magneticVariation" << "geoIDHeight" << "symbol" << "fix" << "satelites" << "horizontalDOP" << "verticalDOP" << "positionDOP" << "ageofDGPSData" << "DGPSID" << "latitude" << "longitude";
     return list;
@@ -58,9 +69,11 @@ void Point::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_POINT_LONGITUDE) ? _longitude : QVariant(QVariant::Double));
 }
 
-void Point::loadValues(QSqlQuery query)
+void Point::loadValues(QSqlQuery query, bool loadID)
 {
     int i=-1;
+    if (loadID)
+        setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
         setQStringValue(NULLMASK_POINT_TIME, query.value(i).toString());
     if (query.value(++i).isValid())

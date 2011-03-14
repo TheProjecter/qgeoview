@@ -10,11 +10,17 @@ DatabaseObject::DatabaseObject(Database *db, int id) :
 }
 
 DatabaseObject::DatabaseObject(const DatabaseObject &original) :
+    QObject(),
     _db(original._db),
     _id(original._id),
     _nullMask(original._nullMask)
 {
 
+}
+
+QStringList DatabaseObject::fields()
+{
+    return QStringList();
 }
 
 void DatabaseObject::load()

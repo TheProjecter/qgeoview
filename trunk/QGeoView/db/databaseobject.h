@@ -13,6 +13,7 @@ public:
     DatabaseObject(const DatabaseObject &original);
     bool isSet(int mask);
     void set(int mask);
+    virtual QStringList fields();
 signals:
     void saved();
     void changed();
@@ -32,9 +33,8 @@ public slots:
     virtual QString table() = 0;
 protected:
     void setID(int id);
-    virtual QStringList fields() = 0;
     virtual void addBindValues(QSqlQuery query) = 0;
-    virtual void loadValues(QSqlQuery query) = 0;
+    virtual void loadValues(QSqlQuery query, bool loadID=false) = 0;
     void load();
     Database *_db;
     int _id;

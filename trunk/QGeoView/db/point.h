@@ -25,6 +25,7 @@ class Point : public DatabaseObject
     Q_OBJECT
 public:
     Point(Database *db, int id=0);
+    Point(Database *db, QSqlQuery query);
     Point(const Point &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
@@ -34,9 +35,10 @@ public:
     float getFloatValue(int mask);
     int getIntValue(int mask);
     QString table();
-protected:
     QStringList fields();
-    void loadValues(QSqlQuery query);
+    static QStringList fieldNames();
+protected:
+    void loadValues(QSqlQuery query, bool loadID=false);
 private:
     QString _time;
     QString _symbol;

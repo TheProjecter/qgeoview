@@ -9,6 +9,12 @@ Description::Description(Database *db, int id) :
         load();
 }
 
+Description::Description(Database *db, QSqlQuery query) :
+    DatabaseObject(db)
+{
+    loadValues(query, true);
+}
+
 Description::Description(const Description &original) :
     DatabaseObject(original),
     _name(original._name),
@@ -28,6 +34,11 @@ QString Description::table()
 
 QStringList Description::fields()
 {
+    return Description::fieldNames();
+}
+
+QStringList Description::fieldNames()
+{
     QStringList list; list << "name" << "link_url" << "link_name" << "comments" << "source" << "type";
     return list;
 }
@@ -42,9 +53,11 @@ void Description::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_DESCRIPTION_TYPE) ? _type : QVariant(QVariant::String));
 }
 
-void Description::loadValues(QSqlQuery query)
+void Description::loadValues(QSqlQuery query, bool loadID)
 {
     int i=-1;
+    if (loadID)
+        setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
         setQStringValue(NULLMASK_DESCRIPTION_NAME, query.value(i).toString());
     if (query.value(++i).isValid())

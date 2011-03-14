@@ -41,32 +41,3 @@ void Database::commit()
 {
     _db.commit();
 }
-
-QList<int> Database::getCacheIDs()
-{
-    QList<int> ids;
-    QSqlQuery query;
-    QString query_string;
-    query_string = "SELECT c.id FROM Cache c;";
-    query.prepare(query_string);
-    query.exec();
-    while (query.next())
-        ids.append(query.value(0).toInt());
-    return ids;
-}
-
-QList<int> Database::getWaypointIDs(bool orphan)
-{
-    QList<int> ids;
-    QSqlQuery query;
-    QString query_string;
-    if (orphan)
-        query_string = "SELECT w.id FROM Waypoint w WHERE w.id not in (SELECT UNIQUE fk_cache from Cache);";
-    else
-        query_string = "SELECT w.id FROM Waypoint w;";
-    query.prepare(query_string);
-    query.exec();
-    while (query.next())
-        ids.append(query.value(0).toInt());
-    return ids;
-}

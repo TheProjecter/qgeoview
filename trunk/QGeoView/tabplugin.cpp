@@ -27,7 +27,6 @@ void TabPlugin::activate()
     _active = true;
     _tab_id = _pluginsTabWidget->addTab(this, name());
     this->show();
-    std::cout << name().toStdString() << " Activated and added to " << _tab_id << std::endl;
 }
 
 void TabPlugin::deactivate()
@@ -39,11 +38,24 @@ void TabPlugin::deactivate()
     this->hide();
     _pluginsTabWidget->removeTab(_tab_id);
     _tab_id = 0;
-    std::cout << name().toStdString() << " Deactivated" << std::endl;
 }
 
 void TabPlugin::cacheSelected(Cache cache)
-{}
+{
+    Q_UNUSED(cache)
+}
 
 void TabPlugin::waypointSelected(Waypoint waypoint)
-{}
+{
+    Q_UNUSED(waypoint)
+}
+
+void TabPlugin::collectionSelected(Collection collection)
+{
+    Q_UNUSED(collection)
+}
+
+void TabPlugin::items_selection(QModelIndexList selection)
+{
+    Q_UNUSED(selection)
+}

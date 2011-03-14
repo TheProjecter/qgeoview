@@ -9,6 +9,12 @@ Waypoint::Waypoint(Database *db, int id) :
         load();
 }
 
+Waypoint::Waypoint(Database *db, QSqlQuery query) :
+    DatabaseObject(db)
+{
+    loadValues(query, true);
+}
+
 Waypoint::Waypoint(const Waypoint &original) :
     DatabaseObject(original),
     _fk_point(original._fk_point),
@@ -16,9 +22,14 @@ Waypoint::Waypoint(const Waypoint &original) :
 {
 }
 
-QString Waypoint::treeDisplay()
+QString Waypoint::summary()
 {
-    return getDescription().getQStringValue(NULLMASK_DESCRIPTION_NAME);
+    if (isSet(NULLMASK_WAYPOINT_DESCRIPTION)) {
+        Description d(getDescription());
+        if (d.isSet(NULLMASK_DESCRIPTION_NAME))
+            return d.getQStringValue(NULLMASK_DESCRIPTION_NAME);
+    }
+    return "Some Waypoint...";
 }
 
 QString Waypoint::table()
@@ -27,6 +38,11 @@ QString Waypoint::table()
 }
 
 QStringList Waypoint::fields()
+{
+    return Waypoint::fieldNames();
+}
+
+QStringList Waypoint::fieldNames()
 {
     QStringList list;
     list << "fk_point" << "fk_description";
@@ -39,9 +55,11 @@ void Waypoint::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_WAYPOINT_DESCRIPTION) ? _fk_description : QVariant(QVariant::Int));
 }
 
-void Waypoint::loadValues(QSqlQuery query)
+void Waypoint::loadValues(QSqlQuery query, bool loadID)
 {
     int i=-1;
+    if (loadID)
+        setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
         setIntValue(NULLMASK_WAYPOINT_POINT, query.value(i).toInt());
     if (query.value(++i).isValid())

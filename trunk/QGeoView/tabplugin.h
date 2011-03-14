@@ -7,6 +7,7 @@
 #include "db/database.h"
 #include "db/cache.h"
 #include "db/waypoint.h"
+#include "db/collection.h"
 
 class TabPlugin : public QWidget
 {
@@ -21,11 +22,13 @@ public slots:
     void deactivate();
     void cacheSelected(Cache cache);
     void waypointSelected(Waypoint waypoint);
+    void collectionSelected(Collection collection);
+    void items_selection(QModelIndexList selection);
 protected:
-    bool _active;
-    int _tab_id;
     Database *_db;
     QTabWidget *_pluginsTabWidget;
+    bool _active;
+    int _tab_id;
 };
 
 class TabPluginFactory

@@ -175,7 +175,7 @@ void ReadGpxPlugin::read(QDomDocument *doc)
             l->setQStringValue(NULLMASK_LOG_FINDERNAME, node.nodeValue());
 
             node = log_element.elementsByTagName("groundspeak:text").item(0).firstChild();
-            l->setQStringValue(NULLMASK_LOG_TEXT, node.toElement().nodeValue());
+            l->setQStringValue(NULLMASK_LOG_TEXT, node.nodeValue());
             l->setBoolValue(NULLMASK_LOG_TEXTENCODED, node.toElement().attribute("encoded", "False") == "True");
             l->save();
             delete l;
