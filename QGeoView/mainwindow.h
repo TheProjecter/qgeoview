@@ -21,12 +21,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QStandardItemModel>
 #include <QSettings>
 #include <QMainWindow>
 #include <QItemSelection>
 #include <QSortFilterProxyModel>
 #include <QDateTime>
 #include <QDir>
+#include <QModelIndexList>
 
 #include "database.h"
 #include "dummyplugin.h"
@@ -70,17 +72,23 @@ private:
     QList<ReadPlugin*> _readPlugins;
     QList<WritePlugin*> _writePlugins;
     QList<TabPlugin*> _tabPlugins;
-
+    QStandardItemModel _model;
+public slots:
+    void collectionIndexChanged(int index);
 private slots:
     void on_action_Quit_triggered();
     void on_action_Test_triggered();
-    void refreshTree();
-    void on_comboBox_activated(int index);
+    void refreshCollections();
+    void refreshTree(Collection *collection=NULL);
     void item_selected(QModelIndex index);
+    void items_selected_trigger();
 signals:
     void quit();
     void waypointSelected(Waypoint waypoint);
     void cacheSelected(Cache cache);
+    void collectionSelected(Collection collection);
+    void collectionDeselected();
+    void items_selected(QModelIndexList selection);
 };
 
 #endif // MAINWINDOW_H

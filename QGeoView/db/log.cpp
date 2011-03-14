@@ -8,6 +8,12 @@ Log::Log(Database *db, int id) :
         load();
 }
 
+Log::Log(Database *db, QSqlQuery query) :
+    DatabaseObject(db)
+{
+    loadValues(query, true);
+}
+
 Log::Log(const Log &original) :
     DatabaseObject(original),
     _log_guid(original._log_guid),
@@ -30,7 +36,17 @@ QString Log::table()
     return "Log";
 }
 
+QString Log::summary()
+{
+    return "Log " + QString::number(getID());
+}
+
 QStringList Log::fields()
+{
+    return Log::fieldNames();
+}
+
+QStringList Log::fieldNames()
 {
     QStringList list;
     list << "fk_cache" << "log_id" << "log_guid" << "date" << "type" << "finder_id" << "finder_guid" << "finder_name" << "text" << "text_encoded" << "latitude" << "longitude";
@@ -53,9 +69,11 @@ void Log::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_LOG_LONGITUDE) ? _longitude : QVariant(QVariant::Double));
 }
 
-void Log::loadValues(QSqlQuery query)
+void Log::loadValues(QSqlQuery query, bool loadID)
 {
     int i=-1;
+    if (loadID)
+        setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
         setIntValue(NULLMASK_LOG_CACHE, query.value(i).toInt());
     if (query.value(++i).isValid())

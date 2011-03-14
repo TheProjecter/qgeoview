@@ -9,6 +9,12 @@ Cache::Cache(Database *db, int id) :
         load();
 }
 
+Cache::Cache(Database *db, QSqlQuery query) :
+    DatabaseObject(db)
+{
+    loadValues(query, true);
+}
+
 Cache::Cache(const Cache &original) :
     DatabaseObject(original),
     _name(original._name),
@@ -31,14 +37,15 @@ Cache::Cache(const Cache &original) :
 {
 }
 
-QString Cache::treeDisplay()
+QString Cache::summary()
 {
-    QString str;
-    str.append(getQStringValue(NULLMASK_CACHE_NAME));
-    str.append(" (");
-    str.append(getWaypoint().treeDisplay());
-    str.append(")");
-    return str;
+    try {
+        return getQStringValue(NULLMASK_CACHE_NAME) + " (" + getWaypoint().summary() + ")";
+    }
+    catch (DBValueNotSetException) {
+        std::cout << "Cache " << QString::number(getID()).toStdString() << "has no name!" << std::endl;
+        return "Cache " + QString::number(getID());
+    }
 }
 
 QString Cache::table()
@@ -47,6 +54,11 @@ QString Cache::table()
 }
 
 QStringList Cache::fields()
+{
+    return Cache::fieldNames();
+}
+
+QStringList Cache::fieldNames()
 {
     QStringList list;
     list << "name" << "placed_by" << "owner_id" << "owner_guid" << "owner_name" << "type" << "container" << "difficulty" << "terrain" << "country" << "state" << "short_description" << "short_description_html" << "long_description" << "long_description_html" << "encoded_hints" << "fk_waypoint";
@@ -74,9 +86,11 @@ void Cache::addBindValues(QSqlQuery query)
     query.addBindValue(isSet(NULLMASK_CACHE_WAYPOINT) ? _fk_waypoint : QVariant(QVariant::Int));
 }
 
-void Cache::loadValues(QSqlQuery query)
+void Cache::loadValues(QSqlQuery query, bool loadID)
 {
     int i=-1;
+    if (loadID)
+        setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
         setQStringValue(NULLMASK_CACHE_NAME, query.value(i).toString());
     if (query.value(++i).isValid())

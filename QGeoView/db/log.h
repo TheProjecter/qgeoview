@@ -23,6 +23,7 @@ class Log : public DatabaseObject
     Q_OBJECT
 public:
     Log(Database *db, int id=0);
+    Log(Database *db, QSqlQuery query);
     Log(const Log &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
@@ -34,9 +35,11 @@ public:
     int getIntValue(int mask);
     bool getBoolValue(int mask);
     QString table();
-protected:
     QStringList fields();
-    void loadValues(QSqlQuery query);
+    static QStringList fieldNames();
+    QString summary();
+protected:
+    void loadValues(QSqlQuery query, bool loadID=false);
 private:
     QString _log_guid;
     QString _date;

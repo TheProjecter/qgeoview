@@ -30,6 +30,7 @@ class Cache : public DatabaseObject
     Q_OBJECT
 public:
     Cache(Database *db, int id=0);
+    Cache(Database *db, QSqlQuery query);
     Cache(const Cache &original);
     QString table();
     void addBindValues(QSqlQuery query);
@@ -43,10 +44,11 @@ public:
     bool getBoolValue(int mask);
     Waypoint getWaypoint();
     QList<int> getLogIDs();
-    QString treeDisplay();
-protected:
+    QString summary();
     QStringList fields();
-    void loadValues(QSqlQuery query);
+    static QStringList fieldNames();
+protected:
+    void loadValues(QSqlQuery query, bool loadID=false);
 private:
     QString _name;
     QString _placed_by;

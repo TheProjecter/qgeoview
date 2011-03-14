@@ -16,14 +16,16 @@ class Description : public DatabaseObject
     Q_OBJECT
 public:
     Description(Database *db, int id=0);
+    Description(Database *db, QSqlQuery query);
     Description(const Description &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     QString getQStringValue(int mask);
     QString table();
-protected:
     QStringList fields();
-    void loadValues(QSqlQuery);
+    static QStringList fieldNames();
+protected:
+    void loadValues(QSqlQuery query, bool loadID=false);
 private:
     QString _name;
     QString _link_url;

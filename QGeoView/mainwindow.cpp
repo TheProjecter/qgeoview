@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // UI
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/application.svg"));
+    ui->tree->setModel(&_model);
 
     // Database
     _db = new Database(_settings->value("database/location").toString(), ui->tree);
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Plugins
     loadPlugins();
     refreshTree();
+    refreshCollections();
 }
 
 /*
@@ -174,6 +176,7 @@ void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
     _readPlugins.append(plugin);
     ui->menu_Read->addAction(plugin->name(), plugin, SLOT(open()));
     connect(plugin, SIGNAL(done()), this, SLOT(refreshTree()));
+    connect(plugin, SIGNAL(done()), this, SLOT(refreshCollections()));
 }
 
 void MainWindow::loadWritePlugin(WritePlugin *plugin) {
@@ -188,39 +191,72 @@ void MainWindow::loadTabPlugin(TabPlugin *plugin) {
     ui->menu_Plugins->addAction(plugin->name(), plugin, SLOT(toggle()));
     connect(this, SIGNAL(cacheSelected(Cache)), plugin, SLOT(cacheSelected(Cache)));
     connect(this, SIGNAL(waypointSelected(Waypoint)), plugin, SLOT(waypointSelected(Waypoint)));
+    connect(this, SIGNAL(collectionSelected(Collection)), plugin, SLOT(collectionSelected(Collection)));
 }
 
-void MainWindow::refreshTree()
+void MainWindow::refreshCollections()
 {
-    QStandardItemModel *model = new QStandardItemModel();
+    // Collections Drop-Down
+    QSqlQuery query;
+    query.prepare("SELECT id, " + Collection::fieldNames().join(", ") + " FROM COLLECTION;");
+    if (!query.exec())
+        throw query;
+    Collection *collection;
+    while (query.next()) {
+        collection = new Collection(_db, query);
+        ui->collections->addItem(collection->summary(), collection->getID());
+        delete collection;
+    }
+}
+
+void MainWindow::refreshTree(Collection *collection)
+{
+    QSqlQuery cachesQuery;
+    _model.clear();
 
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
     caches->setEditable(false);
     caches->setData(QVariant::fromValue<int>(INFO_TYPE_CACHE), Qt::UserRole);
-    model->appendRow(caches);
-    foreach (int i, _db->getCacheIDs()) {
-        Cache cache(_db, i);
-        QStandardItem *item = new QStandardItem(cache.treeDisplay());
+    _model.appendRow(caches);
+    if (collection) {
+        cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache WHERE id IN (SELECT fk_cache FROM Cache2Collection WHERE fk_collection=?);");
+        cachesQuery.addBindValue(collection->getID());
+    } else {
+        cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache;");
+    }
+    if (!cachesQuery.exec())
+        throw cachesQuery;
+    while (cachesQuery.next()) {
+        Cache cache(_db, cachesQuery);
+        QStandardItem *item = new QStandardItem(cache.summary());
         item->setEditable(false);
         item->setData(QVariant::fromValue<int>(cache.getID()), Qt::UserRole);
         caches->appendRow(item);
     }
 
+    QSqlQuery waypointsQuery;
     // Waypoints
     QStandardItem *waypoints = new QStandardItem("Waypoints");
     waypoints->setEditable(false);
     waypoints->setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
-    model->appendRow(waypoints);
-    foreach (int i, _db->getWaypointIDs(true)) {
-        Waypoint waypoint(_db, i);
-        QStandardItem *item = new QStandardItem(waypoint.treeDisplay());
+    _model.appendRow(waypoints);
+
+    if (collection) {
+        waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache) AND id IN (SELECT fk_waypoint FROM Waypoint2Collection WHERE fk_collection=?);");
+        waypointsQuery.addBindValue(collection->getID());
+    } else
+        waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache);");
+    if (!waypointsQuery.exec())
+        throw waypointsQuery;
+    while (waypointsQuery.next()) {
+        Waypoint waypoint(_db, waypointsQuery);
+        QStandardItem *item = new QStandardItem(waypoint.summary());
         item->setEditable(false);
         item->setData(QVariant::fromValue<int>(waypoint.getID()), Qt::UserRole);
         waypoints->appendRow(item);
     }
 
-    ui->tree->setModel(model);
     ui->tree->expandAll();
 }
 
@@ -248,15 +284,29 @@ void MainWindow::item_selected(QModelIndex index)
     }
 }
 
-
-
-void MainWindow::on_comboBox_activated(int index)
+void MainWindow::items_selected_trigger()
 {
-    // TODO: Get collection ID.
-    refreshTree();
+    QModelIndexList selection = ui->tree->selectionModel()->selectedIndexes();
+    emit items_selected(selection);
 }
-
 
 void MainWindow::on_action_Test_triggered()
 {
+}
+
+void MainWindow::collectionIndexChanged(int index)
+{
+    int id = 0;
+    QVariant qv = ui->collections->itemData(index, Qt::UserRole);
+    if (qv.isValid())
+        id = qv.toInt();
+    std::cout << "Selecting collection: " << id << std::endl;
+    if (id) {
+        Collection collection(_db, id);
+        refreshTree(&collection);
+        emit collectionSelected(collection);
+    } else {
+        refreshTree();
+        emit collectionDeselected();
+    }
 }
