@@ -26,6 +26,7 @@
 
 #include "tabplugin.h"
 #include "ui_mainwidget.h"
+#include "treemodel.h"
 
 class CollectionEditorTabPlugin : public TabPlugin
 {
@@ -34,18 +35,29 @@ public:
     CollectionEditorTabPlugin(Database *db, QTabWidget *pluginsTabWindow);
     QString name();
 public slots:
+    void collectionIndexChanged(int index);
     void items_selection(QModelIndexList selection);
     void refresh_collections();
+    void cacheDragged(int id);
+    void waypointDragged(int id);
+    void cacheDropped(int id);
+    void waypointDropped(int id);
 private slots:
     void open_description_link();
-    void on_edit_button_clicked();
-    void on_new_button_clicked();
-    void on_delete_button_clicked();
     void on_selector_currentIndexChanged(int index);
+
+    void on_remove_selected_clicked();
+
+    void on_edit_collection_clicked();
+
+    void on_delete_collection_clicked();
+
+    void on_new_collection_clicked();
 
 private:
     Ui::MainWidget ui;
     int _action;
+    TreeModel *_model;
 };
 
 class CollectionEditorTabPluginFactory : public QObject, public TabPluginFactory

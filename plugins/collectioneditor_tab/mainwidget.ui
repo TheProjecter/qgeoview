@@ -15,9 +15,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QComboBox" name="selector"/>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <spacer name="horizontalSpacer">
@@ -33,7 +30,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="edit_button">
+      <widget class="QPushButton" name="edit_collection">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -46,7 +43,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="delete_button">
+      <widget class="QPushButton" name="delete_collection">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -59,7 +56,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="new_button">
+      <widget class="QPushButton" name="new_collection">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -74,7 +71,40 @@
     </layout>
    </item>
    <item>
-    <widget class="QTreeView" name="items">
+    <widget class="QComboBox" name="selector">
+     <item>
+      <property name="text">
+       <string>All</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="remove_selected">
+       <property name="text">
+        <string>Remove Selected</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTreeView" name="tree">
      <property name="acceptDrops">
       <bool>true</bool>
      </property>
@@ -98,9 +128,27 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>selector</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWidget</receiver>
+   <slot>collectionIndexChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>79</x>
+     <y>58</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>53</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>edit_collection()</slot>
   <slot>new_collection()</slot>
+  <slot>collectionIndexChanged(int)</slot>
  </slots>
 </ui>

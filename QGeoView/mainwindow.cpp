@@ -221,13 +221,9 @@ void MainWindow::on_action_Test_triggered()
 
 void MainWindow::collectionIndexChanged(int index)
 {
-    int id = 0;
     QVariant qv = ui->collections->itemData(index, Qt::UserRole);
-    if (qv.isValid())
-        id = qv.toInt();
-    std::cout << "Selecting collection: " << id << std::endl;
-    if (id) {
-        Collection collection(_db, id);
+    if (qv.isValid() && qv.toInt() > 0) { // "All" is index 0, we don't want that!
+        Collection collection(_db, qv.toInt());
         _model->refresh(&collection);
         emit collectionSelected(collection);
     } else {

@@ -1,10 +1,12 @@
+#include <iostream>
 #include "treemodel.h"
 
 TreeModel::TreeModel(Database *db, QObject *parent) :
     QStandardItemModel(parent),
     _db(db),
     _caches("Caches"),
-    _waypoints("Waypoints")
+    _waypoints("Waypoints"),
+    _collection(NULL)
 {
     // Caches
     _caches.setEditable(false);
@@ -15,6 +17,22 @@ TreeModel::TreeModel(Database *db, QObject *parent) :
     _waypoints.setEditable(false);
     _waypoints.setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
     appendRow(&_waypoints);
+}
+
+TreeModel::~TreeModel()
+{
+    if (_collection)
+        delete _collection;
+}
+
+Collection *TreeModel::collection() {
+    return _collection;
+}
+
+int TreeModel::collectionID() {
+    if (!_collection)
+        return NULL;
+    return _collection->getID();
 }
 
 
@@ -61,24 +79,20 @@ void TreeModel::refresh(Collection *collection)
 void TreeModel::item_selected(QModelIndex index)
 {
     QModelIndex parent = index.parent();
-    if (parent.isValid()) {
-        // Item
-        int id = index.data(Qt::UserRole).value<int>();
-        int category = parent.data(Qt::UserRole).value<int>();
-        switch (category) {
-            case INFO_TYPE_CACHE:
-                emit cacheSelected(Cache(_db, id));
-                break;
-            case INFO_TYPE_WAYPOINT:
-                emit waypointSelected(Waypoint(_db, id));
-                break;
-            default:
-                throw InvalidTreeItemCategoryException(category);
-        }
-    } else {
-        // Category
-        // This can be later expanded in case something wants to know when a category is clicked.
-        // int category = index.data(Qt::UserRole).value<int>();
+    if (!parent.isValid())
+        return;
+    // Item
+    int id = index.data(Qt::UserRole).value<int>();
+    int category = parent.data(Qt::UserRole).value<int>();
+    switch (category) {
+        case INFO_TYPE_CACHE:
+            emit cacheSelected(Cache(_db, id));
+            break;
+        case INFO_TYPE_WAYPOINT:
+            emit waypointSelected(Waypoint(_db, id));
+            break;
+        default:
+            throw InvalidTreeItemCategoryException(category);
     }
 }
 
@@ -113,8 +127,12 @@ QMimeData *TreeModel::mimeData(const QModelIndexList &indexes) const
 
     foreach (QModelIndex index, indexes) {
         QModelIndex parent = index.parent();
-        if (index.isValid() && parent.isValid()) // index must be Valid and it must have a valid parent (otherwise it is a category, which is USELESS!)
-            stream << parent.data(Qt::UserRole).value<int>() << index.data(Qt::UserRole).value<int>(); // Stream parent's data (which is the item's TYPE) and the item's data (which is it's DB id)
+        if (index.isValid() && parent.isValid()) { // index must be Valid and it must have a valid parent (otherwise it is a category, which is USELESS!)
+            int type = parent.data(Qt::UserRole).value<int>();
+            int id = index.data(Qt::UserRole).value<int>();
+            std::cout << "Found " << type << " : " << id << std::endl;
+            stream << type << id;   // Stream parent's data (which is the item's TYPE) and the item's data (which is it's DB id)
+        }
     }
     mimeData->setData("data/QGeoViewItemIDs", encodedData);
     return mimeData;
@@ -134,20 +152,26 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
     while (!stream.atEnd()) {
         int type;
         int id;
-        stream >> type >> column;
+        stream >> type >> id;
         QStandardItem *item;
+        Cache *cache;
+        Waypoint *waypoint;
         switch (type) {
             case INFO_TYPE_CACHE:
-                item = new QStandardItem(Cache(_db, id).summary());
+                cache = new Cache(_db, id);
+                item = new QStandardItem(cache->summary());
                 item->setEditable(false);
                 item->setData(QVariant::fromValue<int>(id), Qt::UserRole);
                 _caches.appendRow(item);
+                emit cacheDropped(id);
                 break;
             case INFO_TYPE_WAYPOINT:
-                item = new QStandardItem(Waypoint(_db, id).summary());
+                waypoint = new Waypoint(_db, id);
+                item = new QStandardItem(waypoint->summary());
                 item->setEditable(false);
                 item->setData(QVariant::fromValue<int>(id), Qt::UserRole);
                 _waypoints.appendRow(item);
+                emit waypointDropped(id);
                 break;
         }
     }

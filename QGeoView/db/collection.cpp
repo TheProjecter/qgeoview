@@ -87,3 +87,49 @@ QString Collection::getQStringValue(int mask)
     }
     throw MaskNotFoundException(this, mask, "QString");
 }
+
+void Collection::addCache(int id)
+{
+    _db->transaction();
+    QSqlQuery query("INSERT INTO Cache2Collection (fk_collection, fk_cache) VALUES (?, ?)");
+    query.addBindValue(_id);
+    query.addBindValue(id);
+    if (!query.exec())
+        throw query;
+    _db->commit();
+}
+
+void Collection::addWaypoint(int id)
+{
+    _db->transaction();
+    QSqlQuery query("INSERT INTO Waypoint2Collection (fk_collection, fk_waypoint) VALUES (?, ?)");
+    query.addBindValue(_id);
+    query.addBindValue(id);
+    if (!query.exec())
+        throw query;
+    _db->commit();
+}
+
+void Collection::removeCache(int id)
+{
+    _db->transaction();
+    QSqlQuery query("DELETE FROM Cache2Collection WHERE fk_collection=? AND fk_cache=?");
+    query.addBindValue(_id);
+    query.addBindValue(id);
+    if (!query.exec())
+        throw query;
+    _db->commit();
+}
+
+void Collection::removeWaypoint(int id)
+{
+    _db->transaction();
+    QSqlQuery query("DELETE FROM Waypoint2Collection WHERE fk_collection=? AND fk_waypoint=?");
+    query.addBindValue(_id);
+    query.addBindValue(id);
+    if (!query.exec())
+        throw query;
+    _db->commit();
+}
+
+

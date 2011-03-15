@@ -8,6 +8,7 @@ HEADERS        += collectioneditor_tab.h \
                   ../../QGeoView/tabplugin.h \
                   ../../QGeoView/exceptions.h \
                   ../../QGeoView/mainwindow.h \
+                  ../../QGeoView/treemodel.h \
                   ../../QGeoView/db/point.h \
                   ../../QGeoView/db/cache.h \
                   ../../QGeoView/db/collection.h \
@@ -16,10 +17,11 @@ HEADERS        += collectioneditor_tab.h \
                   ../../QGeoView/db/waypoint.h \
                   ../../QGeoView/db/databaseobject.h \
                   ../../QGeoView/db/database.h \
-    editcollectiondialog.h
+                  editcollectiondialog.h
 SOURCES        += collectioneditor_tab.cpp \
                   ../../QGeoView/tabplugin.cpp \
                   ../../QGeoView/mainwindow.cpp \
+                  ../../QGeoView/treemodel.cpp \
                   ../../QGeoView/db/point.cpp \
                   ../../QGeoView/db/cache.cpp \
                   ../../QGeoView/db/collection.cpp \
