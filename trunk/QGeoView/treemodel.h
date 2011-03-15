@@ -2,6 +2,7 @@
 #define TREEMODEL_H
 
 #include <QStandardItemModel>
+#include <QMimeData>
 
 #include "db/database.h"
 #include "db/collection.h"
@@ -20,7 +21,11 @@ class TreeModel : public QStandardItemModel
     Q_OBJECT
 public:
     explicit TreeModel(Database *db, QObject *parent = 0);
-
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    QStringList mimeTypes() const;
+    Qt::DropActions supportedDropActions() const;
 signals:
     void cacheSelected(Cache cache);
     void waypointSelected(Waypoint waypoint);

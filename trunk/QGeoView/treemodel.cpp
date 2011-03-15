@@ -81,3 +81,74 @@ void TreeModel::item_selected(QModelIndex index)
         // int category = index.data(Qt::UserRole).value<int>();
     }
 }
+
+Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
+{
+    Qt::ItemFlags defaultFlags = QStandardItemModel::flags(index);
+
+    if (index.isValid())
+        return defaultFlags | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+    else
+        return defaultFlags | Qt::ItemIsDropEnabled;
+}
+
+QStringList TreeModel::mimeTypes() const
+{
+    QStringList types;
+    types << "data/QGeoViewItemIDs";
+    return types;
+}
+
+Qt::DropActions TreeModel::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
+}
+
+QMimeData *TreeModel::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData *mimeData = new QMimeData();
+    QByteArray encodedData;
+
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+
+    foreach (QModelIndex index, indexes) {
+        QModelIndex parent = index.parent();
+        if (index.isValid() && parent.isValid()) // index must be Valid and it must have a valid parent (otherwise it is a category, which is USELESS!)
+            stream << parent.data(Qt::UserRole).value<int>() << index.data(Qt::UserRole).value<int>(); // Stream parent's data (which is the item's TYPE) and the item's data (which is it's DB id)
+    }
+    mimeData->setData("data/QGeoViewItemIDs", encodedData);
+    return mimeData;
+}
+
+bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
+{
+    if (action == Qt::IgnoreAction)
+        return true;
+
+    if (!data->hasFormat("data/QGeoViewItemIDs"))
+        return false;
+
+    QByteArray encodedData = data->data("data/QGeoViewItemIDs");
+    QDataStream stream(&encodedData, QIODevice::ReadOnly);
+
+    while (!stream.atEnd()) {
+        int type;
+        int id;
+        stream >> type >> column;
+        QStandardItem *item;
+        switch (type) {
+            case INFO_TYPE_CACHE:
+                item = new QStandardItem(Cache(_db, id).summary());
+                item->setEditable(false);
+                item->setData(QVariant::fromValue<int>(id), Qt::UserRole);
+                _caches.appendRow(item);
+                break;
+            case INFO_TYPE_WAYPOINT:
+                item = new QStandardItem(Waypoint(_db, id).summary());
+                item->setEditable(false);
+                item->setData(QVariant::fromValue<int>(id), Qt::UserRole);
+                _waypoints.appendRow(item);
+                break;
+        }
+    }
+}
