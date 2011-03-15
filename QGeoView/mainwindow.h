@@ -39,12 +39,6 @@
 #include "db/waypoint.h"
 #include "treemodel.h"
 
-#define INFO_TYPE_NONE      1
-#define INFO_TYPE_CACHE     2
-#define INFO_TYPE_WAYPOINT  3
-#define INFO_TYPE_ROUTE     4
-#define INFO_TYPE_TRACK     5
-
 namespace Ui {
     class MainWindow;
 }
