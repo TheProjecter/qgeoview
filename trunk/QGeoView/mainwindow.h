@@ -72,7 +72,7 @@ private:
     QList<ReadPlugin*> _readPlugins;
     QList<WritePlugin*> _writePlugins;
     QList<TabPlugin*> _tabPlugins;
-    QStandardItemModel _model;
+    QStandardItemModel *_model;
 public slots:
     void collectionIndexChanged(int index);
 private slots:
