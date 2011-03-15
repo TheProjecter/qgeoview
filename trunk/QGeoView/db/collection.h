@@ -23,6 +23,10 @@ public:
     QString table();
     QStringList fields();
     static QStringList fieldNames();
+    void addCache(int id);
+    void removeCache(int id);
+    void addWaypoint(int id);
+    void removeWaypoint(int id);
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:
