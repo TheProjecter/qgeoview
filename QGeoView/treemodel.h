@@ -29,6 +29,8 @@ public slots:
     void refresh(Collection *collection=NULL);
 private:
     Database *_db;
+    QStandardItem _caches;
+    QStandardItem _waypoints;
 };
 
 #endif // TREEMODEL_H
