@@ -22,10 +22,10 @@ public:
     explicit TreeModel(Database *db, QObject *parent = 0);
 
 signals:
-    void item_selected(QModelIndex index);
     void cacheSelected(Cache cache);
     void waypointSelected(Waypoint waypoint);
 public slots:
+    void item_selected(QModelIndex index);
     void refresh(Collection *collection=NULL);
 private:
     Database *_db;
