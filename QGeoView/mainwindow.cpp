@@ -52,14 +52,15 @@ MainWindow::MainWindow(QWidget *parent) :
         firstRun();
     }
 
-    // UI
-    ui->setupUi(this);
-    setWindowIcon(QIcon(":/icons/application.svg"));
-    ui->tree->setModel(&_model);
-
     // Database
     _db = new Database(_settings->value("database/location").toString(), ui->tree);
     
+    // UI
+    ui->setupUi(this);
+    setWindowIcon(QIcon(":/icons/application.svg"));
+    _model = new QStandardItemModel();
+    ui->tree->setModel(_model);
+
     // Plugins
     loadPlugins();
     refreshTree();
@@ -214,13 +215,13 @@ void MainWindow::refreshCollections()
 void MainWindow::refreshTree(Collection *collection)
 {
     QSqlQuery cachesQuery;
-    _model.clear();
+    _model->clear();
 
     // Caches
     QStandardItem *caches = new QStandardItem("Caches");
     caches->setEditable(false);
     caches->setData(QVariant::fromValue<int>(INFO_TYPE_CACHE), Qt::UserRole);
-    _model.appendRow(caches);
+    _model->appendRow(caches);
     if (collection) {
         cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache WHERE id IN (SELECT fk_cache FROM Cache2Collection WHERE fk_collection=?);");
         cachesQuery.addBindValue(collection->getID());
@@ -242,7 +243,7 @@ void MainWindow::refreshTree(Collection *collection)
     QStandardItem *waypoints = new QStandardItem("Waypoints");
     waypoints->setEditable(false);
     waypoints->setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
-    _model.appendRow(waypoints);
+    _model->appendRow(waypoints);
 
     if (collection) {
         waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache) AND id IN (SELECT fk_waypoint FROM Waypoint2Collection WHERE fk_collection=?);");
