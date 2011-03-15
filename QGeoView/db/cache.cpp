@@ -18,7 +18,7 @@ Cache::Cache(Database *db, QSqlQuery query) :
 Cache::Cache(const Cache &original) :
     DatabaseObject(original),
     _name(original._name),
-    _placed_by(original._name),
+    _placed_by(original._placed_by),
     _owner_guid(original._owner_guid),
     _owner_name(original._owner_name),
     _type(original._type),
