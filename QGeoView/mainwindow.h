@@ -37,6 +37,7 @@
 #include "tabplugin.h"
 #include "db/cache.h"
 #include "db/waypoint.h"
+#include "treemodel.h"
 
 #define INFO_TYPE_NONE      1
 #define INFO_TYPE_CACHE     2
@@ -72,7 +73,7 @@ private:
     QList<ReadPlugin*> _readPlugins;
     QList<WritePlugin*> _writePlugins;
     QList<TabPlugin*> _tabPlugins;
-    QStandardItemModel *_model;
+    TreeModel *_model;
 public slots:
     void collectionIndexChanged(int index);
 private slots:

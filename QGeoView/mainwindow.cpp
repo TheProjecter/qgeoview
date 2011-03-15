@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // UI
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/application.svg"));
-    _model = new QStandardItemModel();
+    _model = new TreeModel(_db);
     ui->tree->setModel(_model);
 
     // Plugins
