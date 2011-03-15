@@ -2,21 +2,27 @@
 
 TreeModel::TreeModel(Database *db, QObject *parent) :
     QStandardItemModel(parent),
-    _db(db)
+    _db(db),
+    _caches("Caches"),
+    _waypoints("Waypoints")
 {
+    // Caches
+    _caches.setEditable(false);
+    _caches.setData(QVariant::fromValue<int>(INFO_TYPE_CACHE), Qt::UserRole);
+    appendRow(&_caches);
+
+    // Waypoints
+    _waypoints.setEditable(false);
+    _waypoints.setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
+    appendRow(&_waypoints);
 }
 
 
 void TreeModel::refresh(Collection *collection)
 {
-    QSqlQuery cachesQuery;
-    clear();
-
     // Caches
-    QStandardItem *caches = new QStandardItem("Caches");
-    caches->setEditable(false);
-    caches->setData(QVariant::fromValue<int>(INFO_TYPE_CACHE), Qt::UserRole);
-    appendRow(caches);
+    _caches.removeRows(0, _caches.rowCount());
+    QSqlQuery cachesQuery;
     if (collection) {
         cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache WHERE id IN (SELECT fk_cache FROM Cache2Collection WHERE fk_collection=?);");
         cachesQuery.addBindValue(collection->getID());
@@ -30,16 +36,12 @@ void TreeModel::refresh(Collection *collection)
         QStandardItem *item = new QStandardItem(cache.summary());
         item->setEditable(false);
         item->setData(QVariant::fromValue<int>(cache.getID()), Qt::UserRole);
-        caches->appendRow(item);
+        _caches.appendRow(item);
     }
 
-    QSqlQuery waypointsQuery;
     // Waypoints
-    QStandardItem *waypoints = new QStandardItem("Waypoints");
-    waypoints->setEditable(false);
-    waypoints->setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
-    appendRow(waypoints);
-
+    _waypoints.removeRows(0, _waypoints.rowCount());
+    QSqlQuery waypointsQuery;
     if (collection) {
         waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache) AND id IN (SELECT fk_waypoint FROM Waypoint2Collection WHERE fk_collection=?);");
         waypointsQuery.addBindValue(collection->getID());
@@ -52,7 +54,7 @@ void TreeModel::refresh(Collection *collection)
         QStandardItem *item = new QStandardItem(waypoint.summary());
         item->setEditable(false);
         item->setData(QVariant::fromValue<int>(waypoint.getID()), Qt::UserRole);
-        waypoints->appendRow(item);
+        _waypoints.appendRow(item);
     }
 }
 
