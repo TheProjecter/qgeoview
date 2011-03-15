@@ -63,8 +63,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Plugins
     loadPlugins();
-    refreshTree();
+    _model->refresh();
     refreshCollections();
+
+    // Connections
+    connect(ui->tree, SIGNAL(clicked(QModelIndex)), _model, SLOT(item_selected(QModelIndex)));
 }
 
 /*
@@ -178,7 +181,7 @@ void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
     std::cout << "\t\tLoading Read Plugin: " << plugin->name().toStdString() << std::endl;
     _readPlugins.append(plugin);
     ui->menu_Read->addAction(plugin->name(), plugin, SLOT(open()));
-    connect(plugin, SIGNAL(done()), this, SLOT(refreshTree()));
+    connect(plugin, SIGNAL(done()), _model, SLOT(refresh()));
     connect(plugin, SIGNAL(done()), this, SLOT(refreshCollections()));
 }
 
@@ -192,8 +195,8 @@ void MainWindow::loadTabPlugin(TabPlugin *plugin) {
     std::cout << "\t\tLoading Tab Plugin: " << plugin->name().toStdString() << std::endl;
     _tabPlugins.append(plugin);
     ui->menu_Plugins->addAction(plugin->name(), plugin, SLOT(toggle()));
-    connect(this, SIGNAL(cacheSelected(Cache)), plugin, SLOT(cacheSelected(Cache)));
-    connect(this, SIGNAL(waypointSelected(Waypoint)), plugin, SLOT(waypointSelected(Waypoint)));
+    connect(_model, SIGNAL(cacheSelected(Cache)), plugin, SLOT(cacheSelected(Cache)));
+    connect(_model, SIGNAL(waypointSelected(Waypoint)), plugin, SLOT(waypointSelected(Waypoint)));
     connect(this, SIGNAL(collectionSelected(Collection)), plugin, SLOT(collectionSelected(Collection)));
 }
 
@@ -212,87 +215,6 @@ void MainWindow::refreshCollections()
     }
 }
 
-void MainWindow::refreshTree(Collection *collection)
-{
-    QSqlQuery cachesQuery;
-    _model->clear();
-
-    // Caches
-    QStandardItem *caches = new QStandardItem("Caches");
-    caches->setEditable(false);
-    caches->setData(QVariant::fromValue<int>(INFO_TYPE_CACHE), Qt::UserRole);
-    _model->appendRow(caches);
-    if (collection) {
-        cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache WHERE id IN (SELECT fk_cache FROM Cache2Collection WHERE fk_collection=?);");
-        cachesQuery.addBindValue(collection->getID());
-    } else {
-        cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache;");
-    }
-    if (!cachesQuery.exec())
-        throw cachesQuery;
-    while (cachesQuery.next()) {
-        Cache cache(_db, cachesQuery);
-        QStandardItem *item = new QStandardItem(cache.summary());
-        item->setEditable(false);
-        item->setData(QVariant::fromValue<int>(cache.getID()), Qt::UserRole);
-        caches->appendRow(item);
-    }
-
-    QSqlQuery waypointsQuery;
-    // Waypoints
-    QStandardItem *waypoints = new QStandardItem("Waypoints");
-    waypoints->setEditable(false);
-    waypoints->setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
-    _model->appendRow(waypoints);
-
-    if (collection) {
-        waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache) AND id IN (SELECT fk_waypoint FROM Waypoint2Collection WHERE fk_collection=?);");
-        waypointsQuery.addBindValue(collection->getID());
-    } else
-        waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache);");
-    if (!waypointsQuery.exec())
-        throw waypointsQuery;
-    while (waypointsQuery.next()) {
-        Waypoint waypoint(_db, waypointsQuery);
-        QStandardItem *item = new QStandardItem(waypoint.summary());
-        item->setEditable(false);
-        item->setData(QVariant::fromValue<int>(waypoint.getID()), Qt::UserRole);
-        waypoints->appendRow(item);
-    }
-
-    ui->tree->expandAll();
-}
-
-void MainWindow::item_selected(QModelIndex index)
-{
-    QModelIndex parent = index.parent();
-    if (parent.isValid()) {
-        // Item
-        int id = index.data(Qt::UserRole).value<int>();
-        int category = parent.data(Qt::UserRole).value<int>();
-        switch (category) {
-            case INFO_TYPE_CACHE:
-                emit cacheSelected(Cache(_db, id));
-                break;
-            case INFO_TYPE_WAYPOINT:
-                emit waypointSelected(Waypoint(_db, id));
-                break;
-            default:
-                throw InvalidTreeItemCategoryException(category);
-        }
-    } else {
-        // Category
-        // int category = index.data(Qt::UserRole).value<int>();
-        // This can be later expanded in case something wants to know when a category is clicked.
-    }
-}
-
-void MainWindow::items_selected_trigger()
-{
-    QModelIndexList selection = ui->tree->selectionModel()->selectedIndexes();
-    emit items_selected(selection);
-}
-
 void MainWindow::on_action_Test_triggered()
 {
 }
@@ -306,10 +228,10 @@ void MainWindow::collectionIndexChanged(int index)
     std::cout << "Selecting collection: " << id << std::endl;
     if (id) {
         Collection collection(_db, id);
-        refreshTree(&collection);
+        _model->refresh(&collection);
         emit collectionSelected(collection);
     } else {
-        refreshTree();
+        _model->refresh();
         emit collectionDeselected();
     }
 }
