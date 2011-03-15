@@ -87,7 +87,9 @@ void MainWindow::firstRun()
     if (!dir.mkpath(QString(QDesktopServices::storageLocation(QDesktopServices::DataLocation)))) {
         std::cerr << "Error creating dataStorage folder" << std::endl;
     }
-
+    if (!dir.mkpath(QString(QDesktopServices::storageLocation(QDesktopServices::DataLocation)).append("/plugins"))) {
+        std::cerr << "Error creating plugins folder" << std::endl;
+    }
     // Empty DB File
     std::cout << "copying database to " << _settings->value("database/location").toString().toStdString() << std::endl;
     QFile(":/db/db.sqlite3.empty").copy(_settings->value("database/location").toString());
