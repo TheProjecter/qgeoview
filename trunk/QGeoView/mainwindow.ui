@@ -195,22 +195,6 @@
  <resources/>
  <connections>
   <connection>
-   <sender>tree</sender>
-   <signal>clicked(QModelIndex)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>item_selected(QModelIndex)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>365</x>
-     <y>126</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>597</x>
-     <y>33</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>collections</sender>
    <signal>currentIndexChanged(int)</signal>
    <receiver>MainWindow</receiver>

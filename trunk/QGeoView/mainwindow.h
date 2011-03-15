@@ -80,16 +80,10 @@ private slots:
     void on_action_Quit_triggered();
     void on_action_Test_triggered();
     void refreshCollections();
-    void refreshTree(Collection *collection=NULL);
-    void item_selected(QModelIndex index);
-    void items_selected_trigger();
 signals:
     void quit();
-    void waypointSelected(Waypoint waypoint);
-    void cacheSelected(Cache cache);
     void collectionSelected(Collection collection);
     void collectionDeselected();
-    void items_selected(QModelIndexList selection);
 };
 
 #endif // MAINWINDOW_H
