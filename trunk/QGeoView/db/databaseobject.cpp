@@ -77,7 +77,9 @@ void DatabaseObject::remove()
         throw NotInDatabaseException(this);
     QSqlQuery query;
     _db->transaction();
-    query.prepare("REMOVE FROM " + table() + " WHERE id=" + _id);
+    query.prepare("DELETE FROM " + table() + " WHERE id=" + QString::number(_id) + ";");
+    query.exec();
+    _db->commit();
 }
 
 void DatabaseObject::setID(int value)
