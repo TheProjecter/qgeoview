@@ -34,9 +34,9 @@ public:
     DetailsTabPlugin(Database *db, QTabWidget *tabPluginsTab);
     QString name();
 public slots:
-    void cacheSelected(Cache cache);
-    void waypointSelected(Waypoint waypoint);
-    void logIndexSelected(int index);
+    void selectCache(Cache cache);
+    void selectWaypoint(Waypoint waypoint);
+    void selectLogIndex(int index);
 private slots:
     void open_description_link();
 private:
