@@ -27,6 +27,7 @@
 #include "tabplugin.h"
 #include "ui_mainwidget.h"
 #include "treemodel.h"
+#include "collectionselectormodel.h"
 
 class CollectionEditorTabPlugin : public TabPlugin
 {
@@ -35,7 +36,6 @@ public:
     CollectionEditorTabPlugin(Database *db, QTabWidget *pluginsTabWindow);
     QString name();
 public slots:
-    void collectionIndexChanged(int index);
     void items_selection(QModelIndexList selection);
     void refresh_collections();
     void cacheDragged(int id);
@@ -56,8 +56,8 @@ private slots:
 
 private:
     Ui::MainWidget ui;
-    int _action;
-    TreeModel *_model;
+    CollectionSelectorModel *_collection_selector_model;
+    TreeModel *_item_tree_model;
 };
 
 class CollectionEditorTabPluginFactory : public QObject, public TabPluginFactory

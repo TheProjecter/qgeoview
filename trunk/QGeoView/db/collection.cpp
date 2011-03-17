@@ -23,6 +23,11 @@ Collection::Collection(const Collection &original) :
 
 QString Collection::table()
 {
+    return tableName();
+}
+
+QString Collection::tableName()
+{
     return "Collection";
 }
 
@@ -124,7 +129,7 @@ void Collection::removeCache(int id)
 void Collection::removeWaypoint(int id)
 {
     _db->transaction();
-    QSqlQuery query("DELETE FROM Waypoint2Collection WHERE fk_collection=? AND fk_waypoint=?");
+    QSqlQuery query("DELETE FROM Waypoint2Collection WHERE fk_collection=? AND fk_waypoint=?;");
     query.addBindValue(_id);
     query.addBindValue(id);
     if (!query.exec())
@@ -132,4 +137,47 @@ void Collection::removeWaypoint(int id)
     _db->commit();
 }
 
+void Collection::cleanup()
+{
+    if (!_id)
+        return;
 
+    _db->transaction();
+
+    QSqlQuery query("DELETE FROM Cache2Collection WHERE fk_collection=?;");
+    query.addBindValue(_id);
+    if (!query.exec())
+        throw query;
+
+    query.clear();
+    query.prepare("DELETE FROM Waypoint2Collection WHERE fk_collection=?;");
+    query.addBindValue(_id);
+    if (!query.exec())
+        throw query;
+
+    query.clear();
+    query.prepare("DELETE FROM Point2Collection WHERE fk_collection=?;");
+    query.addBindValue(_id);
+    if (!query.exec())
+        throw query;
+
+    query.clear();
+    query.prepare("DELETE FROM Track2Collection WHERE fk_collection=?;");
+    query.addBindValue(_id);
+    if (!query.exec())
+        throw query;
+
+    query.clear();
+    query.prepare("DELETE FROM Route2Collection WHERE fk_collection=?;");
+    query.addBindValue(_id);
+    if (!query.exec())
+        throw query;
+
+    query.clear();
+    query.prepare("DELETE FROM TravelBug2Collection WHERE fk_collection=?;");
+    query.addBindValue(_id);
+    if (!query.exec())
+        throw query;
+
+    _db->commit();
+}

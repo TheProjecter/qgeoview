@@ -27,7 +27,8 @@ HEADERS        += mainwindow.h \
                   myapplication.h \
                   exceptions.h \
                   tabplugin.h \
-                  treemodel.h
+                  treemodel.h \
+                  collectionselectormodel.h
 FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
@@ -43,5 +44,6 @@ SOURCES        += main.cpp \
                   db/cache.cpp \
                   myapplication.cpp \
                   tabplugin.cpp \
-                  treemodel.cpp
+                  treemodel.cpp \
+                  collectionselectormodel.cpp
 RESOURCES      += QGeoView.qrc

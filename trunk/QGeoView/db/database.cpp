@@ -8,9 +8,8 @@
 /*
  Opens the database and ensures that it is available.
 */
-Database::Database(QString location, QTreeView *tree, QObject *parent) :
-    QObject(parent),
-    _tree(tree)
+Database::Database(QString location, QObject *parent) :
+    QObject(parent)
 {
     _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(location);

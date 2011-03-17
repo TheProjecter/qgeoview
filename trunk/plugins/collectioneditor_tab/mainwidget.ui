@@ -123,32 +123,16 @@
      <property name="selectionMode">
       <enum>QAbstractItemView::MultiSelection</enum>
      </property>
+     <property name="autoExpandDelay">
+      <number>3</number>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
     </widget>
    </item>
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>selector</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>MainWidget</receiver>
-   <slot>collectionIndexChanged(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>79</x>
-     <y>58</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>5</x>
-     <y>53</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
- <slots>
-  <slot>edit_collection()</slot>
-  <slot>new_collection()</slot>
-  <slot>collectionIndexChanged(int)</slot>
- </slots>
+ <connections/>
 </ui>

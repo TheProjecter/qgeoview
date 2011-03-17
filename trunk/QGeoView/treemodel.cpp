@@ -4,9 +4,10 @@
 TreeModel::TreeModel(Database *db, QObject *parent) :
     QStandardItemModel(parent),
     _db(db),
+    _collection(NULL),
+    _all(false),
     _caches("Caches"),
-    _waypoints("Waypoints"),
-    _collection(NULL)
+    _waypoints("Waypoints")
 {
     // Caches
     _caches.setEditable(false);
@@ -17,6 +18,7 @@ TreeModel::TreeModel(Database *db, QObject *parent) :
     _waypoints.setEditable(false);
     _waypoints.setData(QVariant::fromValue<int>(INFO_TYPE_WAYPOINT), Qt::UserRole);
     appendRow(&_waypoints);
+
 }
 
 TreeModel::~TreeModel()
@@ -29,26 +31,55 @@ Collection *TreeModel::collection() {
     return _collection;
 }
 
-int TreeModel::collectionID() {
-    if (!_collection)
-        return NULL;
-    return _collection->getID();
+void TreeModel::showCollection(Collection collection)
+{
+    if (_collection)
+        delete _collection;
+    _collection = new Collection(collection);
+    refresh();
 }
 
-
-void TreeModel::refresh(Collection *collection)
+void TreeModel::showNone()
 {
-    // Caches
+    if (_collection) {
+        delete _collection;
+        _collection = NULL;
+    }
+    _all = false;
+    refresh();
+}
+
+void TreeModel::showAll()
+{
+    if (_collection) {
+        delete _collection;
+        _collection = NULL;
+    }
+    _all = true;
+    refresh();
+}
+
+void TreeModel::refresh()
+{
+    // Clear
     _caches.removeRows(0, _caches.rowCount());
+    _waypoints.removeRows(0, _waypoints.rowCount());
+
+    if (!_collection & !_all)   // if no collection and _all is false, show empty tree
+        return;
+
+    // Caches
     QSqlQuery cachesQuery;
-    if (collection) {
+    if (_collection) {
         cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache WHERE id IN (SELECT fk_cache FROM Cache2Collection WHERE fk_collection=?);");
-        cachesQuery.addBindValue(collection->getID());
+        cachesQuery.addBindValue(_collection->getID());
     } else {
         cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache;");
     }
+
     if (!cachesQuery.exec())
         throw cachesQuery;
+
     while (cachesQuery.next()) {
         Cache cache(_db, cachesQuery);
         QStandardItem *item = new QStandardItem(cache.summary());
@@ -58,15 +89,17 @@ void TreeModel::refresh(Collection *collection)
     }
 
     // Waypoints
-    _waypoints.removeRows(0, _waypoints.rowCount());
     QSqlQuery waypointsQuery;
-    if (collection) {
+    if (_collection) {
         waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache) AND id IN (SELECT fk_waypoint FROM Waypoint2Collection WHERE fk_collection=?);");
-        waypointsQuery.addBindValue(collection->getID());
-    } else
+        waypointsQuery.addBindValue(_collection->getID());
+    } else {
         waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache);");
+    }
+
     if (!waypointsQuery.exec())
         throw waypointsQuery;
+
     while (waypointsQuery.next()) {
         Waypoint waypoint(_db, waypointsQuery);
         QStandardItem *item = new QStandardItem(waypoint.summary());
@@ -76,7 +109,7 @@ void TreeModel::refresh(Collection *collection)
     }
 }
 
-void TreeModel::item_selected(QModelIndex index)
+void TreeModel::itemSelected(QModelIndex index)
 {
     QModelIndex parent = index.parent();
     if (!parent.isValid())
@@ -130,7 +163,6 @@ QMimeData *TreeModel::mimeData(const QModelIndexList &indexes) const
         if (index.isValid() && parent.isValid()) { // index must be Valid and it must have a valid parent (otherwise it is a category, which is USELESS!)
             int type = parent.data(Qt::UserRole).value<int>();
             int id = index.data(Qt::UserRole).value<int>();
-            std::cout << "Found " << type << " : " << id << std::endl;
             stream << type << id;   // Stream parent's data (which is the item's TYPE) and the item's data (which is it's DB id)
         }
     }

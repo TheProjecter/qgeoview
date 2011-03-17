@@ -1,4 +1,3 @@
-#include <iostream>
 #include <QSqlError>
 #include "databaseobject.h"
 #include "exceptions.h"
@@ -51,15 +50,12 @@ void DatabaseObject::save()
 {
     QSqlQuery query;
     _db->transaction();
-    QString query_string;
     QStringList field_names = fields();
     if (_id) {   // update
-        query_string = "UPDATE " + table() + " SET " + field_names.join("=?, ") + "=? WHERE id=" + _id + ";";
-        query.prepare(query_string);
+        query.prepare("UPDATE " + table() + " SET " + field_names.join("=?, ") + "=? WHERE id=" + _id + ";");
         query.addBindValue(_id);
     } else {                    // insert
-        query_string = "INSERT INTO " + table() + " (" + field_names.join(", ") + ") VALUES (?" + QString(", ?").repeated(field_names.count() - 1) + ");";
-        query.prepare(query_string);
+        query.prepare("INSERT INTO " + table() + " (" + field_names.join(", ") + ") VALUES (?" + QString(", ?").repeated(field_names.count() - 1) + ");");
     }
     addBindValues(query);
     if (!query.exec()) {
@@ -75,10 +71,13 @@ void DatabaseObject::remove()
 {
     if (!_id)
         throw NotInDatabaseException(this);
+    cleanup();
     QSqlQuery query;
     _db->transaction();
-    query.prepare("DELETE FROM " + table() + " WHERE id=" + QString::number(_id) + ";");
-    query.exec();
+    query.prepare("DELETE FROM " + table() + " WHERE id=?;");
+    query.addBindValue(_id);
+    if (!query.exec())
+        throw query;
     _db->commit();
 }
 
@@ -149,3 +148,5 @@ bool DatabaseObject::getBoolValue(int mask)
     throw MaskNotFoundException(this, mask, "Bool");
 }
 
+void DatabaseObject::cleanup()
+{}

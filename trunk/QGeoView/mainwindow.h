@@ -38,6 +38,7 @@
 #include "db/cache.h"
 #include "db/waypoint.h"
 #include "treemodel.h"
+#include "collectionselectormodel.h"
 
 namespace Ui {
     class MainWindow;
@@ -67,13 +68,11 @@ private:
     QList<ReadPlugin*> _readPlugins;
     QList<WritePlugin*> _writePlugins;
     QList<TabPlugin*> _tabPlugins;
-    TreeModel *_model;
-public slots:
-    void collectionIndexChanged(int index);
+    TreeModel *_item_tree_model;
+    CollectionSelectorModel *_collection_selector_model;
 private slots:
     void on_action_Quit_triggered();
     void on_action_Test_triggered();
-    void refreshCollections();
 signals:
     void quit();
     void collectionSelected(Collection collection);
