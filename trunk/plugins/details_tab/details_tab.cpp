@@ -28,6 +28,8 @@ DetailsTabPlugin::DetailsTabPlugin(Database *db, QTabWidget *pluginsTabWidget) :
     TabPlugin(db, pluginsTabWidget)
 {
     ui.setupUi(this);
+    connect(ui.description_link, SIGNAL(clicked()), this, SLOT(open_description_link()));
+    connect(ui.logs_selector, SIGNAL(currentIndexChanged(int)), this, SLOT(selectLogIndex(int)));
 }
 
 QString DetailsTabPlugin::name()
@@ -35,16 +37,16 @@ QString DetailsTabPlugin::name()
     return "Details";
 }
 
-void DetailsTabPlugin::cacheSelected(Cache cache)
+void DetailsTabPlugin::selectCache(Cache cache)
 {
     if (!_active)
         return;
     setCacheData(&cache);
     setLogsData(&cache.getLogIDs());
-    waypointSelected(cache.getWaypoint());
+    selectWaypoint(cache.getWaypoint());
 }
 
-void DetailsTabPlugin::waypointSelected(Waypoint waypoint)
+void DetailsTabPlugin::selectWaypoint(Waypoint waypoint)
 {
     if (!_active)
         return;
@@ -287,7 +289,7 @@ void DetailsTabPlugin::setLogsData(QList<int> *logIDs)
     }
 }
 
-void DetailsTabPlugin::logIndexSelected(int index)
+void DetailsTabPlugin::selectLogIndex(int index)
 {
     Log log(_db, ui.logs_selector->itemData(index, Qt::UserRole).toInt());
 
@@ -333,6 +335,7 @@ void DetailsTabPlugin::open_description_link()
     // TODO: Open Link!
     if (_link_url.isEmpty())
         return;
+    std::cout << "Opening " << _link_url.toStdString() << std::endl;
 }
 
 TabPlugin *DetailsTabPluginFactory::get_plugin(Database *db, QTabWidget *pluginsTabWidget)
