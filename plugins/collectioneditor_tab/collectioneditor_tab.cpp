@@ -26,17 +26,30 @@
 #include "editcollectiondialog.h"
 
 CollectionEditorTabPlugin::CollectionEditorTabPlugin(Database *db, QTabWidget *pluginsTabWidget) :
-    TabPlugin(db, pluginsTabWidget),
-    _model(new TreeModel(db))
+    TabPlugin(db, pluginsTabWidget)
 {
     ui.setupUi(this);
-    ui.tree->setModel(_model);
-    _model->refresh();
-    refresh_collections();
-    connect (_model, SIGNAL(cacheDragged(int)), this, SLOT(cacheDragged(int)));
-    connect (_model, SIGNAL(waypointDragged(int)), this, SLOT(waypointDragged(int)));
-    connect (_model, SIGNAL(cacheDropped(int)), this, SLOT(cacheDropped(int)));
-    connect (_model, SIGNAL(waypointDropped(int)), this, SLOT(waypointDropped(int)));
+    _collection_selector_model = new CollectionSelectorModel(db);
+    _item_tree_model = new TreeModel(db);
+
+    ui.selector->setModel(_collection_selector_model);
+
+    ui.tree->setModel(_item_tree_model);
+    _item_tree_model->refresh();
+    ui.tree->expandAll();
+
+
+    connect(ui.selector, SIGNAL(currentIndexChanged(int)), _collection_selector_model, SLOT(indexChanged(int)));
+    connect(ui.tree, SIGNAL(clicked(QModelIndex)), _item_tree_model, SLOT(itemSelected(QModelIndex)));
+    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection)), _item_tree_model, SLOT(showCollection(Collection)));
+    connect(_collection_selector_model, SIGNAL(allSelected()), _item_tree_model, SLOT(showAll()));
+    connect(_collection_selector_model, SIGNAL(noneSelected()), _item_tree_model, SLOT(showNone()));
+    connect(_collection_selector_model, SIGNAL(refreshed()), _item_tree_model, SLOT(refresh()));
+    connect (_item_tree_model, SIGNAL(cacheDragged(int)), this, SLOT(cacheDragged(int)));
+    connect (_item_tree_model, SIGNAL(waypointDragged(int)), this, SLOT(waypointDragged(int)));
+    connect (_item_tree_model, SIGNAL(cacheDropped(int)), this, SLOT(cacheDropped(int)));
+    connect (_item_tree_model, SIGNAL(waypointDropped(int)), this, SLOT(waypointDropped(int)));
+    _collection_selector_model->refresh();
 }
 
 QString CollectionEditorTabPlugin::name()
@@ -65,27 +78,21 @@ void CollectionEditorTabPlugin::refresh_collections()
 
 void CollectionEditorTabPlugin::on_remove_selected_clicked()
 {
-    int type;
-    int id;
-    int collection_id;
-    QModelIndex parent;
-    Collection *collection = _model->collection();
+    Collection *collection = _collection_selector_model->collection();
+    if (collection)
+        return;
     foreach (QModelIndex index, ui.tree->selectionModel()->selectedIndexes()) {
-        parent = index.parent();
-        if (index.isValid() && parent.isValid()) {
-            type = parent.data(Qt::UserRole).value<int>();
-            id = index.data(Qt::UserRole).value<int>();
-            switch (type) {
+        if (index.isValid() && index.parent().isValid())
+            switch (index.parent().data(Qt::UserRole).toInt()) {
                 case INFO_TYPE_CACHE:
-                    collection->removeCache(id);
+                    collection->removeCache(index.data(Qt::UserRole).toInt());
                     break;
                 case INFO_TYPE_WAYPOINT:
-                    collection->removeWaypoint(id);
+                    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).removeWaypoint(index.data(Qt::UserRole).toInt());
                     break;
             }
-        }
     }
-    _model->refresh();
+    _item_tree_model->refresh();
 }
 
 void CollectionEditorTabPlugin::on_edit_collection_clicked()
@@ -93,60 +100,45 @@ void CollectionEditorTabPlugin::on_edit_collection_clicked()
     std::cout << "Editing Existing Collection" << std::endl;
     EditCollectionDialog dialog(_db, Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()));
     dialog.exec();
+    _collection_selector_model->refresh();
 }
 
 void CollectionEditorTabPlugin::on_delete_collection_clicked()
 {
-    foreach (QModelIndex index, ui.tree->selectionModel()->selectedIndexes()) {
-        if (index.isValid() && index.parent().isValid())
-            switch (index.parent().data(Qt::UserRole).toInt()) {
-                case INFO_TYPE_CACHE:
-                    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).removeCache(index.data(Qt::UserRole).toInt());
-                    break;
-                case INFO_TYPE_WAYPOINT:
-                    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).removeWaypoint(index.data(Qt::UserRole).toInt());
-                    break;
-            }
-    }
-    _model->refresh();
+    Collection *collection = _collection_selector_model->collection();
+    if (!collection)
+        return;
+    collection->remove();
+    _collection_selector_model->refresh();
 }
 
 void CollectionEditorTabPlugin::on_new_collection_clicked()
 {
     EditCollectionDialog dialog(_db);
     dialog.exec();
-}
-void CollectionEditorTabPlugin::collectionIndexChanged(int index)
-{
-    QVariant qv = ui.selector->itemData(index, Qt::UserRole);
-    if (qv.isValid() && qv.toInt() > 0) {
-    Collection collection(_db, qv.toInt());
-    _model->refresh(&collection);
-    } else {
-        _model->refresh();
-    }
+    _collection_selector_model->refresh();
 }
 
 void CollectionEditorTabPlugin::cacheDragged(int id)
 {
-    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).removeCache(id);
-}
-
-void CollectionEditorTabPlugin::waypointDragged(int id)
-{
-    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).removeWaypoint(id);
+    Collection *collection = _collection_selector_model->collection();
+    if (collection)
+        collection->removeCache(id);
 }
 
 void CollectionEditorTabPlugin::cacheDropped(int id)
 {
-    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).addCache(id);
+    Collection *collection = _collection_selector_model->collection();
+    if (collection)
+        collection->addCache(id);
 }
 
 void CollectionEditorTabPlugin::waypointDropped(int id)
 {
-    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).addWaypoint(id);
+    Collection *collection = _collection_selector_model->collection();
+    if (collection)
+        collection->addWaypoint(id);
 }
-
 
 
 TabPlugin *CollectionEditorTabPluginFactory::get_plugin(Database *db, QTabWidget *pluginsTabWidget)

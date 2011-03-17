@@ -20,10 +20,11 @@ public slots:
     void toggle();
     void activate();
     void deactivate();
-    void cacheSelected(Cache cache);
-    void waypointSelected(Waypoint waypoint);
-    void collectionSelected(Collection collection);
-    void items_selection(QModelIndexList selection);
+    void selectCache(Cache cache);
+    void selectWaypoint(Waypoint waypoint);
+    void selectCollection(Collection collection);
+    void selectAllCollections();
+    void selectNoCollections();
 protected:
     Database *_db;
     QTabWidget *_pluginsTabWidget;

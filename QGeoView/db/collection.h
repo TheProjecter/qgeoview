@@ -21,12 +21,14 @@ public:
     QString getQStringValue(int mask);
     QString summary();
     QString table();
+    static QString tableName();
     QStringList fields();
     static QStringList fieldNames();
     void addCache(int id);
     void removeCache(int id);
     void addWaypoint(int id);
     void removeWaypoint(int id);
+    void cleanup();
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:

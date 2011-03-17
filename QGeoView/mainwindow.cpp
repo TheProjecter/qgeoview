@@ -53,21 +53,32 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     // Database
-    _db = new Database(_settings->value("database/location").toString(), ui->tree);
+    _db = new Database(_settings->value("database/location").toString());
     
     // UI
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/application.svg"));
-    _model = new TreeModel(_db);
-    ui->tree->setModel(_model);
+
+    // Collection Selector
+    _collection_selector_model = new CollectionSelectorModel(_db, true);
+    ui->collections->setModel(_collection_selector_model);
+
+    // Item Tree
+    _item_tree_model = new TreeModel(_db);
+    ui->tree->setModel(_item_tree_model);
+    ui->tree->expandAll();
+
+    // Connections
+    connect(ui->collections, SIGNAL(currentIndexChanged(int)), _collection_selector_model, SLOT(indexChanged(int)));
+    connect(ui->tree, SIGNAL(clicked(QModelIndex)), _item_tree_model, SLOT(itemSelected(QModelIndex)));
+    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection)), _item_tree_model, SLOT(showCollection(Collection)));
+    connect(_collection_selector_model, SIGNAL(allSelected()), _item_tree_model, SLOT(showAll()));
+    connect(_collection_selector_model, SIGNAL(noneSelected()), _item_tree_model, SLOT(showNone()));
+    connect(_collection_selector_model, SIGNAL(refreshed()), _item_tree_model, SLOT(refresh()));
+    _collection_selector_model->refresh();
 
     // Plugins
     loadPlugins();
-    _model->refresh();
-    refreshCollections();
-
-    // Connections
-    connect(ui->tree, SIGNAL(clicked(QModelIndex)), _model, SLOT(item_selected(QModelIndex)));
 }
 
 /*
@@ -181,8 +192,8 @@ void MainWindow::loadReadPlugin(ReadPlugin *plugin) {
     std::cout << "\t\tLoading Read Plugin: " << plugin->name().toStdString() << std::endl;
     _readPlugins.append(plugin);
     ui->menu_Read->addAction(plugin->name(), plugin, SLOT(open()));
-    connect(plugin, SIGNAL(done()), _model, SLOT(refresh()));
-    connect(plugin, SIGNAL(done()), this, SLOT(refreshCollections()));
+    connect(plugin, SIGNAL(done()), _item_tree_model, SLOT(refresh()));
+    connect(plugin, SIGNAL(done()), _collection_selector_model, SLOT(refresh()));
 }
 
 void MainWindow::loadWritePlugin(WritePlugin *plugin) {
@@ -195,39 +206,13 @@ void MainWindow::loadTabPlugin(TabPlugin *plugin) {
     std::cout << "\t\tLoading Tab Plugin: " << plugin->name().toStdString() << std::endl;
     _tabPlugins.append(plugin);
     ui->menu_Plugins->addAction(plugin->name(), plugin, SLOT(toggle()));
-    connect(_model, SIGNAL(cacheSelected(Cache)), plugin, SLOT(cacheSelected(Cache)));
-    connect(_model, SIGNAL(waypointSelected(Waypoint)), plugin, SLOT(waypointSelected(Waypoint)));
-    connect(this, SIGNAL(collectionSelected(Collection)), plugin, SLOT(collectionSelected(Collection)));
-}
-
-void MainWindow::refreshCollections()
-{
-    // Collections Drop-Down
-    QSqlQuery query;
-    query.prepare("SELECT id, " + Collection::fieldNames().join(", ") + " FROM COLLECTION;");
-    if (!query.exec())
-        throw query;
-    Collection *collection;
-    while (query.next()) {
-        collection = new Collection(_db, query);
-        ui->collections->addItem(collection->summary(), collection->getID());
-        delete collection;
-    }
+    connect(_item_tree_model, SIGNAL(cacheSelected(Cache)), plugin, SLOT(selectCache(Cache)));
+    connect(_item_tree_model, SIGNAL(waypointSelected(Waypoint)), plugin, SLOT(selectWaypoint(Waypoint)));
+    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection)), plugin, SLOT(selectCollection(Collection)));
+    connect(_collection_selector_model, SIGNAL(allSelected()), plugin, SLOT(selectAllCollections()));
+    connect(_collection_selector_model, SIGNAL(noneSelected()), plugin, SLOT(selectNoCollections()));
 }
 
 void MainWindow::on_action_Test_triggered()
 {
-}
-
-void MainWindow::collectionIndexChanged(int index)
-{
-    QVariant qv = ui->collections->itemData(index, Qt::UserRole);
-    if (qv.isValid() && qv.toInt() > 0) { // "All" is index 0, we don't want that!
-        Collection collection(_db, qv.toInt());
-        _model->refresh(&collection);
-        emit collectionSelected(collection);
-    } else {
-        _model->refresh();
-        emit collectionDeselected();
-    }
 }

@@ -10,12 +10,6 @@
 #include "db/waypoint.h"
 #include "exceptions.h"
 
-#define INFO_TYPE_NONE      1
-#define INFO_TYPE_CACHE     2
-#define INFO_TYPE_WAYPOINT  3
-#define INFO_TYPE_ROUTE     4
-#define INFO_TYPE_TRACK     5
-
 class TreeModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -27,7 +21,6 @@ public:
     QMimeData *mimeData(const QModelIndexList &indexes) const;
     QStringList mimeTypes() const;
     Qt::DropActions supportedDropActions() const;
-    int collectionID();
     Collection *collection();
 signals:
     void cacheSelected(Cache cache);
@@ -37,11 +30,17 @@ signals:
     void waypointDragged(int id);
     void waypointDropped(int id);
 public slots:
-    void item_selected(QModelIndex index);
-    void refresh(Collection *collection=NULL);
+    void showAll();
+    void showNone();
+    void showCollection(Collection collection);
+    void itemSelected(QModelIndex index);
+    void refresh();
+protected:
+    void setup();
 private:
     Database *_db;
     Collection *_collection;
+    bool _all;
     QStandardItem _caches;
     QStandardItem _waypoints;
 };

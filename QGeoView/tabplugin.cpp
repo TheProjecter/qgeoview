@@ -10,7 +10,6 @@ TabPlugin::TabPlugin(Database *db, QTabWidget *pluginsTabWidget) :
 }
 
 
-
 void TabPlugin::toggle()
 {
     if (_active)
@@ -40,22 +39,25 @@ void TabPlugin::deactivate()
     _tab_id = 0;
 }
 
-void TabPlugin::cacheSelected(Cache cache)
+void TabPlugin::selectCache(Cache cache)
 {
     Q_UNUSED(cache)
 }
 
-void TabPlugin::waypointSelected(Waypoint waypoint)
+void TabPlugin::selectWaypoint(Waypoint waypoint)
 {
     Q_UNUSED(waypoint)
 }
 
-void TabPlugin::collectionSelected(Collection collection)
+void TabPlugin::selectCollection(Collection collection)
 {
     Q_UNUSED(collection)
 }
 
-void TabPlugin::items_selection(QModelIndexList selection)
-{
-    Q_UNUSED(selection)
-}
+void TabPlugin::selectNoCollections()
+{}
+
+
+void TabPlugin::selectAllCollections()
+{}
+

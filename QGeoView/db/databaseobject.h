@@ -28,6 +28,7 @@ public slots:
     float getFloatValue(int mask);
     int getIntValue(int mask);
     bool getBoolValue(int mask);
+    virtual void cleanup();
     virtual void save();
     virtual void remove();
     virtual QString table() = 0;
