@@ -16,7 +16,6 @@ class Waypoint : public DatabaseObject
 public:
     Waypoint(QSqlDatabase *db, int id=0);
     Waypoint(QSqlDatabase *db, QSqlQuery query);
-    Waypoint(const Waypoint &original);
     void addBindValues(QSqlQuery query);
     void setIntValue(int mask, int value);
     int getIntValue(int mask);

@@ -16,13 +16,6 @@ Collection::Collection(QSqlDatabase *db, QSqlQuery query) :
     loadValues(query, true);
 }
 
-Collection::Collection(const Collection &original) :
-    DatabaseObject(original),
-    _name(original._name),
-    _description(original._description)
-{
-}
-
 QString Collection::table()
 {
     return tableName();

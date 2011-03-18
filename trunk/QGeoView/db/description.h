@@ -17,7 +17,6 @@ class Description : public DatabaseObject
 public:
     Description(QSqlDatabase *db, int id=0);
     Description(QSqlDatabase *db, QSqlQuery query);
-    Description(const Description &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     QString getQStringValue(int mask);

@@ -16,23 +16,6 @@ Log::Log(QSqlDatabase *db, QSqlQuery query) :
     loadValues(query, true);
 }
 
-Log::Log(const Log &original) :
-    DatabaseObject(original),
-    _log_guid(original._log_guid),
-    _date(original._date),
-    _type(original._type),
-    _finder_guid(original._finder_guid),
-    _finder_name(original._finder_name),
-    _text(original._text),
-    _latitude(original._latitude),
-    _longitude(original._longitude),
-    _log_id(original._log_id),
-    _finder_id(original._finder_id),
-    _fk_cache(original._fk_cache),
-    _text_encoded(original._text_encoded)
-{
-}
-
 QString Log::table()
 {
     return Log::tableName();

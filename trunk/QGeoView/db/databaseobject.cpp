@@ -11,12 +11,6 @@ DatabaseObject::DatabaseObject(QSqlDatabase *db, int id) :
     _nullMask(0x0)
 {}
 
-DatabaseObject::DatabaseObject(const DatabaseObject &original) :
-    _db(original._db),
-    _id(original._id),
-    _nullMask(original._nullMask)
-{}
-
 void DatabaseObject::load()
 {
     if (!_id)
