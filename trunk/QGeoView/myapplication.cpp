@@ -5,7 +5,7 @@
 #include <QSqlError>
 
 
-MyApplication::MyApplication(int argc, char *argv[]) :
+MyApplication::MyApplication(int &argc, char *argv[]) :
     QApplication(argc, argv)
 {
 }

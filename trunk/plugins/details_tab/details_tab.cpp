@@ -37,24 +37,24 @@ QString DetailsTabPlugin::name()
     return "Details";
 }
 
-void DetailsTabPlugin::selectCache(Cache cache)
+void DetailsTabPlugin::selectCache(Cache *cache)
 {
     if (!_active)
         return;
-    setCacheData(&cache);
-    setLogsData(&cache.getLogIDs());
-    selectWaypoint(cache.getWaypoint());
+    setCacheData(cache);
+    setLogsData(cache->getLogIDs());
+    selectWaypoint(cache->getWaypoint());
 }
 
-void DetailsTabPlugin::selectWaypoint(Waypoint waypoint)
+void DetailsTabPlugin::selectWaypoint(Waypoint *waypoint)
 {
     if (!_active)
         return;
-    Point point = waypoint.getPoint();
-    Description description = waypoint.getDescription();
-    setPointData(&point);
-    setAccuracyData(&point);
-    setDescriptionData(&description);
+    Point *point = waypoint->getPoint();
+    Description *description = waypoint->getDescription();
+    setPointData(point);
+    setAccuracyData(point);
+    setDescriptionData(description);
 }
 
 void DetailsTabPlugin::setCacheData(Cache *cache)
@@ -266,13 +266,13 @@ void DetailsTabPlugin::setAccuracyData(Point *point)
         ui.accuracy_dgpsid->hide();
 }
 
-void DetailsTabPlugin::setLogsData(QList<int> *logIDs)
+void DetailsTabPlugin::setLogsData(QList<int> logIDs)
 {
     ui.logs_selector->clear();
     QSqlQuery query;
     QString query_string("SELECT l.id, l." + Log::fieldNames().join(", l.") + " FROM Log l WHERE l.id IN (");
     bool first=true;
-    foreach(int id, *logIDs) {
+    foreach(int id, logIDs) {
         if (first)
             first = false;
         else
