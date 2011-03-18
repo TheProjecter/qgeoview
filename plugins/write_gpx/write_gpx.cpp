@@ -49,6 +49,9 @@ void WriteGpxPlugin::save()
  Exports a collection to a GPX file.
 */
 void WriteGpxPlugin::write(QFile *file, int collection_id) {
+    // TODO: Implement
+    Q_UNUSED(file)          // TODO: Use
+    Q_UNUSED(collection_id) // TODO: Use
     return;
     /*
     // create gpx structure

@@ -7,7 +7,7 @@ class MyApplication : public QApplication
 {
     Q_OBJECT
 public:
-    MyApplication(int argc, char *argv[]);
+    MyApplication(int &argc, char *argv[]);
     bool notify(QObject *rec, QEvent *ev);
 };
 

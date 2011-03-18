@@ -34,8 +34,8 @@ public:
     DetailsTabPlugin(QSqlDatabase *db, QTabWidget *tabPluginsTab);
     QString name();
 public slots:
-    void selectCache(Cache cache);
-    void selectWaypoint(Waypoint waypoint);
+    void selectCache(Cache *cache);
+    void selectWaypoint(Waypoint *waypoint);
     void selectLogIndex(int index);
 private slots:
     void open_description_link();
@@ -44,7 +44,7 @@ private:
     void setDescriptionData(Description *details);
     void setPointData(Point *point);
     void setAccuracyData(Point *point);
-    void setLogsData(QList<int> *logIDs);
+    void setLogsData(QList<int> logIDs);
     QString _link_url;
     Ui::MainWidget ui;
 };
