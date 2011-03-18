@@ -31,28 +31,6 @@ QList<Cache> Cache::getAll(QSqlDatabase *db)
     return caches;
 }
 
-Cache::Cache(const Cache &original) :
-    DatabaseObject(original),
-    _name(original._name),
-    _placed_by(original._placed_by),
-    _owner_guid(original._owner_guid),
-    _owner_name(original._owner_name),
-    _type(original._type),
-    _container(original._container),
-    _country(original._country),
-    _state(original._state),
-    _short_description(original._short_description),
-    _long_description(original._long_description),
-    _encoded_hints(original._encoded_hints),
-    _difficulty(original._difficulty),
-    _terrain(original._terrain),
-    _owner_id(original._owner_id),
-    _fk_waypoint(original._fk_waypoint),
-    _long_description_html(original._long_description_html),
-    _short_description_html(original._short_description_html)
-{
-}
-
 QString Cache::summary()
 {
     try {

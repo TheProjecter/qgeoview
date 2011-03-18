@@ -17,16 +17,6 @@ Description::Description(QSqlDatabase *db, QSqlQuery query) :
     loadValues(query, true);
 }
 
-Description::Description(const Description &original) :
-    DatabaseObject(original),
-    _name(original._name),
-    _link_url(original._link_url),
-    _link_name(original._link_name),
-    _comments(original._comments),
-    _source(original._source),
-    _type(original._type)
-{}
-
 QString Description::table()
 {
     return "Description";

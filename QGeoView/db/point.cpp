@@ -17,25 +17,6 @@ Point::Point(QSqlDatabase *db, QSqlQuery query) :
     loadValues(query, true);
 }
 
-Point::Point(const Point &original) :
-    DatabaseObject(original),
-    _time(original._time),
-    _symbol(original._symbol),
-    _fix(original._fix),
-    _elevation(original._elevation),
-    _magneticVariation(original._elevation),
-    _geoIDHeight(original._geoIDHeight),
-    _latitude(original._latitude),
-    _longitude(original._longitude),
-    _horizontalDOP(original._horizontalDOP),
-    _verticalDOP(original._verticalDOP),
-    _positionDOP(original._positionDOP),
-    _ageOfDGPSData(original._ageOfDGPSData),
-    _satelites(original._satelites),
-    _DGPSID(original._DGPSID)
-{
-}
-
 QString Point::table()
 {
     return Point::tableName();

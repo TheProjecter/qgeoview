@@ -31,7 +31,6 @@ class Cache : public DatabaseObject
 public:
     Cache(QSqlDatabase *db, int id=0);
     Cache(QSqlDatabase *db, QSqlQuery query);
-    Cache(const Cache &original);
     QString table();
     static QString tableName();
     static QList<Cache> getAll(QSqlDatabase *);

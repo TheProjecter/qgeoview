@@ -26,7 +26,6 @@ class Point : public DatabaseObject
 public:
     Point(QSqlDatabase *db, int id=0);
     Point(QSqlDatabase *db, QSqlQuery query);
-    Point(const Point &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     void setFloatValue(int mask, float value);

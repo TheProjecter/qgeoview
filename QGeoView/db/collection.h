@@ -17,7 +17,6 @@ class Collection : public DatabaseObject
 public:
     Collection(QSqlDatabase *db, int id=0);
     Collection(QSqlDatabase *db, QSqlQuery query);
-    Collection(const Collection &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     QString getQStringValue(int mask);

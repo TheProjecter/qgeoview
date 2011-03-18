@@ -15,7 +15,6 @@ class DatabaseObject : public QObject
     Q_OBJECT
 public:
     DatabaseObject(QSqlDatabase *db, int id=0);
-    DatabaseObject(const DatabaseObject &original);
     bool isSet(int mask);
     void set(int mask);
     virtual QStringList fields() = 0;

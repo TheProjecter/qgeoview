@@ -17,13 +17,6 @@ Waypoint::Waypoint(QSqlDatabase *db, QSqlQuery query) :
     loadValues(query, true);
 }
 
-Waypoint::Waypoint(const Waypoint &original) :
-    DatabaseObject(original),
-    _fk_point(original._fk_point),
-    _fk_description(original._fk_description)
-{
-}
-
 QString Waypoint::summary()
 {
     if (isSet(NULLMASK_WAYPOINT_DESCRIPTION)) {
