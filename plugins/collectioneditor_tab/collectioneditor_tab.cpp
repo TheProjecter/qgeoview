@@ -41,7 +41,7 @@ CollectionEditorTabPlugin::CollectionEditorTabPlugin(QSqlDatabase *db, QTabWidge
 
     connect(ui.selector, SIGNAL(currentIndexChanged(int)), _collection_selector_model, SLOT(indexChanged(int)));
     connect(ui.tree, SIGNAL(clicked(QModelIndex)), _item_tree_model, SLOT(itemSelected(QModelIndex)));
-    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection)), _item_tree_model, SLOT(showCollection(Collection)));
+    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection*)), _item_tree_model, SLOT(showCollection(Collection*)));
     connect(_collection_selector_model, SIGNAL(allSelected()), _item_tree_model, SLOT(showAll()));
     connect(_collection_selector_model, SIGNAL(noneSelected()), _item_tree_model, SLOT(showNone()));
     connect(_collection_selector_model, SIGNAL(refreshed()), _item_tree_model, SLOT(refresh()));
