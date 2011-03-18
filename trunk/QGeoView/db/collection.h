@@ -4,6 +4,7 @@
 #include <QSqlQuery>
 #include <QObject>
 #include "databaseobject.h"
+#include "db/cache.h"
 
 
 #define NULLMASK_COLLECTION_NAME        0x1
@@ -29,6 +30,9 @@ public:
     void addWaypoint(int id);
     void removeWaypoint(int id);
     void cleanup();
+    static QList<Collection> getAllCollections(Database *db);
+    QList<Cache> caches();
+    QList<Waypoint> waypoints();
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:

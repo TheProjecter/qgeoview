@@ -4,11 +4,13 @@
 TabPlugin::TabPlugin(Database *db, QTabWidget *pluginsTabWidget) :
     _db(db),
     _pluginsTabWidget(pluginsTabWidget),
-    _active(false),
-    _tab_id(0)
-{
-}
+    _active(false)
+{}
 
+TabPlugin::~TabPlugin()
+{
+    delete _pluginsTabWidget;
+}
 
 void TabPlugin::toggle()
 {
@@ -24,7 +26,7 @@ void TabPlugin::activate()
         return;
     // TODO: Activate myself
     _active = true;
-    _tab_id = _pluginsTabWidget->addTab(this, name());
+    _pluginsTabWidget->addTab(this, name());
     this->show();
 }
 
@@ -35,10 +37,10 @@ void TabPlugin::deactivate()
     // TODO: Deactivate myself
     _active = false;
     this->hide();
-    _pluginsTabWidget->removeTab(_tab_id);
-    _tab_id = 0;
+    _pluginsTabWidget->removeTab(_pluginsTabWidget->indexOf(this));
 }
 
+// The following are unused in case a TabWidget wishes to extends them.
 void TabPlugin::selectCache(Cache cache)
 {
     Q_UNUSED(cache)

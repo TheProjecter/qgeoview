@@ -14,6 +14,7 @@ class TabPlugin : public QWidget
     Q_OBJECT
 public:
     TabPlugin(Database *db, QTabWidget *pluginsTabWidget);
+    ~TabPlugin();
     virtual QString name() = 0;
     int active();
 public slots:
@@ -29,7 +30,6 @@ protected:
     Database *_db;
     QTabWidget *_pluginsTabWidget;
     bool _active;
-    int _tab_id;
 };
 
 class TabPluginFactory

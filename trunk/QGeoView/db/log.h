@@ -35,6 +35,7 @@ public:
     int getIntValue(int mask);
     bool getBoolValue(int mask);
     QString table();
+    static QString tableName();
     QStringList fields();
     static QStringList fieldNames();
     QString summary();

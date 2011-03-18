@@ -9,9 +9,8 @@
  Opens the database and ensures that it is available.
 */
 Database::Database(QString location, QObject *parent) :
-    QObject(parent)
+    _db(QSqlDatabase::addDatabase("QSQLITE"))
 {
-    _db = QSqlDatabase::addDatabase("QSQLITE");
     _db.setDatabaseName(location);
     if (_db.open()) {
         std::cout << "Connected" << std::endl;
@@ -29,12 +28,10 @@ Database::~Database()
     _db.close();
 }
 
-
 void Database::transaction()
 {
     _db.transaction();
 }
-
 
 void Database::commit()
 {

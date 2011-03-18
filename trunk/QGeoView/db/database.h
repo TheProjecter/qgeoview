@@ -21,17 +21,12 @@ class Database : public QObject
 {
 Q_OBJECT
 public:
-    explicit Database(QString location, QObject *parent=NULL);
+    Database(QString location, QObject *parent=NULL);
+    ~Database();
     void transaction();
     void commit();
-    ~Database();
 private:
     QSqlDatabase _db;
-
-signals:
-
-public slots:
-
 };
 
 #endif // DATABASE_H

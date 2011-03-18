@@ -36,6 +36,11 @@ Point::Point(const Point &original) :
 
 QString Point::table()
 {
+    return Point::tableName();
+}
+
+QString Point::tableName()
+{
     return "Point";
 }
 

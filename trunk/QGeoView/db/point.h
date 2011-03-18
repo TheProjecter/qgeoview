@@ -35,6 +35,7 @@ public:
     float getFloatValue(int mask);
     int getIntValue(int mask);
     QString table();
+    static QString tableName();
     QStringList fields();
     static QStringList fieldNames();
 protected:

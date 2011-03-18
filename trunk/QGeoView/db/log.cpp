@@ -33,6 +33,11 @@ Log::Log(const Log &original) :
 
 QString Log::table()
 {
+    return Log::tableName();
+}
+
+QString Log::tableName()
+{
     return "Log";
 }
 

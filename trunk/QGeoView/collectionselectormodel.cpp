@@ -12,6 +12,8 @@ CollectionSelectorModel::~CollectionSelectorModel()
 {
     if (_collection)
         delete _collection;
+    if (_root)
+        delete _root;
 }
 
 Collection *CollectionSelectorModel::collection() {
@@ -51,15 +53,11 @@ void CollectionSelectorModel::refresh()
     }
 
     // Repopulate collections
-    QSqlQuery query("SELECT id, " + Collection::fieldNames().join(", ") + " FROM " + Collection::tableName() + ";");
-    if (!query.exec())
-        throw query;
-    Collection *collection;
-    while (query.next()) {
-        collection = new Collection(_db, query);
-        _ids.append(collection->getID());
-        _root->appendRow(new QStandardItem(collection->summary()));
-        delete collection;
+    QList<Collection> collections = Collection::getAllCollections(_db);
+    QList<Collection>::iterator i;
+    for (i = collections.begin(); i != collections.end(); ++i) {
+        _ids.append(i->getID());
+        _root->appendRow(new QStandardItem(i->summary()));
     }
     emit refreshed();
 }

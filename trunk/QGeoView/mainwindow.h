@@ -31,7 +31,6 @@
 #include <QModelIndexList>
 
 #include "database.h"
-#include "dummyplugin.h"
 #include "readplugin.h"
 #include "writeplugin.h"
 #include "tabplugin.h"
@@ -48,35 +47,31 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
     MainWindow(QWidget *parent = 0);
-    void firstRun();
-    void openFile(QString filename);
     ~MainWindow();
 
-protected:
-    void changeEvent(QEvent *e);
+private slots:
+    void on_action_Quit_triggered();
+
+signals:
+    void quit();
+    void collectionSelected(Collection collection);
+    void noCollectionSelected();
 
 private:
+    void firstRun();
     void loadPlugins();
-    void loadDummyPlugin(DummyPlugin *plugin);
     void loadReadPlugin(ReadPlugin *plugin);
     void loadWritePlugin(WritePlugin *plugin);
     void loadTabPlugin(TabPlugin *plugin);
+
     Ui::MainWindow *ui;
-    Database* _db;
-    QSettings* _settings;
-    QList<DummyPlugin*> _dummyPlugins;
+    QSettings *_settings;
+    Database *_db;
     QList<ReadPlugin*> _readPlugins;
     QList<WritePlugin*> _writePlugins;
     QList<TabPlugin*> _tabPlugins;
     TreeModel *_item_tree_model;
     CollectionSelectorModel *_collection_selector_model;
-private slots:
-    void on_action_Quit_triggered();
-    void on_action_Test_triggered();
-signals:
-    void quit();
-    void collectionSelected(Collection collection);
-    void collectionDeselected();
 };
 
 #endif // MAINWINDOW_H

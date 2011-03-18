@@ -21,7 +21,6 @@ public:
     QMimeData *mimeData(const QModelIndexList &indexes) const;
     QStringList mimeTypes() const;
     Qt::DropActions supportedDropActions() const;
-    Collection *collection();
 signals:
     void cacheSelected(Cache cache);
     void waypointSelected(Waypoint waypoint);
