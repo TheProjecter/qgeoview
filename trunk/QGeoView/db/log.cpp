@@ -1,14 +1,16 @@
+#include <QVariant>
+#include <QStringList>
 #include "log.h"
 #include "exceptions.h"
 
-Log::Log(Database *db, int id) :
+Log::Log(QSqlDatabase *db, int id) :
     DatabaseObject(db, id)
 {
     if (id)
         load();
 }
 
-Log::Log(Database *db, QSqlQuery query) :
+Log::Log(QSqlDatabase *db, QSqlQuery query) :
     DatabaseObject(db)
 {
     loadValues(query, true);

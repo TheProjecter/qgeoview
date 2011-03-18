@@ -1,15 +1,17 @@
+#include <QVariant>
+#include <QStringList>
 #include <iostream>
 #include "point.h"
 #include "exceptions.h"
 
-Point::Point(Database *db, int id) :
+Point::Point(QSqlDatabase *db, int id) :
     DatabaseObject(db, id)
 {
     if (id)
         load();
 }
 
-Point::Point(Database *db, QSqlQuery query) :
+Point::Point(QSqlDatabase *db, QSqlQuery query) :
     DatabaseObject(db)
 {
     loadValues(query, true);

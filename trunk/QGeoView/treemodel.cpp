@@ -1,7 +1,7 @@
 #include <iostream>
 #include "treemodel.h"
 
-TreeModel::TreeModel(Database *db, QObject *parent) :
+TreeModel::TreeModel(QSqlDatabase *db, QObject *parent) :
     QStandardItemModel(parent),
     _db(db),
     _collection(NULL),

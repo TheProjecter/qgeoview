@@ -30,7 +30,6 @@
 #include <QDir>
 #include <QModelIndexList>
 
-#include "database.h"
 #include "readplugin.h"
 #include "writeplugin.h"
 #include "tabplugin.h"
@@ -66,7 +65,7 @@ private:
 
     Ui::MainWindow *ui;
     QSettings *_settings;
-    Database *_db;
+    QSqlDatabase _db;
     QList<ReadPlugin*> _readPlugins;
     QList<WritePlugin*> _writePlugins;
     QList<TabPlugin*> _tabPlugins;

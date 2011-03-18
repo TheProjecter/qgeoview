@@ -1,15 +1,17 @@
+#include <QVariant>
+#include <QStringList>
 #include <iostream>
 #include "waypoint.h"
 #include "exceptions.h"
 
-Waypoint::Waypoint(Database *db, int id) :
+Waypoint::Waypoint(QSqlDatabase *db, int id) :
     DatabaseObject(db, id)
 {
     if (id)
         load();
 }
 
-Waypoint::Waypoint(Database *db, QSqlQuery query) :
+Waypoint::Waypoint(QSqlDatabase *db, QSqlQuery query) :
     DatabaseObject(db)
 {
     loadValues(query, true);
@@ -112,7 +114,7 @@ Description Waypoint::getDescription()
     return Description(_db, _fk_description);
 }
 
-QList<Waypoint> Waypoint::getAll(Database *db)
+QList<Waypoint> Waypoint::getAll(QSqlDatabase *db)
 {
     QList<Waypoint> waypoints;
     QSqlQuery query("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM " + Waypoint::tableName() + ";");

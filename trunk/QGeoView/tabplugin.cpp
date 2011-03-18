@@ -1,7 +1,7 @@
 #include <iostream>
 #include "tabplugin.h"
 
-TabPlugin::TabPlugin(Database *db, QTabWidget *pluginsTabWidget) :
+TabPlugin::TabPlugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget) :
     _db(db),
     _pluginsTabWidget(pluginsTabWidget),
     _active(false)

@@ -33,7 +33,7 @@ class CollectionEditorTabPlugin : public TabPlugin
 {
     Q_OBJECT
 public:
-    CollectionEditorTabPlugin(Database *db, QTabWidget *pluginsTabWindow);
+    CollectionEditorTabPlugin(QSqlDatabase *db, QTabWidget *pluginsTabWindow);
     QString name();
 public slots:
     void items_selection(QModelIndexList selection);
@@ -65,7 +65,7 @@ class CollectionEditorTabPluginFactory : public QObject, public TabPluginFactory
     Q_OBJECT
     Q_INTERFACES(TabPluginFactory)
 public:
-    TabPlugin *get_plugin(Database *db, QTabWidget *pluginsTabWindow);
+    TabPlugin *get_plugin(QSqlDatabase *db, QTabWidget *pluginsTabWindow);
 };
 
 #endif 

@@ -13,8 +13,8 @@ class EditCollectionDialog : public QDialog
     Q_OBJECT
 
 public:
-    EditCollectionDialog(Database *db, Collection collection, QWidget *parent = 0);
-    EditCollectionDialog(Database *db, QWidget *parent = 0);
+    EditCollectionDialog(QSqlDatabase *db, Collection collection, QWidget *parent = 0);
+    EditCollectionDialog(QSqlDatabase *db, QWidget *parent = 0);
     ~EditCollectionDialog();
     Collection collection();
 

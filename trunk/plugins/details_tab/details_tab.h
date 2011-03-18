@@ -31,7 +31,7 @@ class DetailsTabPlugin : public TabPlugin
 {
     Q_OBJECT
 public:
-    DetailsTabPlugin(Database *db, QTabWidget *tabPluginsTab);
+    DetailsTabPlugin(QSqlDatabase *db, QTabWidget *tabPluginsTab);
     QString name();
 public slots:
     void selectCache(Cache cache);
@@ -54,7 +54,7 @@ class DetailsTabPluginFactory : public QObject, public TabPluginFactory
     Q_OBJECT
     Q_INTERFACES(TabPluginFactory)
 public:
-    TabPlugin *get_plugin(Database *db, QTabWidget *pluginsTabWidget);
+    TabPlugin *get_plugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget);
 };
 
 #endif 

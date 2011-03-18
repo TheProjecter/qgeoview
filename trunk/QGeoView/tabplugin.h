@@ -4,7 +4,6 @@
 #include <QWidget>
 #include <QTabWidget>
 
-#include "db/database.h"
 #include "db/cache.h"
 #include "db/waypoint.h"
 #include "db/collection.h"
@@ -13,7 +12,7 @@ class TabPlugin : public QWidget
 {
     Q_OBJECT
 public:
-    TabPlugin(Database *db, QTabWidget *pluginsTabWidget);
+    TabPlugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget);
     ~TabPlugin();
     virtual QString name() = 0;
     int active();
@@ -27,7 +26,7 @@ public slots:
     void selectAllCollections();
     void selectNoCollections();
 protected:
-    Database *_db;
+    QSqlDatabase *_db;
     QTabWidget *_pluginsTabWidget;
     bool _active;
 };
@@ -35,7 +34,7 @@ protected:
 class TabPluginFactory
 {
 public:
-    virtual TabPlugin *get_plugin(Database *db, QTabWidget *pluginsTabWidget) = 0;
+    virtual TabPlugin *get_plugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget) = 0;
 };
 
 Q_DECLARE_INTERFACE(TabPluginFactory, "org.homelinux.darwinsurvivor.QGeoView.TabPluginFactory");

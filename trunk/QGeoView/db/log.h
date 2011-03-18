@@ -22,8 +22,8 @@ class Log : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Log(Database *db, int id=0);
-    Log(Database *db, QSqlQuery query);
+    Log(QSqlDatabase *db, int id=0);
+    Log(QSqlDatabase *db, QSqlQuery query);
     Log(const Log &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);

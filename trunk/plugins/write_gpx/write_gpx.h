@@ -26,7 +26,6 @@
 #include <QFile>
 
 #include "writeplugin.h"
-#include "db/database.h"
 #include "db/point.h"
 #include "db/description.h"
 #include "db/waypoint.h"
@@ -36,7 +35,7 @@
 class WriteGpxPlugin : public WritePlugin {
     Q_OBJECT
 public:
-    WriteGpxPlugin(Database *db);
+    WriteGpxPlugin(QSqlDatabase *db);
     QString name();
     void write(QFile *file, int collection_id);
 public slots:
@@ -48,7 +47,7 @@ class WriteGpxPluginFactory : public QObject, public WritePluginFactory
     Q_OBJECT
     Q_INTERFACES(WritePluginFactory)
 public:
-    WritePlugin *get_plugin(Database *db);
+    WritePlugin *get_plugin(QSqlDatabase *db);
 };
 
 #endif 

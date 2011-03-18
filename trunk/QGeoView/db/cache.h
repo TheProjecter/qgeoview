@@ -29,12 +29,12 @@ class Cache : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Cache(Database *db, int id=0);
-    Cache(Database *db, QSqlQuery query);
+    Cache(QSqlDatabase *db, int id=0);
+    Cache(QSqlDatabase *db, QSqlQuery query);
     Cache(const Cache &original);
     QString table();
     static QString tableName();
-    static QList<Cache> getAll(Database *);
+    static QList<Cache> getAll(QSqlDatabase *);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     void setIntValue(int mask, int value);

@@ -1,14 +1,16 @@
+#include <QVariant>
+
 #include "collection.h"
 #include "exceptions.h"
 
-Collection::Collection(Database *db, int id) :
+Collection::Collection(QSqlDatabase *db, int id) :
     DatabaseObject(db, id)
 {
     if (id)
         load();
 }
 
-Collection::Collection(Database *db, QSqlQuery query) :
+Collection::Collection(QSqlDatabase *db, QSqlQuery query) :
     DatabaseObject(db)
 {
     loadValues(query, true);
@@ -182,7 +184,7 @@ void Collection::cleanup()
     _db->commit();
 }
 
-QList<Collection> Collection::getAllCollections(Database *db)
+QList<Collection> Collection::getAllCollections(QSqlDatabase *db)
 {
     QList<Collection> collections;
     QSqlQuery query("SELECT id, " + Collection::fieldNames().join(", ") + " FROM " + Collection::tableName() + ";");

@@ -53,18 +53,21 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     // Database
-    _db = new Database(_settings->value("database/location").toString());
+    _db = QSqlDatabase::addDatabase("QSQLITE");
+    _db.setDatabaseName(_settings->value("database/location").toString());
+    if (!_db.open())
+        std::cerr << "Error Connecting to Database: " << _settings->value("database/location").toString().toStdString() << std::endl;
     
     // UI
     ui->setupUi(this);
     setWindowIcon(QIcon(":/icons/application.svg"));
 
     // Collection Selector
-    _collection_selector_model = new CollectionSelectorModel(_db, true);
+    _collection_selector_model = new CollectionSelectorModel(&_db, true);
     ui->collections->setModel(_collection_selector_model);
 
     // Item Tree
-    _item_tree_model = new TreeModel(_db);
+    _item_tree_model = new TreeModel(&_db);
     ui->tree->setModel(_item_tree_model);
     ui->tree->expandAll();
 
@@ -80,6 +83,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Plugins
     loadPlugins();
+}
+
+/*
+ Removes private variables from memory.
+*/
+MainWindow::~MainWindow()
+{
+    _db.close();
+    delete _settings;
+    delete ui;
 }
 
 /*
@@ -115,15 +128,6 @@ void MainWindow::firstRun()
 }
 
 
-/*
- Removes private variables from memory.
-*/
-MainWindow::~MainWindow()
-{
-    delete _db;
-    delete _settings;
-    delete ui;
-}
 
 /*
  Quit the application.
@@ -146,11 +150,11 @@ void MainWindow::loadPlugins()
             WritePluginFactory *writePluginFactory = qobject_cast<WritePluginFactory*>(plugin);
             TabPluginFactory *tabPluginFactory = qobject_cast<TabPluginFactory*>(plugin);
             if (readPluginFactory)
-                loadReadPlugin(readPluginFactory->get_plugin(_db));
+                loadReadPlugin(readPluginFactory->get_plugin(&_db));
             if (writePluginFactory)
-                loadWritePlugin(writePluginFactory->get_plugin(_db));
+                loadWritePlugin(writePluginFactory->get_plugin(&_db));
             if (tabPluginFactory)
-                loadTabPlugin(tabPluginFactory->get_plugin(_db, ui->tabPluginsWidget));
+                loadTabPlugin(tabPluginFactory->get_plugin(&_db, ui->tabPluginsWidget));
         } else {
             std::cout << "Loading " << fileName.toStdString() << " failed: " << pluginLoader.errorString().toStdString() << std::endl;
         }

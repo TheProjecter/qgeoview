@@ -17,7 +17,6 @@ HEADERS        += collectioneditor_tab.h \
                   ../../QGeoView/db/log.h \
                   ../../QGeoView/db/waypoint.h \
                   ../../QGeoView/db/databaseobject.h \
-                  ../../QGeoView/db/database.h \
                   editcollectiondialog.h
 SOURCES        += collectioneditor_tab.cpp \
                   ../../QGeoView/tabplugin.cpp \
@@ -31,8 +30,7 @@ SOURCES        += collectioneditor_tab.cpp \
                   ../../QGeoView/db/log.cpp \
                   ../../QGeoView/db/waypoint.cpp \
                   ../../QGeoView/db/databaseobject.cpp \
-                  ../../QGeoView/db/database.cpp \
-    editcollectiondialog.cpp
+                  editcollectiondialog.cpp
 FORMS           += \
                   mainwidget.ui \
     editcollectiondialog.ui

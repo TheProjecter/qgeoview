@@ -3,13 +3,18 @@
 
 #include <QObject>
 #include <QSqlQuery>
-#include "database.h"
+
+#define INFO_TYPE_NONE      1
+#define INFO_TYPE_CACHE     2
+#define INFO_TYPE_WAYPOINT  3
+#define INFO_TYPE_ROUTE     4
+#define INFO_TYPE_TRACK     5
 
 class DatabaseObject : public QObject
 {
     Q_OBJECT
 public:
-    DatabaseObject(Database *db, int id=0);
+    DatabaseObject(QSqlDatabase *db, int id=0);
     DatabaseObject(const DatabaseObject &original);
     bool isSet(int mask);
     void set(int mask);
@@ -37,7 +42,7 @@ protected:
     virtual void addBindValues(QSqlQuery query) = 0;
     virtual void loadValues(QSqlQuery query, bool loadID=false) = 0;
     void load();
-    Database *_db;
+    QSqlDatabase *_db;
     int _id;
     int _nullMask;
 };

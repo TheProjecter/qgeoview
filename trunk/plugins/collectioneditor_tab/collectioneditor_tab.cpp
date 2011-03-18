@@ -25,7 +25,7 @@
 #include "db/collection.h"
 #include "editcollectiondialog.h"
 
-CollectionEditorTabPlugin::CollectionEditorTabPlugin(Database *db, QTabWidget *pluginsTabWidget) :
+CollectionEditorTabPlugin::CollectionEditorTabPlugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget) :
     TabPlugin(db, pluginsTabWidget)
 {
     ui.setupUi(this);
@@ -141,7 +141,7 @@ void CollectionEditorTabPlugin::waypointDropped(int id)
 }
 
 
-TabPlugin *CollectionEditorTabPluginFactory::get_plugin(Database *db, QTabWidget *pluginsTabWidget)
+TabPlugin *CollectionEditorTabPluginFactory::get_plugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget)
 {
     return new CollectionEditorTabPlugin(db, pluginsTabWidget);
 }

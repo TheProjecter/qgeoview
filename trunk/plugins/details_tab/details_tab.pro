@@ -14,8 +14,7 @@ HEADERS        += details_tab.h \
                   ../../QGeoView/db/description.h \
                   ../../QGeoView/db/log.h \
                   ../../QGeoView/db/waypoint.h \
-                  ../../QGeoView/db/databaseobject.h \
-                  ../../QGeoView/db/database.h
+                  ../../QGeoView/db/databaseobject.h
 SOURCES        += details_tab.cpp \
                   ../../QGeoView/tabplugin.cpp \
                   ../../QGeoView/mainwindow.cpp \
@@ -25,8 +24,7 @@ SOURCES        += details_tab.cpp \
                   ../../QGeoView/db/description.cpp \
                   ../../QGeoView/db/log.cpp \
                   ../../QGeoView/db/waypoint.cpp \
-                  ../../QGeoView/db/databaseobject.cpp \
-                  ../../QGeoView/db/database.cpp
+                  ../../QGeoView/db/databaseobject.cpp
 FORMS           += \
                   mainwidget.ui
 TARGET          = $$qtLibraryTarget(detailstabpluginfactor)

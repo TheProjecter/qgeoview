@@ -14,8 +14,7 @@ HEADERS        += read_gpx.h \
                   ../../QGeoView/exceptions.h \
                   ../../QGeoView/db/log.h \
                   ../../QGeoView/db/waypoint.h \
-                  ../../QGeoView/db/databaseobject.h \
-                  ../../QGeoView/db/database.h
+                  ../../QGeoView/db/databaseobject.h
 SOURCES        += read_gpx.cpp \
                   ../../QGeoView/readplugin.cpp \
                   ../../QGeoView/db/point.cpp \
@@ -24,7 +23,6 @@ SOURCES        += read_gpx.cpp \
                   ../../QGeoView/db/description.cpp \
                   ../../QGeoView/db/log.cpp \
                   ../../QGeoView/db/waypoint.cpp \
-                  ../../QGeoView/db/databaseobject.cpp \
-                  ../../QGeoView/db/database.cpp
+                  ../../QGeoView/db/databaseobject.cpp
 TARGET          = $$qtLibraryTarget(readgpxpluginfactory)
 DESTDIR         = ../bin

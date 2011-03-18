@@ -1,21 +1,23 @@
 #include <iostream>
+#include <QStringList>
+#include <QVariant>
 #include "cache.h"
 #include "exceptions.h"
 
-Cache::Cache(Database *db, int id) :
+Cache::Cache(QSqlDatabase *db, int id) :
     DatabaseObject(db, id)
 {
     if (id)
         load();
 }
 
-Cache::Cache(Database *db, QSqlQuery query) :
+Cache::Cache(QSqlDatabase *db, QSqlQuery query) :
     DatabaseObject(db)
 {
     loadValues(query, true);
 }
 
-QList<Cache> Cache::getAll(Database *db)
+QList<Cache> Cache::getAll(QSqlDatabase *db)
 {
     QList<Cache> caches;
     QSqlQuery query("SELECT id, " + Cache::fieldNames().join(", ") + " FROM " + Cache::tableName() + ";");
