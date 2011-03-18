@@ -21,7 +21,6 @@ HEADERS        += mainwindow.h \
                   db/point.h \
                   db/waypoint.h \
                   readplugin.h \
-                  dummyplugin.h \
                   exceptions.h \
                   db/cache.h \
                   myapplication.h \
@@ -40,7 +39,6 @@ SOURCES        += main.cpp \
                   db/point.cpp \
                   db/waypoint.cpp \
                   readplugin.cpp \
-                  dummyplugin.cpp \
                   db/cache.cpp \
                   myapplication.cpp \
                   tabplugin.cpp \

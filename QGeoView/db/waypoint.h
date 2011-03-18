@@ -21,11 +21,13 @@ public:
     void setIntValue(int mask, int value);
     int getIntValue(int mask);
     QString table();
+    static QString tableName();
     Point getPoint();
     Description getDescription();
     QString summary();
     QStringList fields();
     static QStringList fieldNames();
+    static QList<Waypoint> getAll(Database *db);
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:

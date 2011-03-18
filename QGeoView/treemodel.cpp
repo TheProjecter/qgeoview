@@ -27,10 +27,6 @@ TreeModel::~TreeModel()
         delete _collection;
 }
 
-Collection *TreeModel::collection() {
-    return _collection;
-}
-
 void TreeModel::showCollection(Collection collection)
 {
     if (_collection)
@@ -69,42 +65,31 @@ void TreeModel::refresh()
         return;
 
     // Caches
-    QSqlQuery cachesQuery;
+    QList<Cache> caches;
     if (_collection) {
-        cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache WHERE id IN (SELECT fk_cache FROM Cache2Collection WHERE fk_collection=?);");
-        cachesQuery.addBindValue(_collection->getID());
+        caches = _collection->caches();
     } else {
-        cachesQuery.prepare("SELECT id, " + Cache::fieldNames().join(", ") + " FROM Cache;");
+        caches = Cache::getAll(_db);
     }
-
-    if (!cachesQuery.exec())
-        throw cachesQuery;
-
-    while (cachesQuery.next()) {
-        Cache cache(_db, cachesQuery);
-        QStandardItem *item = new QStandardItem(cache.summary());
+    for (QList<Cache>::iterator i=caches.begin(); i!=caches.end(); ++i) {
+        QStandardItem *item = new QStandardItem(i->summary());
         item->setEditable(false);
-        item->setData(QVariant::fromValue<int>(cache.getID()), Qt::UserRole);
+        item->setData(QVariant::fromValue<int>(i->getID()), Qt::UserRole);
         _caches.appendRow(item);
     }
 
     // Waypoints
-    QSqlQuery waypointsQuery;
+    QList<Waypoint> waypoints;
     if (_collection) {
-        waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache) AND id IN (SELECT fk_waypoint FROM Waypoint2Collection WHERE fk_collection=?);");
-        waypointsQuery.addBindValue(_collection->getID());
+        waypoints = _collection->waypoints();
     } else {
-        waypointsQuery.prepare("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM Waypoint WHERE id NOT IN (SELECT fk_waypoint FROM Cache);");
+        waypoints = Waypoint::getAll(_db);
     }
 
-    if (!waypointsQuery.exec())
-        throw waypointsQuery;
-
-    while (waypointsQuery.next()) {
-        Waypoint waypoint(_db, waypointsQuery);
-        QStandardItem *item = new QStandardItem(waypoint.summary());
+    for (QList<Waypoint>::iterator i=waypoints.begin(); i!=waypoints.end(); ++i) {
+        QStandardItem *item = new QStandardItem(i->summary());
         item->setEditable(false);
-        item->setData(QVariant::fromValue<int>(waypoint.getID()), Qt::UserRole);
+        item->setData(QVariant::fromValue<int>(i->getID()), Qt::UserRole);
         _waypoints.appendRow(item);
     }
 }
@@ -112,8 +97,9 @@ void TreeModel::refresh()
 void TreeModel::itemSelected(QModelIndex index)
 {
     QModelIndex parent = index.parent();
-    if (!parent.isValid())
+    if (!parent.isValid())  // Only categories have no parents, those are useless to us.
         return;
+
     // Item
     int id = index.data(Qt::UserRole).value<int>();
     int category = parent.data(Qt::UserRole).value<int>();
@@ -161,9 +147,7 @@ QMimeData *TreeModel::mimeData(const QModelIndexList &indexes) const
     foreach (QModelIndex index, indexes) {
         QModelIndex parent = index.parent();
         if (index.isValid() && parent.isValid()) { // index must be Valid and it must have a valid parent (otherwise it is a category, which is USELESS!)
-            int type = parent.data(Qt::UserRole).value<int>();
-            int id = index.data(Qt::UserRole).value<int>();
-            stream << type << id;   // Stream parent's data (which is the item's TYPE) and the item's data (which is it's DB id)
+            stream << parent.data(Qt::UserRole).value<int>() << index.data(Qt::UserRole).value<int>();   // Stream parent's data (which is the item's TYPE) and the item's data (which is it's DB id)
         }
     }
     mimeData->setData("data/QGeoViewItemIDs", encodedData);
@@ -190,16 +174,14 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
         Waypoint *waypoint;
         switch (type) {
             case INFO_TYPE_CACHE:
-                cache = new Cache(_db, id);
-                item = new QStandardItem(cache->summary());
+                item = new QStandardItem(Cache(_db, id).summary());
                 item->setEditable(false);
                 item->setData(QVariant::fromValue<int>(id), Qt::UserRole);
                 _caches.appendRow(item);
                 emit cacheDropped(id);
                 break;
             case INFO_TYPE_WAYPOINT:
-                waypoint = new Waypoint(_db, id);
-                item = new QStandardItem(waypoint->summary());
+                item = new QStandardItem(Waypoint(_db, id).summary());
                 item->setEditable(false);
                 item->setData(QVariant::fromValue<int>(id), Qt::UserRole);
                 _waypoints.appendRow(item);

@@ -15,6 +15,20 @@ Cache::Cache(Database *db, QSqlQuery query) :
     loadValues(query, true);
 }
 
+QList<Cache> Cache::getAll(Database *db)
+{
+    QList<Cache> caches;
+    QSqlQuery query("SELECT id, " + Cache::fieldNames().join(", ") + " FROM " + Cache::tableName() + ";");
+    if (!query.exec())
+        throw query;
+
+    while (query.next()) {
+        caches.append(Cache(db, query));
+    }
+
+    return caches;
+}
+
 Cache::Cache(const Cache &original) :
     DatabaseObject(original),
     _name(original._name),
@@ -43,12 +57,16 @@ QString Cache::summary()
         return getQStringValue(NULLMASK_CACHE_NAME) + " (" + getWaypoint().summary() + ")";
     }
     catch (DBValueNotSetException) {
-        std::cout << "Cache " << QString::number(getID()).toStdString() << "has no name!" << std::endl;
         return "Cache " + QString::number(getID());
     }
 }
 
 QString Cache::table()
+{
+    return Cache::tableName();
+}
+
+QString Cache::tableName()
 {
     return "Cache";
 }

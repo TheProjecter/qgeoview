@@ -34,6 +34,11 @@ QString Waypoint::summary()
 
 QString Waypoint::table()
 {
+    return Waypoint::tableName();
+}
+
+QString Waypoint::tableName()
+{
     return "Waypoint";
 }
 
@@ -105,4 +110,17 @@ Description Waypoint::getDescription()
         throw DBValueNotSetException(this, NULLMASK_WAYPOINT_DESCRIPTION, "fk_description");
     }
     return Description(_db, _fk_description);
+}
+
+QList<Waypoint> Waypoint::getAll(Database *db)
+{
+    QList<Waypoint> waypoints;
+    QSqlQuery query("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM " + Waypoint::tableName() + ";");
+    if (!query.exec())
+        throw query;
+    while (query.next()) {
+        waypoints.append(Waypoint(db, query));
+    }
+
+    return waypoints;
 }

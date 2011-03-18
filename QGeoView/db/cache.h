@@ -33,6 +33,8 @@ public:
     Cache(Database *db, QSqlQuery query);
     Cache(const Cache &original);
     QString table();
+    static QString tableName();
+    static QList<Cache> getAll(Database *);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     void setIntValue(int mask, int value);

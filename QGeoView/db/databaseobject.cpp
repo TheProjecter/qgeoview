@@ -4,23 +4,15 @@
 
 DatabaseObject::DatabaseObject(Database *db, int id) :
     _db(db),
-    _id(id)
-{
-}
+    _id(id),
+    _nullMask(0x0)
+{}
 
 DatabaseObject::DatabaseObject(const DatabaseObject &original) :
-    QObject(),
     _db(original._db),
     _id(original._id),
     _nullMask(original._nullMask)
-{
-
-}
-
-QStringList DatabaseObject::fields()
-{
-    return QStringList();
-}
+{}
 
 void DatabaseObject::load()
 {
@@ -30,8 +22,11 @@ void DatabaseObject::load()
     QString query_string = "SELECT " + fields().join(",") + " FROM " + table() + " WHERE id=?;";
     query.prepare(query_string);
     query.addBindValue(_id);
-    if (query.exec() && query.first())
-        loadValues(query);
+    if (!query.exec())
+        throw query;
+    if (!query.first())
+        throw query;
+    loadValues(query);
 }
 
 
@@ -45,16 +40,15 @@ void DatabaseObject::set(int mask)
     _nullMask |= mask;
 }
 
-
 void DatabaseObject::save()
 {
     QSqlQuery query;
     _db->transaction();
     QStringList field_names = fields();
-    if (_id) {   // update
+    if (_id) {  // perform update
         query.prepare("UPDATE " + table() + " SET " + field_names.join("=?, ") + "=? WHERE id=" + _id + ";");
         query.addBindValue(_id);
-    } else {                    // insert
+    } else {    // perform insert
         query.prepare("INSERT INTO " + table() + " (" + field_names.join(", ") + ") VALUES (?" + QString(", ?").repeated(field_names.count() - 1) + ");");
     }
     addBindValues(query);
@@ -124,6 +118,12 @@ int DatabaseObject::getID()
     return _id;
 }
 
+// Defined in case a class does not require cleanup when being removed.
+void DatabaseObject::cleanup()
+{}
+
+// The following only need to be implemented if the item handles the respective type.
+
 QString DatabaseObject::getQStringValue(int mask)
 {
     Q_UNUSED(mask)
@@ -147,6 +147,3 @@ bool DatabaseObject::getBoolValue(int mask)
     Q_UNUSED(mask)
     throw MaskNotFoundException(this, mask, "Bool");
 }
-
-void DatabaseObject::cleanup()
-{}

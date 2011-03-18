@@ -13,7 +13,7 @@ public:
     DatabaseObject(const DatabaseObject &original);
     bool isSet(int mask);
     void set(int mask);
-    virtual QStringList fields();
+    virtual QStringList fields() = 0;
 signals:
     void saved();
     void changed();

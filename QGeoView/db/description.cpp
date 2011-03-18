@@ -23,9 +23,7 @@ Description::Description(const Description &original) :
     _comments(original._comments),
     _source(original._source),
     _type(original._type)
-{
-
-}
+{}
 
 QString Description::table()
 {
