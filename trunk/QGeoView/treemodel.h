@@ -21,8 +21,8 @@ public:
     QStringList mimeTypes() const;
     Qt::DropActions supportedDropActions() const;
 signals:
-    void cacheSelected(Cache cache);
-    void waypointSelected(Waypoint waypoint);
+    void cacheSelected(Cache *cache);
+    void waypointSelected(Waypoint *waypoint);
     void cacheDragged(int id);
     void cacheDropped(int id);
     void waypointDragged(int id);
@@ -30,7 +30,7 @@ signals:
 public slots:
     void showAll();
     void showNone();
-    void showCollection(Collection collection);
+    void showCollection(Collection *collection);
     void itemSelected(QModelIndex index);
     void refresh();
 protected:

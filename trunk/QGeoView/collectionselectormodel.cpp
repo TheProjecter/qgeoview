@@ -23,8 +23,9 @@ Collection *CollectionSelectorModel::collection() {
 void CollectionSelectorModel::indexChanged(int index)
 {
     int id = 0;
-    if (index >= 0)    // QComboBox will spit out -1 if the list is empty or something goes wrong
+    if (index < _ids.count()) {    // QComboBox will spit out -1 if the list is empty or something goes wrong
         id = _ids.at(index);
+    }
 
     if (_collection) {
         delete _collection;
@@ -33,7 +34,7 @@ void CollectionSelectorModel::indexChanged(int index)
 
     if (id) {
         _collection = new Collection(_db, id);
-        emit collectionSelected(*_collection);
+        emit collectionSelected(_collection);
     } else if (_all) {
         emit allSelected();
     } else {
@@ -53,11 +54,12 @@ void CollectionSelectorModel::refresh()
     }
 
     // Repopulate collections
-    QList<Collection> collections = Collection::getAllCollections(_db);
-    QList<Collection>::iterator i;
+    QList<Collection*> collections = Collection::getAllCollections(_db);
+    QList<Collection*>::iterator i;
     for (i = collections.begin(); i != collections.end(); ++i) {
-        _ids.append(i->getID());
-        _root->appendRow(new QStandardItem(i->summary()));
+        _ids.append((*i)->getID());
+        _root->appendRow(new QStandardItem((*i)->summary()));
+        delete (*i);
     }
     emit refreshed();
 }

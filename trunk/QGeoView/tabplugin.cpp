@@ -41,17 +41,17 @@ void TabPlugin::deactivate()
 }
 
 // The following are unused in case a TabWidget wishes to extends them.
-void TabPlugin::selectCache(Cache cache)
+void TabPlugin::selectCache(Cache *cache)
 {
     Q_UNUSED(cache)
 }
 
-void TabPlugin::selectWaypoint(Waypoint waypoint)
+void TabPlugin::selectWaypoint(Waypoint *waypoint)
 {
     Q_UNUSED(waypoint)
 }
 
-void TabPlugin::selectCollection(Collection collection)
+void TabPlugin::selectCollection(Collection *collection)
 {
     Q_UNUSED(collection)
 }

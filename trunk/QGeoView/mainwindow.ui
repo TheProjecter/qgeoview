@@ -197,24 +197,5 @@
  <resources/>
  <connections/>
  <slots>
-  <signal>row_selected(QModelIndex)</signal>
-  <signal>cache_lat_changed(double)</signal>
-  <signal>cache_long_changed(double)</signal>
-  <signal>cache_number_changed(QString)</signal>
-  <signal>cache_name_changed(QString)</signal>
-  <signal>cache_long_name_changed(QString)</signal>
-  <signal>cache_url_changed(QString)</signal>
-  <signal>cache_url_name_changed(QString)</signal>
-  <signal>cache_placed_by_changed(QString)</signal>
-  <signal>cache_owner_changed(QString)</signal>
-  <signal>cache_terrain_changed(double)</signal>
-  <signal>cache_type_changed(QString)</signal>
-  <signal>cache_container_changed(QString)</signal>
-  <signal>cache_difficulty_changed(double)</signal>
-  <signal>cache_desc_long_changed(QString)</signal>
-  <signal>cache_desc_long_html_changed(QString)</signal>
-  <signal>cache_desc_short_changed(QString)</signal>
-  <signal>cache_desc_shot_html_changed(QString)</signal>
-  <signal>cache_hint_changed(QString)</signal>
  </slots>
 </ui>

@@ -27,11 +27,11 @@ TreeModel::~TreeModel()
         delete _collection;
 }
 
-void TreeModel::showCollection(Collection collection)
+void TreeModel::showCollection(Collection *collection)
 {
     if (_collection)
         delete _collection;
-    _collection = new Collection(collection);
+    _collection = collection;
     refresh();
 }
 
@@ -65,31 +65,33 @@ void TreeModel::refresh()
         return;
 
     // Caches
-    QList<Cache> caches;
+    QList<Cache*> caches;
     if (_collection) {
         caches = _collection->caches();
     } else {
         caches = Cache::getAll(_db);
     }
-    for (QList<Cache>::iterator i=caches.begin(); i!=caches.end(); ++i) {
-        QStandardItem *item = new QStandardItem(i->summary());
+    for (QList<Cache*>::iterator i=caches.begin(); i!=caches.end(); ++i) {
+        QStandardItem *item = new QStandardItem((*i)->summary());
         item->setEditable(false);
-        item->setData(QVariant::fromValue<int>(i->getID()), Qt::UserRole);
+        item->setData(QVariant::fromValue<int>((*i)->getID()), Qt::UserRole);
+        delete (*i);
         _caches.appendRow(item);
     }
 
     // Waypoints
-    QList<Waypoint> waypoints;
+    QList<Waypoint*> waypoints;
     if (_collection) {
         waypoints = _collection->waypoints();
     } else {
         waypoints = Waypoint::getAll(_db);
     }
 
-    for (QList<Waypoint>::iterator i=waypoints.begin(); i!=waypoints.end(); ++i) {
-        QStandardItem *item = new QStandardItem(i->summary());
+    for (QList<Waypoint*>::iterator i=waypoints.begin(); i!=waypoints.end(); ++i) {
+        QStandardItem *item = new QStandardItem((*i)->summary());
         item->setEditable(false);
-        item->setData(QVariant::fromValue<int>(i->getID()), Qt::UserRole);
+        item->setData(QVariant::fromValue<int>((*i)->getID()), Qt::UserRole);
+        delete (*i);
         _waypoints.appendRow(item);
     }
 }
@@ -105,10 +107,10 @@ void TreeModel::itemSelected(QModelIndex index)
     int category = parent.data(Qt::UserRole).value<int>();
     switch (category) {
         case INFO_TYPE_CACHE:
-            emit cacheSelected(Cache(_db, id));
+            emit cacheSelected(new Cache(_db, id));
             break;
         case INFO_TYPE_WAYPOINT:
-            emit waypointSelected(Waypoint(_db, id));
+            emit waypointSelected(new Waypoint(_db, id));
             break;
         default:
             throw InvalidTreeItemCategoryException(category);
@@ -156,6 +158,9 @@ QMimeData *TreeModel::mimeData(const QModelIndexList &indexes) const
 
 bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
+    Q_UNUSED(row)
+    Q_UNUSED(column)
+    Q_UNUSED(parent)
     if (action == Qt::IgnoreAction)
         return true;
 
@@ -170,8 +175,6 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
         int id;
         stream >> type >> id;
         QStandardItem *item;
-        Cache *cache;
-        Waypoint *waypoint;
         switch (type) {
             case INFO_TYPE_CACHE:
                 item = new QStandardItem(Cache(_db, id).summary());
@@ -189,4 +192,5 @@ bool TreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int r
                 break;
         }
     }
+    return true;
 }

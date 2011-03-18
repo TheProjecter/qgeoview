@@ -33,7 +33,7 @@ public:
     Cache(QSqlDatabase *db, QSqlQuery query);
     QString table();
     static QString tableName();
-    static QList<Cache> getAll(QSqlDatabase *);
+    static QList<Cache*> getAll(QSqlDatabase *);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
     void setIntValue(int mask, int value);
@@ -43,7 +43,7 @@ public:
     float getFloatValue(int mask);
     QString getQStringValue(int mask);
     bool getBoolValue(int mask);
-    Waypoint getWaypoint();
+    Waypoint *getWaypoint();
     QList<int> getLogIDs();
     QString summary();
     QStringList fields();

@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connections
     connect(ui->collections, SIGNAL(currentIndexChanged(int)), _collection_selector_model, SLOT(indexChanged(int)));
     connect(ui->tree, SIGNAL(clicked(QModelIndex)), _item_tree_model, SLOT(itemSelected(QModelIndex)));
-    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection)), _item_tree_model, SLOT(showCollection(Collection)));
+    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection*)), _item_tree_model, SLOT(showCollection(Collection*)));
     connect(_collection_selector_model, SIGNAL(noneSelected()), _item_tree_model, SLOT(showAll()));
     connect(_collection_selector_model, SIGNAL(allSelected()), _item_tree_model, SLOT(showAll()));
     connect(_collection_selector_model, SIGNAL(noneSelected()), _item_tree_model, SLOT(showNone()));
@@ -180,9 +180,9 @@ void MainWindow::loadWritePlugin(WritePlugin *plugin) {
 void MainWindow::loadTabPlugin(TabPlugin *plugin) {
     _tabPlugins.append(plugin);
     ui->menu_Plugins->addAction(plugin->name(), plugin, SLOT(toggle()));
-    connect(_item_tree_model, SIGNAL(cacheSelected(Cache)), plugin, SLOT(selectCache(Cache)));
-    connect(_item_tree_model, SIGNAL(waypointSelected(Waypoint)), plugin, SLOT(selectWaypoint(Waypoint)));
-    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection)), plugin, SLOT(selectCollection(Collection)));
+    connect(_item_tree_model, SIGNAL(cacheSelected(Cache*)), plugin, SLOT(selectCache(Cache*)));
+    connect(_item_tree_model, SIGNAL(waypointSelected(Waypoint*)), plugin, SLOT(selectWaypoint(Waypoint*)));
+    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection*)), plugin, SLOT(selectCollection(Collection*)));
     connect(_collection_selector_model, SIGNAL(allSelected()), plugin, SLOT(selectAllCollections()));
     connect(_collection_selector_model, SIGNAL(noneSelected()), plugin, SLOT(selectNoCollections()));
 }
