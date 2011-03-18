@@ -44,14 +44,9 @@ public slots:
     void waypointDropped(int id);
 private slots:
     void open_description_link();
-    void on_selector_currentIndexChanged(int index);
-
     void on_remove_selected_clicked();
-
     void on_edit_collection_clicked();
-
     void on_delete_collection_clicked();
-
     void on_new_collection_clicked();
 
 private:

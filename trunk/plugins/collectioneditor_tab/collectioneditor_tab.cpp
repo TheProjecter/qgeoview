@@ -58,28 +58,21 @@ QString CollectionEditorTabPlugin::name()
 }
 
 void CollectionEditorTabPlugin::items_selection(QModelIndexList selection)
-{
-
-}
+{}
 
 void CollectionEditorTabPlugin::refresh_collections()
 {
-    QSqlQuery query;
-    query.prepare("SELECT id, name, description FROM COLLECTION;");
-    if (!query.exec())
-        throw query;
-    Collection *collection;
-    while (query.next()) {
-        collection = new Collection(_db, query);
-        ui.selector->addItem(collection->summary(), collection->getID());
-        delete collection;
+    QList<Collection*> collections = Collection::getAll(_db);
+    for (QList<Collection*>::iterator i=collections.begin(); i!=collections.end(); ++i) {
+        ui.selector->addItem((*i)->summary(), (*i)->getID());
+        delete (*i);
     }
 }
 
 void CollectionEditorTabPlugin::on_remove_selected_clicked()
 {
     Collection *collection = _collection_selector_model->collection();
-    if (collection)
+    if (!collection)
         return;
     foreach (QModelIndex index, ui.tree->selectionModel()->selectedIndexes()) {
         if (index.isValid() && index.parent().isValid())
@@ -88,7 +81,7 @@ void CollectionEditorTabPlugin::on_remove_selected_clicked()
                     collection->removeCache(index.data(Qt::UserRole).toInt());
                     break;
                 case INFO_TYPE_WAYPOINT:
-                    Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()).removeWaypoint(index.data(Qt::UserRole).toInt());
+                    collection->removeWaypoint(index.data(Qt::UserRole).toInt());
                     break;
             }
     }
@@ -98,7 +91,7 @@ void CollectionEditorTabPlugin::on_remove_selected_clicked()
 void CollectionEditorTabPlugin::on_edit_collection_clicked()
 {
     std::cout << "Editing Existing Collection" << std::endl;
-    EditCollectionDialog dialog(_db, Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()));
+    EditCollectionDialog dialog(_db, new Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()));
     dialog.exec();
     _collection_selector_model->refresh();
 }
@@ -147,9 +140,3 @@ TabPlugin *CollectionEditorTabPluginFactory::get_plugin(QSqlDatabase *db, QTabWi
 }
 
 Q_EXPORT_PLUGIN2(collectioneditortabpluginfactory, CollectionEditorTabPluginFactory);
-
-
-void CollectionEditorTabPlugin::on_selector_currentIndexChanged(int index)
-{
-
-}

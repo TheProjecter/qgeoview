@@ -54,7 +54,7 @@ void CollectionSelectorModel::refresh()
     }
 
     // Repopulate collections
-    QList<Collection*> collections = Collection::getAllCollections(_db);
+    QList<Collection*> collections = Collection::getAll(_db);
     QList<Collection*>::iterator i;
     for (i = collections.begin(); i != collections.end(); ++i) {
         _ids.append((*i)->getID());
