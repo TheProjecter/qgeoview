@@ -4,7 +4,6 @@
 #include <QStandardItemModel>
 #include <QMimeData>
 
-#include "db/database.h"
 #include "db/collection.h"
 #include "db/cache.h"
 #include "db/waypoint.h"
@@ -14,7 +13,7 @@ class TreeModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    TreeModel(Database *db, QObject *parent = 0);
+    TreeModel(QSqlDatabase *db, QObject *parent = 0);
     ~TreeModel();
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
@@ -37,7 +36,7 @@ public slots:
 protected:
     void setup();
 private:
-    Database *_db;
+    QSqlDatabase *_db;
     Collection *_collection;
     bool _all;
     QStandardItem _caches;

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "collectionselectormodel.h"
 
-CollectionSelectorModel::CollectionSelectorModel(Database *db, bool all) :
+CollectionSelectorModel::CollectionSelectorModel(QSqlDatabase *db, bool all) :
     _db(db),
     _collection(NULL),
     _root(invisibleRootItem()),

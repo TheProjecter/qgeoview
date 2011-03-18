@@ -21,10 +21,11 @@
 #include <iostream>
 #include <QSqlError>
 #include <QFileDialog>
+#include <QVariant>
 
 #include "read_gpx.h"
 
-ReadGpxPlugin::ReadGpxPlugin(Database *db) :
+ReadGpxPlugin::ReadGpxPlugin(QSqlDatabase *db) :
     ReadPlugin(db)
 {
 }
@@ -215,7 +216,7 @@ QVariant ReadGpxPlugin::child_value(QDomNodeList list, int format=0)
     return QVariant();
 }
 
-ReadPlugin *ReadGpxPluginFactory::get_plugin(Database *db)
+ReadPlugin *ReadGpxPluginFactory::get_plugin(QSqlDatabase *db)
 {
     return new ReadGpxPlugin(db);
 }

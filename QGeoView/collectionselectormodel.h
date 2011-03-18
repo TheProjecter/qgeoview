@@ -1,10 +1,10 @@
 #ifndef COLLECTIONSELECTORMODEL_H
 #define COLLECTIONSELECTORMODEL_H
 #include <QStandardItemModel>
+#include <QSqlDatabase>
 #include <QComboBox>
 #include <QMimeData>
 
-#include "db/database.h"
 #include "db/collection.h"
 #include "db/cache.h"
 #include "db/waypoint.h"
@@ -14,7 +14,7 @@ class CollectionSelectorModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    CollectionSelectorModel(Database *db, bool all=false);
+    CollectionSelectorModel(QSqlDatabase *db, bool all=false);
     ~CollectionSelectorModel();
     Collection *collection();
 signals:
@@ -26,7 +26,7 @@ public slots:
     void indexChanged(int index);
     void refresh();
 private:
-    Database *_db;
+    QSqlDatabase *_db;
     Collection *_collection;
     QStandardItem *_root;
     bool _all;

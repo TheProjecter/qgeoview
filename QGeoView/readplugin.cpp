@@ -1,7 +1,7 @@
 #include <iostream>
 #include "readplugin.h"
 
-ReadPlugin::ReadPlugin(Database *db) :
+ReadPlugin::ReadPlugin(QSqlDatabase *db) :
     _db(db)
 {
 }

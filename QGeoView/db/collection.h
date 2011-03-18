@@ -3,6 +3,7 @@
 
 #include <QSqlQuery>
 #include <QObject>
+#include <QStringList>
 #include "databaseobject.h"
 #include "db/cache.h"
 
@@ -14,8 +15,8 @@ class Collection : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Collection(Database *db, int id=0);
-    Collection(Database *db, QSqlQuery query);
+    Collection(QSqlDatabase *db, int id=0);
+    Collection(QSqlDatabase *db, QSqlQuery query);
     Collection(const Collection &original);
     void addBindValues(QSqlQuery query);
     void setQStringValue(int mask, QString value);
@@ -30,7 +31,7 @@ public:
     void addWaypoint(int id);
     void removeWaypoint(int id);
     void cleanup();
-    static QList<Collection> getAllCollections(Database *db);
+    static QList<Collection> getAllCollections(QSqlDatabase *db);
     QList<Cache> caches();
     QList<Waypoint> waypoints();
 protected:

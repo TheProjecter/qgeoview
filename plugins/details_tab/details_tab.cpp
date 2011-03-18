@@ -24,7 +24,7 @@
 #include "details_tab.h"
 #include "db/log.h"
 
-DetailsTabPlugin::DetailsTabPlugin(Database *db, QTabWidget *pluginsTabWidget) :
+DetailsTabPlugin::DetailsTabPlugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget) :
     TabPlugin(db, pluginsTabWidget)
 {
     ui.setupUi(this);
@@ -338,7 +338,7 @@ void DetailsTabPlugin::open_description_link()
     std::cout << "Opening " << _link_url.toStdString() << std::endl;
 }
 
-TabPlugin *DetailsTabPluginFactory::get_plugin(Database *db, QTabWidget *pluginsTabWidget)
+TabPlugin *DetailsTabPluginFactory::get_plugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget)
 {
     return new DetailsTabPlugin(db, pluginsTabWidget);
 }

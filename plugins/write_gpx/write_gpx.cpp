@@ -25,7 +25,7 @@
 #include "write_gpx.h"
 
 
-WriteGpxPlugin::WriteGpxPlugin(Database *db) :
+WriteGpxPlugin::WriteGpxPlugin(QSqlDatabase *db) :
     WritePlugin(db)
 {
 }
@@ -119,7 +119,7 @@ void WriteGpxPlugin::write(QFile *file, int collection_id) {
     stream << doc->toString();*/
 }
 
-WritePlugin *WriteGpxPluginFactory::get_plugin(Database *db)
+WritePlugin *WriteGpxPluginFactory::get_plugin(QSqlDatabase *db)
 {
     return new WriteGpxPlugin(db);
 }

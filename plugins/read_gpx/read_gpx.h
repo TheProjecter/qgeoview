@@ -24,17 +24,20 @@
 #include <QObject>
 
 #include "readplugin.h"
-#include "db/database.h"
 #include "db/point.h"
 #include "db/description.h"
 #include "db/waypoint.h"
 #include "db/cache.h"
 #include "db/log.h"
 
+#define DATABASE_DATATYPE_STRING    1
+#define DATABASE_DATATYPE_INT       2
+#define DATABASE_DATATYPE_DOUBLE    3
+
 class ReadGpxPlugin : public ReadPlugin {
     Q_OBJECT
 public:
-    ReadGpxPlugin(Database *db);
+    ReadGpxPlugin(QSqlDatabase *db);
     QString name();
     void read(QDomDocument *doc);
 signals:
@@ -54,7 +57,7 @@ class ReadGpxPluginFactory : public QObject, public ReadPluginFactory
     Q_OBJECT
     Q_INTERFACES(ReadPluginFactory)
 public:
-    ReadPlugin *get_plugin(Database *db);
+    ReadPlugin *get_plugin(QSqlDatabase *db);
 };
 
 #endif

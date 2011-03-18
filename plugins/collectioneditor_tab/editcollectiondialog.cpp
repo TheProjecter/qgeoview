@@ -3,7 +3,7 @@
 #include "editcollectiondialog.h"
 #include "ui_editcollectiondialog.h"
 
-EditCollectionDialog::EditCollectionDialog(Database *db, QWidget *parent) :
+EditCollectionDialog::EditCollectionDialog(QSqlDatabase *db, QWidget *parent) :
     QDialog(parent),
     _collection(Collection(db)),
     ui(new Ui::EditCollectionDialog)
@@ -11,7 +11,7 @@ EditCollectionDialog::EditCollectionDialog(Database *db, QWidget *parent) :
     ui->setupUi(this);
 }
 
-EditCollectionDialog::EditCollectionDialog(Database *db, Collection collection, QWidget *parent) :
+EditCollectionDialog::EditCollectionDialog(QSqlDatabase *db, Collection collection, QWidget *parent) :
     QDialog(parent),
     _collection(collection),
     ui(new Ui::EditCollectionDialog)

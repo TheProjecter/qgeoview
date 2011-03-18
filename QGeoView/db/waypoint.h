@@ -14,8 +14,8 @@ class Waypoint : public DatabaseObject
 {
     Q_OBJECT
 public:
-    Waypoint(Database *db, int id=0);
-    Waypoint(Database *db, QSqlQuery query);
+    Waypoint(QSqlDatabase *db, int id=0);
+    Waypoint(QSqlDatabase *db, QSqlQuery query);
     Waypoint(const Waypoint &original);
     void addBindValues(QSqlQuery query);
     void setIntValue(int mask, int value);
@@ -27,7 +27,7 @@ public:
     QString summary();
     QStringList fields();
     static QStringList fieldNames();
-    static QList<Waypoint> getAll(Database *db);
+    static QList<Waypoint> getAll(QSqlDatabase *db);
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:

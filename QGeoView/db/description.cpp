@@ -1,15 +1,17 @@
 #include <iostream>
+#include <QVariant>
+#include <QStringList>
 #include "description.h"
 #include "exceptions.h"
 
-Description::Description(Database *db, int id) :
+Description::Description(QSqlDatabase *db, int id) :
     DatabaseObject(db, id)
 {
     if (id)
         load();
 }
 
-Description::Description(Database *db, QSqlQuery query) :
+Description::Description(QSqlDatabase *db, QSqlQuery query) :
     DatabaseObject(db)
 {
     loadValues(query, true);

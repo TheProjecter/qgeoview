@@ -1,7 +1,7 @@
 #include <iostream>
 #include "writeplugin.h"
 
-WritePlugin::WritePlugin(Database *db) :
+WritePlugin::WritePlugin(QSqlDatabase *db) :
         _db(db)
 {
 }

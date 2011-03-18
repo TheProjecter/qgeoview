@@ -1,8 +1,11 @@
 #include <QSqlError>
+#include <QSqlDatabase>
+#include <QStringList>
+#include <QVariant>
 #include "databaseobject.h"
 #include "exceptions.h"
 
-DatabaseObject::DatabaseObject(Database *db, int id) :
+DatabaseObject::DatabaseObject(QSqlDatabase *db, int id) :
     _db(db),
     _id(id),
     _nullMask(0x0)
@@ -21,7 +24,7 @@ void DatabaseObject::load()
     QSqlQuery query;
     QString query_string = "SELECT " + fields().join(",") + " FROM " + table() + " WHERE id=?;";
     query.prepare(query_string);
-    query.addBindValue(_id);
+    query.addBindValue(QVariant::fromValue<int>(_id));
     if (!query.exec())
         throw query;
     if (!query.first())

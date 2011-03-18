@@ -14,7 +14,6 @@ win32:target.path = c:\Program\ Files\$$TARGET
 INSTALLS       += target
 HEADERS        += mainwindow.h \
                   db/collection.h \
-                  db/database.h \
                   db/databaseobject.h \
                   db/description.h \
                   db/log.h \
@@ -32,7 +31,6 @@ FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
                   db/collection.cpp \
-                  db/database.cpp \
                   db/databaseobject.cpp \
                   db/description.cpp \
                   db/log.cpp \
