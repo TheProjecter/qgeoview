@@ -17,15 +17,15 @@ Cache::Cache(QSqlDatabase *db, QSqlQuery query) :
     loadValues(query, true);
 }
 
-QList<Cache> Cache::getAll(QSqlDatabase *db)
+QList<Cache*> Cache::getAll(QSqlDatabase *db)
 {
-    QList<Cache> caches;
+    QList<Cache*> caches;
     QSqlQuery query("SELECT id, " + Cache::fieldNames().join(", ") + " FROM " + Cache::tableName() + ";");
     if (!query.exec())
         throw query;
 
     while (query.next()) {
-        caches.append(Cache(db, query));
+        caches.append(new Cache(db, query));
     }
 
     return caches;
@@ -34,7 +34,7 @@ QList<Cache> Cache::getAll(QSqlDatabase *db)
 QString Cache::summary()
 {
     try {
-        return getQStringValue(NULLMASK_CACHE_NAME) + " (" + getWaypoint().summary() + ")";
+        return getQStringValue(NULLMASK_CACHE_NAME) + " (" + getWaypoint()->summary() + ")";
     }
     catch (DBValueNotSetException) {
         return "Cache " + QString::number(getID());
@@ -284,9 +284,9 @@ bool Cache::getBoolValue(int mask)
     throw MaskNotFoundException(this, mask, "Bool");
 }
 
-Waypoint Cache::getWaypoint()
+Waypoint *Cache::getWaypoint()
 {
-    return Waypoint(_db, _fk_waypoint);
+    return new Waypoint(_db, _fk_waypoint);
 }
 
 QList<int> Cache::getLogIDs()

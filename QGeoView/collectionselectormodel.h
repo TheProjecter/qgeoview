@@ -18,7 +18,7 @@ public:
     ~CollectionSelectorModel();
     Collection *collection();
 signals:
-    void collectionSelected(Collection collection);
+    void collectionSelected(Collection *collection);
     void allSelected();
     void noneSelected();
     void refreshed();

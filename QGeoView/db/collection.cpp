@@ -177,44 +177,44 @@ void Collection::cleanup()
     _db->commit();
 }
 
-QList<Collection> Collection::getAllCollections(QSqlDatabase *db)
+QList<Collection*> Collection::getAllCollections(QSqlDatabase *db)
 {
-    QList<Collection> collections;
+    QList<Collection*> collections;
     QSqlQuery query("SELECT id, " + Collection::fieldNames().join(", ") + " FROM " + Collection::tableName() + ";");
     if (!query.exec())
         throw query;
 
     while (query.next())
-        collections.append(Collection(db, query));
+        collections.append(new Collection(db, query));
 
     return collections;
 }
 
-QList<Cache> Collection::caches()
+QList<Cache*> Collection::caches()
 {
-    QList<Cache> caches;
+    QList<Cache*> caches;
     QSqlQuery query("SELECT id, " + Cache::fieldNames().join(", ") + " FROM " + Cache::tableName() + ";");
 
     if (!query.exec())
         throw query;
 
     while (query.next()) {
-        caches.append(Cache(_db, query));
+        caches.append(new Cache(_db, query));
     }
 
     return caches;
 }
 
-QList<Waypoint> Collection::waypoints()
+QList<Waypoint*> Collection::waypoints()
 {
-    QList<Waypoint> waypoints;
+    QList<Waypoint*> waypoints;
     QSqlQuery query("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM " + Waypoint::tableName() + ";");
 
     if (!query.exec())
         throw query;
 
     while (query.next()) {
-        waypoints.append(Waypoint(_db, query));
+        waypoints.append(new Waypoint(_db, query));
     }
 
     return waypoints;

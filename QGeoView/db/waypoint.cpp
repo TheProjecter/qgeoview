@@ -20,9 +20,9 @@ Waypoint::Waypoint(QSqlDatabase *db, QSqlQuery query) :
 QString Waypoint::summary()
 {
     if (isSet(NULLMASK_WAYPOINT_DESCRIPTION)) {
-        Description d(getDescription());
-        if (d.isSet(NULLMASK_DESCRIPTION_NAME))
-            return d.getQStringValue(NULLMASK_DESCRIPTION_NAME);
+        Description *d(getDescription());
+        if (d->isSet(NULLMASK_DESCRIPTION_NAME))
+            return d->getQStringValue(NULLMASK_DESCRIPTION_NAME);
     }
     return "Some Waypoint...";
 }
@@ -94,27 +94,27 @@ int Waypoint::getIntValue(int mask)
     throw MaskNotFoundException(this, mask, "Int");
 }
 
-Point Waypoint::getPoint()
+Point *Waypoint::getPoint()
 {
-    return Point(_db, _fk_point);
+    return new Point(_db, _fk_point);
 }
 
-Description Waypoint::getDescription()
+Description *Waypoint::getDescription()
 {
     if (!isSet(NULLMASK_WAYPOINT_DESCRIPTION)) {
         throw DBValueNotSetException(this, NULLMASK_WAYPOINT_DESCRIPTION, "fk_description");
     }
-    return Description(_db, _fk_description);
+    return new Description(_db, _fk_description);
 }
 
-QList<Waypoint> Waypoint::getAll(QSqlDatabase *db)
+QList<Waypoint*> Waypoint::getAll(QSqlDatabase *db)
 {
-    QList<Waypoint> waypoints;
+    QList<Waypoint*> waypoints;
     QSqlQuery query("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM " + Waypoint::tableName() + ";");
     if (!query.exec())
         throw query;
     while (query.next()) {
-        waypoints.append(Waypoint(db, query));
+        waypoints.append(new Waypoint(db, query));
     }
 
     return waypoints;

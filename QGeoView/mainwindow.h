@@ -53,7 +53,7 @@ private slots:
 
 signals:
     void quit();
-    void collectionSelected(Collection collection);
+    void collectionSelected(Collection *collection);
     void noCollectionSelected();
 
 private:

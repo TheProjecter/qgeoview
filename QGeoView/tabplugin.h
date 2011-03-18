@@ -20,9 +20,9 @@ public slots:
     void toggle();
     void activate();
     void deactivate();
-    void selectCache(Cache cache);
-    void selectWaypoint(Waypoint waypoint);
-    void selectCollection(Collection collection);
+    void selectCache(Cache *cache);
+    void selectWaypoint(Waypoint *waypoint);
+    void selectCollection(Collection *collection);
     void selectAllCollections();
     void selectNoCollections();
 protected:
