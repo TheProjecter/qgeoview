@@ -177,7 +177,7 @@ void Collection::cleanup()
     _db->commit();
 }
 
-QList<Collection*> Collection::getAllCollections(QSqlDatabase *db)
+QList<Collection*> Collection::getAll(QSqlDatabase *db)
 {
     QList<Collection*> collections;
     QSqlQuery query("SELECT id, " + Collection::fieldNames().join(", ") + " FROM " + Collection::tableName() + ";");

@@ -30,7 +30,7 @@ public:
     void addWaypoint(int id);
     void removeWaypoint(int id);
     void cleanup();
-    static QList<Collection*> getAllCollections(QSqlDatabase *db);
+    static QList<Collection*> getAll(QSqlDatabase *db);
     QList<Cache*> caches();
     QList<Waypoint*> waypoints();
 protected:
