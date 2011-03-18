@@ -24,8 +24,6 @@
 #include <QMessageBox>
 #include "myapplication.h"
 
-#include <iostream>
-
 /*
  Initializes the application.
 */
@@ -35,6 +33,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     w.connect(&w, SIGNAL(quit()), &a, SLOT(quit()));
-    std::cout << "test" << std::endl;
     return a.exec();
 }
