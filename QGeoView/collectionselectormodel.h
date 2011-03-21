@@ -18,7 +18,7 @@ public:
     ~CollectionSelectorModel();
     Collection *collection();
 signals:
-    void collectionSelected(Collection *collection);
+    void collectionSelected(int collection_id);
     void allSelected();
     void noneSelected();
     void refreshed();
@@ -30,7 +30,6 @@ private:
     Collection *_collection;
     QStandardItem *_root;
     bool _all;
-    QList<int> _ids;
 };
 
 #endif // COLLECTIONSELECTORMODEL_H

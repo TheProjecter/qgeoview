@@ -1,11 +1,13 @@
 #include <iostream>
+#include <QPointer>
+#include <QPointer>
 #include "treemodel.h"
 
 TreeModel::TreeModel(QSqlDatabase *db, QObject *parent) :
     QStandardItemModel(parent),
     _db(db),
     _collection(NULL),
-    _all(false),
+    _status(TREEMODEL_STATUS_NONE),
     _caches("Caches"),
     _waypoints("Waypoints")
 {
@@ -22,36 +24,24 @@ TreeModel::TreeModel(QSqlDatabase *db, QObject *parent) :
 }
 
 TreeModel::~TreeModel()
-{
-    if (_collection)
-        delete _collection;
-}
+{}
 
-void TreeModel::showCollection(Collection *collection)
+void TreeModel::showCollection(int collection_id)
 {
-    if (_collection)
-        delete _collection;
-    _collection = collection;
+    _collection = QPointer<Collection>(new Collection(_db, collection_id));
+    _status = TREEMODEL_STATUS_COLLECTION;
     refresh();
 }
 
 void TreeModel::showNone()
 {
-    if (_collection) {
-        delete _collection;
-        _collection = NULL;
-    }
-    _all = false;
+    _status = TREEMODEL_STATUS_NONE;
     refresh();
 }
 
 void TreeModel::showAll()
 {
-    if (_collection) {
-        delete _collection;
-        _collection = NULL;
-    }
-    _all = true;
+    _status = TREEMODEL_STATUS_ALL;
     refresh();
 }
 
@@ -61,16 +51,22 @@ void TreeModel::refresh()
     _caches.removeRows(0, _caches.rowCount());
     _waypoints.removeRows(0, _waypoints.rowCount());
 
-    if (!_collection & !_all)   // if no collection and _all is false, show empty tree
-        return;
+    QList<Cache*> caches;
+    QList<Waypoint*> waypoints;
+    switch (_status) {
+        case TREEMODEL_STATUS_NONE:
+            return;
+        case TREEMODEL_STATUS_ALL:
+            caches = Cache::getAll(_db);
+            waypoints = Waypoint::getAll(_db);
+            break;
+        case TREEMODEL_STATUS_COLLECTION:
+            caches = _collection->caches();
+            waypoints = _collection->waypoints();
+            break;
+    }
 
     // Caches
-    QList<Cache*> caches;
-    if (_collection) {
-        caches = _collection->caches();
-    } else {
-        caches = Cache::getAll(_db);
-    }
     for (QList<Cache*>::iterator i=caches.begin(); i!=caches.end(); ++i) {
         QStandardItem *item = new QStandardItem((*i)->summary());
         item->setEditable(false);
@@ -80,13 +76,6 @@ void TreeModel::refresh()
     }
 
     // Waypoints
-    QList<Waypoint*> waypoints;
-    if (_collection) {
-        waypoints = _collection->waypoints();
-    } else {
-        waypoints = Waypoint::getAll(_db);
-    }
-
     for (QList<Waypoint*>::iterator i=waypoints.begin(); i!=waypoints.end(); ++i) {
         QStandardItem *item = new QStandardItem((*i)->summary());
         item->setEditable(false);
@@ -107,10 +96,10 @@ void TreeModel::itemSelected(QModelIndex index)
     int category = parent.data(Qt::UserRole).value<int>();
     switch (category) {
         case INFO_TYPE_CACHE:
-            emit cacheSelected(new Cache(_db, id));
+            emit cacheSelected(QPointer<Cache>(new Cache(_db, id)));
             break;
         case INFO_TYPE_WAYPOINT:
-            emit waypointSelected(new Waypoint(_db, id));
+            emit waypointSelected(QPointer<Waypoint>(new Waypoint(_db, id)));
             break;
         default:
             throw InvalidTreeItemCategoryException(category);

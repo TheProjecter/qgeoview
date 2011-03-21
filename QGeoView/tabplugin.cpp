@@ -8,9 +8,7 @@ TabPlugin::TabPlugin(QSqlDatabase *db, QTabWidget *pluginsTabWidget) :
 {}
 
 TabPlugin::~TabPlugin()
-{
-    delete _pluginsTabWidget;
-}
+{}
 
 void TabPlugin::toggle()
 {
@@ -51,9 +49,9 @@ void TabPlugin::selectWaypoint(Waypoint *waypoint)
     Q_UNUSED(waypoint)
 }
 
-void TabPlugin::selectCollection(Collection *collection)
+void TabPlugin::selectCollection(int collection_id)
 {
-    Q_UNUSED(collection)
+    Q_UNUSED(collection_id)
 }
 
 void TabPlugin::selectNoCollections()

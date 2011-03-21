@@ -41,7 +41,7 @@ CollectionEditorTabPlugin::CollectionEditorTabPlugin(QSqlDatabase *db, QTabWidge
 
     connect(ui.selector, SIGNAL(currentIndexChanged(int)), _collection_selector_model, SLOT(indexChanged(int)));
     connect(ui.tree, SIGNAL(clicked(QModelIndex)), _item_tree_model, SLOT(itemSelected(QModelIndex)));
-    connect(_collection_selector_model, SIGNAL(collectionSelected(Collection*)), _item_tree_model, SLOT(showCollection(Collection*)));
+    connect(_collection_selector_model, SIGNAL(collectionSelected(int)), _item_tree_model, SLOT(showCollection(int)));
     connect(_collection_selector_model, SIGNAL(allSelected()), _item_tree_model, SLOT(showAll()));
     connect(_collection_selector_model, SIGNAL(noneSelected()), _item_tree_model, SLOT(showNone()));
     connect(_collection_selector_model, SIGNAL(refreshed()), _item_tree_model, SLOT(refresh()));
@@ -56,9 +56,6 @@ QString CollectionEditorTabPlugin::name()
 {
     return "Collection Editor";
 }
-
-void CollectionEditorTabPlugin::items_selection(QModelIndexList selection)
-{}
 
 void CollectionEditorTabPlugin::refresh_collections()
 {
@@ -91,7 +88,7 @@ void CollectionEditorTabPlugin::on_remove_selected_clicked()
 void CollectionEditorTabPlugin::on_edit_collection_clicked()
 {
     std::cout << "Editing Existing Collection" << std::endl;
-    EditCollectionDialog dialog(_db, new Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()));
+    EditCollectionDialog dialog(new Collection(_db, ui.selector->itemData(ui.selector->currentIndex(), Qt::UserRole).toInt()));
     dialog.exec();
     _collection_selector_model->refresh();
 }

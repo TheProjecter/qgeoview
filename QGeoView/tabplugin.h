@@ -22,7 +22,7 @@ public slots:
     void deactivate();
     void selectCache(Cache *cache);
     void selectWaypoint(Waypoint *waypoint);
-    void selectCollection(Collection *collection);
+    void selectCollection(int collection_id);
     void selectAllCollections();
     void selectNoCollections();
 protected:

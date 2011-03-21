@@ -9,6 +9,10 @@
 #include "db/waypoint.h"
 #include "exceptions.h"
 
+#define TREEMODEL_STATUS_NONE       1
+#define TREEMODEL_STATUS_ALL        2
+#define TREEMODEL_STATUS_COLLECTION 3
+
 class TreeModel : public QStandardItemModel
 {
     Q_OBJECT
@@ -30,7 +34,7 @@ signals:
 public slots:
     void showAll();
     void showNone();
-    void showCollection(Collection *collection);
+    void showCollection(int collection_id);
     void itemSelected(QModelIndex index);
     void refresh();
 protected:
@@ -38,7 +42,7 @@ protected:
 private:
     QSqlDatabase *_db;
     Collection *_collection;
-    bool _all;
+    int _status;
     QStandardItem _caches;
     QStandardItem _waypoints;
 };
