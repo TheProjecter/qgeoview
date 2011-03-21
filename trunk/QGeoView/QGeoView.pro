@@ -12,6 +12,7 @@ target.files = bin/*
 unix:target.path = /usr/bin
 win32:target.path = c:\Program\ Files\$$TARGET
 INSTALLS       += target
+FORMS          += mainwindow.ui
 HEADERS        += mainwindow.h \
                   db/collection.h \
                   db/databaseobject.h \
@@ -27,7 +28,6 @@ HEADERS        += mainwindow.h \
                   tabplugin.h \
                   treemodel.h \
                   collectionselectormodel.h
-FORMS          += mainwindow.ui
 SOURCES        += main.cpp \
                   mainwindow.cpp \
                   db/collection.cpp \

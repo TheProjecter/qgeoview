@@ -192,8 +192,11 @@ QList<Collection*> Collection::getAll(QSqlDatabase *db)
 
 QList<Cache*> Collection::caches()
 {
+    if (!_id)
+        throw IDNotSetException(this);
     QList<Cache*> caches;
-    QSqlQuery query("SELECT id, " + Cache::fieldNames().join(", ") + " FROM " + Cache::tableName() + ";");
+    QSqlQuery query("SELECT id, " + Cache::fieldNames().join(", ") + " FROM " + Cache::tableName() + " WHERE id IN (SELECT fk_cache FROM Cache2Collection WHERE fk_collection=?);");
+    query.addBindValue(_id);
 
     if (!query.exec())
         throw query;
@@ -207,8 +210,11 @@ QList<Cache*> Collection::caches()
 
 QList<Waypoint*> Collection::waypoints()
 {
+    if (!_id)
+        throw IDNotSetException(this);
     QList<Waypoint*> waypoints;
-    QSqlQuery query("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM " + Waypoint::tableName() + ";");
+    QSqlQuery query("SELECT id, " + Waypoint::fieldNames().join(", ") + " FROM " + Waypoint::tableName() + " WHERE id IN (SELECT fk_waypoint FROM Waypoint2Collection WHERE fk_collection=?);");
+    query.addBindValue(_id);
 
     if (!query.exec())
         throw query;

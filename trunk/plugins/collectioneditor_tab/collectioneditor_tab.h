@@ -36,7 +36,6 @@ public:
     CollectionEditorTabPlugin(QSqlDatabase *db, QTabWidget *pluginsTabWindow);
     QString name();
 public slots:
-    void items_selection(QModelIndexList selection);
     void refresh_collections();
     void cacheDragged(int id);
     void waypointDragged(int id);

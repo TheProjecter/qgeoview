@@ -11,7 +11,7 @@ EditCollectionDialog::EditCollectionDialog(QSqlDatabase *db, QWidget *parent) :
     ui->setupUi(this);
 }
 
-EditCollectionDialog::EditCollectionDialog(QSqlDatabase *db, Collection *collection, QWidget *parent) :
+EditCollectionDialog::EditCollectionDialog(Collection *collection, QWidget *parent) :
     QDialog(parent),
     _collection(collection),
     ui(new Ui::EditCollectionDialog)
