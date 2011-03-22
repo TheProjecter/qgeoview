@@ -55,37 +55,9 @@ void Collection::loadValues(QSqlQuery query, bool loadID)
     if (loadID)
         setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
-        setQStringValue(NULLMASK_COLLECTION_NAME, query.value(i).toString());
+        setName(query.value(i).toString());
     if (query.value(++i).isValid())
-        setQStringValue(NULLMASK_COLLECTION_DESCRIPTION, query.value(i).toString());
-}
-
-void Collection::setQStringValue(int mask, QString value)
-{
-    switch (mask) {
-        case NULLMASK_COLLECTION_NAME:
-            _name = value;
-            break;
-        case NULLMASK_COLLECTION_DESCRIPTION:
-            _description = value;
-            break;
-        default:
-            throw MaskNotFoundException(this, mask, "QString");
-    }
-    set(mask);
-}
-
-QString Collection::getQStringValue(int mask)
-{
-    if (!isSet(mask))
-        throw DBValueNotSetException(this, mask, "QString");
-    switch(mask) {
-        case NULLMASK_COLLECTION_NAME:
-            return _name;
-        case NULLMASK_COLLECTION_DESCRIPTION:
-            return _description;
-    }
-    throw MaskNotFoundException(this, mask, "QString");
+        setDescription(query.value(i).toString());
 }
 
 void Collection::addCache(int id)

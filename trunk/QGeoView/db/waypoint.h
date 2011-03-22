@@ -17,8 +17,6 @@ public:
     Waypoint(QSqlDatabase *db, int id=0);
     Waypoint(QSqlDatabase *db, QSqlQuery query);
     void addBindValues(QSqlQuery query);
-    void setIntValue(int mask, int value);
-    int getIntValue(int mask);
     QString table();
     static QString tableName();
     Point *getPoint();

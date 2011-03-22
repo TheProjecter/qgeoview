@@ -35,14 +35,6 @@ public:
     static QString tableName();
     static QList<Cache*> getAll(QSqlDatabase *);
     void addBindValues(QSqlQuery query);
-    void setQStringValue(int mask, QString value);
-    void setIntValue(int mask, int value);
-    void setFloatValue(int mask, float value);
-    void setBoolValue(int mask, bool value);
-    int getIntValue(int mask);
-    float getFloatValue(int mask);
-    QString getQStringValue(int mask);
-    bool getBoolValue(int mask);
     Waypoint *getWaypoint();
     QList<int> getLogIDs();
     QString summary();

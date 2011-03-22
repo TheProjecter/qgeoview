@@ -63,157 +63,33 @@ void Point::loadValues(QSqlQuery query, bool loadID)
     if (loadID)
         setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
-        setQStringValue(NULLMASK_POINT_TIME, query.value(i).toString());
+        setTime(query.value(i).toString());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_ELEVATION, query.value(i).toDouble());
+        setElevation(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_MAGNETICVARIATION, query.value(i).toDouble());
+        setMagneticVariation(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_GEOIDHEIGHT, query.value(i).toDouble());
+        setGeoIDHeight(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setQStringValue(NULLMASK_POINT_SYMBOL, query.value(i).toString());
+        setSymbol(query.value(i).toString());
     if (query.value(++i).isValid())
-        setQStringValue(NULLMASK_POINT_FIX, query.value(i).toString());
+        setFix(query.value(i).toString());
     if (query.value(++i).isValid())
-        setIntValue(NULLMASK_POINT_SATELITES, query.value(i).toInt());
+        setSatelites(query.value(i).toInt());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_HORIZONTALDOP, query.value(i).toDouble());
+        setHorizontalDOP(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_VERTICALDOP, query.value(i).toDouble());
+        setVerticalDOP(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_POSITIONDOP, query.value(i).toDouble());
+        setPositionDOP(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_AGEOFDGPSDATA, query.value(i).toDouble());
+        setAgeOfDGPSData(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setIntValue(NULLMASK_POINT_DGPSID, query.value(i).toInt());
+        setDGPSID(query.value(i).toInt());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_LATITUDE, query.value(i).toDouble());
+        setLatitude(query.value(i).toDouble());
     if (query.value(++i).isValid())
-        setFloatValue(NULLMASK_POINT_LONGITUDE, query.value(i).toDouble());
-}
-
-void Point::setQStringValue(int mask, QString value)
-{
-    switch(mask) {
-        case NULLMASK_POINT_TIME:
-            _time = value;
-            break;
-        case NULLMASK_POINT_SYMBOL:
-            _symbol = value;
-            break;
-        case NULLMASK_POINT_FIX:
-            _fix = value;
-            break;
-        default:
-            throw MaskNotFoundException(this, mask, "QString");
-    }
-    set(mask);
-}
-
-void Point::setFloatValue(int mask, float value)
-{
-    switch(mask) {
-        case NULLMASK_POINT_ELEVATION:
-            _elevation = value;
-            break;
-        case NULLMASK_POINT_MAGNETICVARIATION:
-            _magnetic_variation = value;
-            break;
-        case NULLMASK_POINT_GEOIDHEIGHT:
-            _geo_id_height = value;
-            break;
-        case NULLMASK_POINT_LATITUDE:
-            _latitude = value;
-            break;
-        case NULLMASK_POINT_LONGITUDE:
-            _longitude = value;
-            break;
-        case NULLMASK_POINT_HORIZONTALDOP:
-            _horizontal_dop = value;
-            break;
-        case NULLMASK_POINT_VERTICALDOP:
-            _vertical_dop= value;
-            break;
-        case NULLMASK_POINT_POSITIONDOP:
-            _position_dop= value;
-            break;
-        case NULLMASK_POINT_AGEOFDGPSDATA:
-            _age_of_dgps_data= value;
-            break;
-        default:
-            throw MaskNotFoundException(this, mask, "Float");
-    }
-    set(mask);
-}
-
-void Point::setIntValue(int mask, int value)
-{
-    switch(mask) {
-        case NULLMASK_POINT_SATELITES:
-            _satelites = value;
-            break;
-        case NULLMASK_POINT_DGPSID:
-            _dgps_id= value;
-            break;
-        default:
-            throw MaskNotFoundException(this, mask, "Int");
-    }
-    set(mask);
-}
-
-QString Point::getQStringValue(int mask)
-{
-    if (!isSet(mask))
-        throw DBValueNotSetException(this, mask, "QString");
-    switch(mask) {
-        case NULLMASK_POINT_TIME:
-            return _time;
-        case NULLMASK_POINT_SYMBOL:
-            return _symbol;
-        case NULLMASK_POINT_FIX:
-            return _fix;
-        }
-    throw MaskNotFoundException(this, mask, "QString");
-}
-
-float Point::getFloatValue(int mask)
-{
-    if(!isSet(mask))
-        throw DBValueNotSetException(this, mask, "Float");
-    switch(mask) {
-        case NULLMASK_POINT_ELEVATION:
-            return _elevation;
-        case NULLMASK_POINT_MAGNETICVARIATION:
-            return _magnetic_variation;
-        case NULLMASK_POINT_GEOIDHEIGHT:
-            return _geo_id_height;
-        case NULLMASK_POINT_LATITUDE:
-            return _latitude;
-        case NULLMASK_POINT_LONGITUDE:
-            return _longitude;
-        case NULLMASK_POINT_HORIZONTALDOP:
-            return _horizontal_dop;
-        case NULLMASK_POINT_VERTICALDOP:
-            return _vertical_dop;
-        case NULLMASK_POINT_POSITIONDOP:
-            return _position_dop;
-        case NULLMASK_POINT_AGEOFDGPSDATA:
-            return _age_of_dgps_data;
-    }
-    throw MaskNotFoundException(this, mask, "Float");
-}
-
-int Point::getIntValue(int mask)
-{
-    if (!isSet(mask))
-        throw DBValueNotSetException(this, mask, "Int");
-    switch(mask) {
-        case NULLMASK_POINT_SATELITES:
-            return _satelites;
-        case NULLMASK_POINT_DGPSID:
-            return _dgps_id;
-    }
-    throw MaskNotFoundException(this, mask, "Int");
+        setLongitude(query.value(i).toDouble());
 }
 
 void Point::setTime(QString time)

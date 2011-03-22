@@ -18,13 +18,13 @@ public:
     Description(QSqlDatabase *db, int id=0);
     Description(QSqlDatabase *db, QSqlQuery query);
     void addBindValues(QSqlQuery query);
-    void setQStringValue(int mask, QString value);
-    QString getQStringValue(int mask);
     QString table();
     QStringList fields();
     static QStringList fieldNames();
     void setName(QString name);
-    void setLink(QString link, QString name);
+    void setLink(QString url, QString name);
+    void setLinkURL(QString url);
+    void setLinkName(QString name);
     void setComments(QString comments);
     void setSource(QString source);
     void setType(QString type);

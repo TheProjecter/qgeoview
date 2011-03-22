@@ -18,10 +18,10 @@ EditCollectionDialog::EditCollectionDialog(Collection *collection, QWidget *pare
 {
     ui->setupUi(this);
     if (_collection->isSet(NULLMASK_COLLECTION_NAME))
-        ui->name->setText(_collection->getQStringValue(NULLMASK_COLLECTION_NAME));
+        ui->name->setText(_collection->getName());
 
     if (_collection->isSet(NULLMASK_COLLECTION_DESCRIPTION))
-        ui->description->setText(_collection->getQStringValue(NULLMASK_COLLECTION_DESCRIPTION));
+        ui->description->setText(_collection->getDescription());
 }
 
 EditCollectionDialog::~EditCollectionDialog()
@@ -33,8 +33,8 @@ void EditCollectionDialog::on_buttonBox_accepted()
 {
     // only save if you specified a name.
     if (!ui->name->text().isEmpty()) {
-        _collection->setQStringValue(NULLMASK_COLLECTION_NAME, ui->name->text());
-        _collection->setQStringValue(NULLMASK_COLLECTION_DESCRIPTION, ui->description->text());
+        _collection->setName(ui->name->text());
+        _collection->setDescription(ui->description->text());
         _collection->save();
     }
 }

@@ -22,7 +22,7 @@ QString Waypoint::summary()
     if (isSet(NULLMASK_WAYPOINT_DESCRIPTION)) {
         Description *d(getDescription());
         if (d->isSet(NULLMASK_DESCRIPTION_NAME))
-            return d->getQStringValue(NULLMASK_DESCRIPTION_NAME);
+            return d->getName();
     }
     return "Some Waypoint...";
 }
@@ -61,37 +61,9 @@ void Waypoint::loadValues(QSqlQuery query, bool loadID)
     if (loadID)
         setID(query.value(++i).toInt());
     if (query.value(++i).isValid())
-        setIntValue(NULLMASK_WAYPOINT_POINT, query.value(i).toInt());
+        setPoint(query.value(i).toInt());
     if (query.value(++i).isValid())
-        setIntValue(NULLMASK_WAYPOINT_DESCRIPTION, query.value(i).toInt());
-}
-
-void Waypoint::setIntValue(int mask, int value)
-{
-    switch(mask) {
-        case NULLMASK_WAYPOINT_POINT:
-            _fk_point = value;
-            break;
-        case NULLMASK_WAYPOINT_DESCRIPTION:
-            _fk_description = value;
-            break;
-        default:
-            throw MaskNotFoundException(this, mask, "Int");
-    }
-    set(mask);
-}
-
-int Waypoint::getIntValue(int mask)
-{
-    if (!isSet(mask))
-        throw DBValueNotSetException(this, mask, "Int");
-    switch(mask) {
-        case NULLMASK_WAYPOINT_POINT:
-            return _fk_point;
-        case NULLMASK_WAYPOINT_DESCRIPTION:
-            return _fk_description;
-    }
-    throw MaskNotFoundException(this, mask, "Int");
+        setDescription(query.value(i).toInt());
 }
 
 Point *Waypoint::getPoint()
