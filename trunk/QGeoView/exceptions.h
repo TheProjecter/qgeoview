@@ -48,7 +48,7 @@ protected:
 
 class DBValueNotSetException : public DBException {
 public:
-    DBValueNotSetException(DatabaseObject *o, int mask, QString datatype) : _o(o), _mask(mask), _datatype(datatype) {}
+    DBValueNotSetException(DatabaseObject *o, int mask, QString datatype = "UnKnown") : _o(o), _mask(mask), _datatype(datatype) {}
     QString name() {return "DBValueNotSetException";}
     QString error() {return _o->table() + ".id(" + _o->getID() + ") " + _datatype + "(" + _mask + ") is NULL";}
 protected:

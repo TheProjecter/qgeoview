@@ -48,6 +48,37 @@ public:
     QString summary();
     QStringList fields();
     static QStringList fieldNames();
+    void setName(QString name);
+    void setPlacedBy(QString placed_by);
+    void setOwnerGUID(QString owner_guid);
+    void setOwnerName(QString owner_name);
+    void setType(QString type);
+    void setContainer(QString container);
+    void setCountry(QString country);
+    void setState(QString state);
+    void setShortDescription(QString description, bool html=false);
+    void setLongDescription(QString description, bool html=false);
+    void setEncodedHints(QString encoded_hints);
+    void setDifficulty(float difficulty);
+    void setTerrain(float terrain);
+    void setOwnerID(int owner_id);
+    void setWaypoint(int waypoint);
+    QString getName();
+    QString getPlacedBy();
+    QString getOwnerGUID();
+    QString getOwnerName();
+    QString getType();
+    QString getContainer();
+    QString getCountry();
+    QString getState();
+    QString getShortDescription();
+    bool getShortDescriptionHTML();
+    QString getLongDescription();
+    bool getLongDescriptionHTML();
+    QString getEncodedHints();
+    float getDifficulty();
+    float getTerrain();
+    int getOwnerID();
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:

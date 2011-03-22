@@ -38,6 +38,29 @@ public:
     QStringList fields();
     static QStringList fieldNames();
     QString summary();
+    void setLogGUID(QString log_guid);
+    void setDate(QString date);
+    void setType(QString type);
+    void setFinderGUID(QString finder_guid);
+    void setFinderName(QString finder_name);
+    void setText(QString text, bool encoded=false);
+    void setLatitude(float latitude);
+    void setLongitude(float longitude);
+    void setLogID(int log_id);
+    void setFinderID(int finder_id);
+    void setCache(int cache);
+    QString getLogGUID();
+    QString getDate();
+    QString getType();
+    QString getFinderGUID();
+    QString getFinderName();
+    QString getText();
+    bool getTextEncoded();
+    float getLatitude();
+    float getLongitude();
+    int getLogID();
+    int getFinderID();
+    int getCache();
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:
