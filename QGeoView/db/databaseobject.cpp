@@ -80,34 +80,6 @@ void DatabaseObject::setID(int value)
     _id = value;
 }
 
-void DatabaseObject::setQStringValue(int mask, QString value)
-{
-    Q_UNUSED(mask)
-    Q_UNUSED(value)
-    throw MaskNotFoundException(this, mask, "QString");
-}
-
-void DatabaseObject::setFloatValue(int mask, float value)
-{
-    Q_UNUSED(mask)
-    Q_UNUSED(value)
-    throw MaskNotFoundException(this, mask, "Float");
-}
-
-void DatabaseObject::setIntValue(int mask, int value)
-{
-    Q_UNUSED(mask)
-    Q_UNUSED(value)
-    throw MaskNotFoundException(this, mask, "Int");
-}
-
-void DatabaseObject::setBoolValue(int mask, bool value)
-{
-    Q_UNUSED(mask)
-    Q_UNUSED(value)
-    throw MaskNotFoundException(this, mask, "Bool");
-}
-
 int DatabaseObject::getID()
 {
     if (!_id)
@@ -120,30 +92,6 @@ void DatabaseObject::cleanup()
 {}
 
 // The following only need to be implemented if the item handles the respective type.
-
-QString DatabaseObject::getQStringValue(int mask)
-{
-    Q_UNUSED(mask)
-    throw MaskNotFoundException(this, mask, "QString");
-}
-
-float DatabaseObject::getFloatValue(int mask)
-{
-    Q_UNUSED(mask)
-    throw MaskNotFoundException(this, mask, "Float");
-}
-
-int DatabaseObject::getIntValue(int mask)
-{
-    Q_UNUSED(mask)
-    throw MaskNotFoundException(this, mask, "Int");
-}
-
-bool DatabaseObject::getBoolValue(int mask)
-{
-    Q_UNUSED(mask)
-    throw MaskNotFoundException(this, mask, "Bool");
-}
 
 void DatabaseObject::ensure(int mask)
 {

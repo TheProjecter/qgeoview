@@ -85,15 +85,15 @@ void ReadGpxPlugin::read(QDomDocument *doc)
 
         node = wpt_element.elementsByTagName("time").item(0).firstChild();
         if (!node.isNull())
-            p->setQStringValue(NULLMASK_POINT_TIME, node.nodeValue());
+            p->setTime(node.nodeValue());
 
         node = wpt_element.elementsByTagName("sym").item(0).firstChild();
         if (!node.isNull())
-            p->setQStringValue(NULLMASK_POINT_SYMBOL, node.nodeValue());
+            p->setSymbol(node.nodeValue());
 
-        p->setFloatValue(NULLMASK_POINT_LATITUDE, wpt_element.attribute("lat").toDouble());
+        p->setLatitude(wpt_element.attribute("lat").toDouble());
 
-        p->setFloatValue(NULLMASK_POINT_LONGITUDE, wpt_element.attribute("lon").toDouble());
+        p->setLongitude(wpt_element.attribute("lon").toDouble());
 
         p->save();
 
@@ -102,19 +102,19 @@ void ReadGpxPlugin::read(QDomDocument *doc)
 
         node = wpt_element.elementsByTagName("name").item(0).firstChild();
         if (!node.isNull())
-            d->setQStringValue(NULLMASK_DESCRIPTION_NAME, node.nodeValue());
+            d->setName(node.nodeValue());
 
         node = wpt_element.elementsByTagName("linkname").item(0).firstChild();
         if (!node.isNull())
-            d->setQStringValue(NULLMASK_DESCRIPTION_LINKNAME, node.nodeValue());
+            d->setLinkName(node.nodeValue());
 
         node = wpt_element.elementsByTagName("link").item(0).firstChild();
         if (!node.isNull())
-            d->setQStringValue(NULLMASK_DESCRIPTION_LINKURL, node.nodeValue());
+            d->setLinkURL(node.nodeValue());
 
         node = wpt_element.elementsByTagName("type").item(0).firstChild();
         if (!node.isNull())
-            d->setQStringValue(NULLMASK_DESCRIPTION_SOURCE, node.nodeValue());
+            d->setSource(node.nodeValue());
 
         d->save();
 
@@ -122,35 +122,39 @@ void ReadGpxPlugin::read(QDomDocument *doc)
 
         w = new Waypoint(_db);
 
-        w->setIntValue(NULLMASK_WAYPOINT_POINT, p->getID());
-        w->setIntValue(NULLMASK_WAYPOINT_DESCRIPTION, d->getID());
+        w->setPoint(p->getID());
+        w->setDescription(d->getID());
         w->save();
 
         // Cache
 
         c = new Cache(_db);
 
-        c->setIntValue(NULLMASK_CACHE_WAYPOINT, w->getID());
+        c->setWaypoint(w->getID());
 
-        c->setQStringValue(NULLMASK_CACHE_NAME, cache_element.elementsByTagName("groundspeak:name").item(0).firstChild().nodeValue());
-        c->setQStringValue(NULLMASK_CACHE_PLACEDBY, cache_element.elementsByTagName("groundspeak:placed_by").item(0).firstChild().nodeValue());
+        c->setName(cache_element.elementsByTagName("groundspeak:name").item(0).firstChild().nodeValue());
+        c->setPlacedBy(cache_element.elementsByTagName("groundspeak:placed_by").item(0).firstChild().nodeValue());
 
         node = cache_element.elementsByTagName("groundspeak:owner").item(0).firstChild();
-        c->setQStringValue(NULLMASK_CACHE_OWNERNAME, node.nodeValue());
-        c->setIntValue(NULLMASK_CACHE_OWNERID, node.toElement().attribute("id").toInt());
-        c->setQStringValue(NULLMASK_CACHE_OWNERGUID, node.toElement().attribute("guid"));
+        c->setOwnerName(node.nodeValue());
+        c->setOwnerID(node.toElement().attribute("id").toInt());
+        c->setOwnerGUID(node.toElement().attribute("guid"));
 
-        c->setQStringValue(NULLMASK_CACHE_TYPE, cache_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
-        c->setQStringValue(NULLMASK_CACHE_CONTAINER, cache_element.elementsByTagName("groundspeak:container").item(0).firstChild().nodeValue());
-        c->setFloatValue(NULLMASK_CACHE_DIFFICULTY, cache_element.elementsByTagName("groundspeak:difficulty").item(0).firstChild().nodeValue().toDouble());
-        c->setFloatValue(NULLMASK_CACHE_TERRAIN, cache_element.elementsByTagName("groundspeak:terrain").item(0).firstChild().nodeValue().toDouble());
-        c->setQStringValue(NULLMASK_CACHE_COUNTRY, cache_element.elementsByTagName("groundspeak:country").item(0).firstChild().nodeValue());
-        c->setQStringValue(NULLMASK_CACHE_STATE, cache_element.elementsByTagName("groundspeak:state").item(0).firstChild().nodeValue());
-        c->setQStringValue(NULLMASK_CACHE_SHORTDESCRIPTION, cache_element.elementsByTagName("groundspeak:short_description").item(0).firstChild().nodeValue());
-        c->setBoolValue(NULLMASK_CACHE_SHORTDESCRIPTIONHTML, cache_element.elementsByTagName("groundspeak:short_description").item(0).firstChild().toElement().attribute("html", "False") == "True");
-        c->setQStringValue(NULLMASK_CACHE_LONGDESCRIPTION, cache_element.elementsByTagName("groundspeak:long_description").item(0).firstChild().nodeValue());
-        c->setBoolValue(NULLMASK_CACHE_LONGDESCRIPTIONHTML, cache_element.elementsByTagName("groundspeak:long_description").item(0).firstChild().toElement().attribute("html", "False") == "True");
-        c->setQStringValue(NULLMASK_CACHE_ENCODEDHINTS, cache_element.elementsByTagName("groundspeak:encoded_hints").item(0).firstChild().nodeValue());
+        c->setType(cache_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
+        c->setContainer(cache_element.elementsByTagName("groundspeak:container").item(0).firstChild().nodeValue());
+        c->set(cache_element.elementsByTagName("groundspeak:difficulty").item(0).firstChild().nodeValue().toDouble());
+        c->setTerrain(cache_element.elementsByTagName("groundspeak:terrain").item(0).firstChild().nodeValue().toDouble());
+        c->setCountry(cache_element.elementsByTagName("groundspeak:country").item(0).firstChild().nodeValue());
+        c->setState(cache_element.elementsByTagName("groundspeak:state").item(0).firstChild().nodeValue());
+        c->setShortDescription(
+            cache_element.elementsByTagName("groundspeak:short_description").item(0).firstChild().nodeValue(),
+            cache_element.elementsByTagName("groundspeak:short_description").item(0).firstChild().toElement().attribute("html", "False") == "True"
+        );
+        c->setLongDescription(
+            cache_element.elementsByTagName("groundspeak:long_description").item(0).firstChild().nodeValue(),
+            cache_element.elementsByTagName("groundspeak:long_description").item(0).firstChild().toElement().attribute("html", "False") == "True"
+        );
+        c->setEncodedHints(cache_element.elementsByTagName("groundspeak:encoded_hints").item(0).firstChild().nodeValue());
 
         c->save();
 
@@ -162,22 +166,24 @@ void ReadGpxPlugin::read(QDomDocument *doc)
         {
             QDomElement log_element = cache_log_list.item(cache_log_i).toElement();
             l = new Log(_db);
-            l->setIntValue(NULLMASK_LOG_CACHE, c->getID());
-            l->setFloatValue(NULLMASK_LOG_LATITUDE, log_element.attribute("lat").toDouble());
-            l->setFloatValue(NULLMASK_LOG_LONGITUDE, log_element.attribute("lon").toDouble());
-            l->setIntValue(NULLMASK_LOG_LOGID, log_element.attribute("id").toInt());
-            l->setQStringValue(NULLMASK_LOG_LOGGUID, log_element.attribute("guid"));
-            l->setQStringValue(NULLMASK_LOG_DATE, log_element.elementsByTagName("groundspeak:date").item(0).firstChild().nodeValue());
-            l->setQStringValue(NULLMASK_LOG_TYPE, log_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
+            l->setCache(c->getID());
+            l->setLatitude(log_element.attribute("lat").toDouble());
+            l->setLongitude(log_element.attribute("lon").toDouble());
+            l->setLogID(log_element.attribute("id").toInt());
+            l->setLogGUID(log_element.attribute("guid"));
+            l->setDate(log_element.elementsByTagName("groundspeak:date").item(0).firstChild().nodeValue());
+            l->setType(log_element.elementsByTagName("groundspeak:type").item(0).firstChild().nodeValue());
 
             node = log_element.elementsByTagName("groundspeak:finder").item(0).firstChild();
-            l->setIntValue(NULLMASK_LOG_FINDERID, node.toElement().attribute("id").toInt());
-            l->setQStringValue(NULLMASK_LOG_FINDERGUID, node.toElement().attribute("guid"));
-            l->setQStringValue(NULLMASK_LOG_FINDERNAME, node.nodeValue());
+            l->setFinderID(node.toElement().attribute("id").toInt());
+            l->setFinderGUID(node.toElement().attribute("guid"));
+            l->setFinderName(node.nodeValue());
 
             node = log_element.elementsByTagName("groundspeak:text").item(0).firstChild();
-            l->setQStringValue(NULLMASK_LOG_TEXT, node.nodeValue());
-            l->setBoolValue(NULLMASK_LOG_TEXTENCODED, node.toElement().attribute("encoded", "False") == "True");
+            l->setText(
+                node.nodeValue(),
+                node.toElement().attribute("encoded", "False") == "True"
+            );
             l->save();
             delete l;
         }

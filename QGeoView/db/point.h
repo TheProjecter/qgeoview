@@ -27,12 +27,6 @@ public:
     Point(QSqlDatabase *db, int id=0);
     Point(QSqlDatabase *db, QSqlQuery query);
     void addBindValues(QSqlQuery query);
-    void setQStringValue(int mask, QString value);
-    void setFloatValue(int mask, float value);
-    void setIntValue(int mask, int value);
-    QString getQStringValue(int mask);
-    float getFloatValue(int mask);
-    int getIntValue(int mask);
     QString table();
     static QString tableName();
     QStringList fields();

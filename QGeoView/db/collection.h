@@ -18,8 +18,6 @@ public:
     Collection(QSqlDatabase *db, int id=0);
     Collection(QSqlDatabase *db, QSqlQuery query);
     void addBindValues(QSqlQuery query);
-    void setQStringValue(int mask, QString value);
-    QString getQStringValue(int mask);
     QString summary();
     QString table();
     static QString tableName();

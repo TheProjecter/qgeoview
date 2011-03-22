@@ -25,14 +25,6 @@ public:
     Log(QSqlDatabase *db, int id=0);
     Log(QSqlDatabase *db, QSqlQuery query);
     void addBindValues(QSqlQuery query);
-    void setQStringValue(int mask, QString value);
-    void setFloatValue(int mask, float value);
-    void setIntValue(int mask, int value);
-    void setBoolValue(int mask, bool value);
-    QString getQStringValue(int mask);
-    float getFloatValue(int mask);
-    int getIntValue(int mask);
-    bool getBoolValue(int mask);
     QString table();
     static QString tableName();
     QStringList fields();
