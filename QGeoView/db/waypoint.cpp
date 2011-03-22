@@ -119,3 +119,16 @@ QList<Waypoint*> Waypoint::getAll(QSqlDatabase *db)
 
     return waypoints;
 }
+
+void Waypoint::setPoint(int point)
+{
+    set(NULLMASK_WAYPOINT_POINT);
+    _fk_point = point;
+}
+
+void Waypoint::setDescription(int description)
+{
+    set(NULLMASK_WAYPOINT_DESCRIPTION);
+    _fk_description = description;
+}
+

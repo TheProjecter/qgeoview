@@ -109,3 +109,72 @@ QString Description::getQStringValue(int mask)
     }
     throw MaskNotFoundException(this, mask, "QString");
 }
+
+void Description::setName(QString name)
+{
+    set(NULLMASK_DESCRIPTION_NAME);
+    _name = name;
+}
+
+QString Description::getName()
+{
+    ensure(NULLMASK_DESCRIPTION_NAME);
+    return _name;
+}
+
+void Description::setLink(QString url, QString name)
+{
+    set(NULLMASK_DESCRIPTION_LINKURL);
+    set(NULLMASK_DESCRIPTION_LINKNAME);
+    _link_url = url;
+    _link_name = name;
+}
+
+QString Description::getLinkURL()
+{
+    ensure(NULLMASK_DESCRIPTION_LINKURL);
+    return _link_url;
+}
+
+QString Description::getLinkName()
+{
+    ensure(NULLMASK_DESCRIPTION_LINKNAME);
+    return _link_name;
+}
+
+void Description::setComments(QString comments)
+{
+    set(NULLMASK_DESCRIPTION_COMMENTS);
+    _comments = comments;
+}
+
+QString Description::getComments()
+{
+    ensure(NULLMASK_DESCRIPTION_COMMENTS);
+    return _comments;
+}
+
+void Description::setSource(QString source)
+{
+    set(NULLMASK_DESCRIPTION_SOURCE);
+    _source = source;
+}
+
+QString Description::getSource()
+{
+    ensure(NULLMASK_DESCRIPTION_SOURCE);
+    return _source;
+}
+
+void Description::setType(QString type)
+{
+    set(NULLMASK_DESCRIPTION_TYPE);
+    _type = type;
+}
+
+QString Description::getType()
+{
+    ensure(NULLMASK_DESCRIPTION_TYPE);
+    return _type;
+}
+

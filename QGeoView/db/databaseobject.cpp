@@ -144,3 +144,10 @@ bool DatabaseObject::getBoolValue(int mask)
     Q_UNUSED(mask)
     throw MaskNotFoundException(this, mask, "Bool");
 }
+
+void DatabaseObject::ensure(int mask)
+{
+    if (!isSet(mask))
+        throw DBValueNotSetException(this, mask);
+}
+

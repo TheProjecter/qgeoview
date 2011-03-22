@@ -36,6 +36,7 @@ public slots:
     virtual void save();
     virtual void remove();
     virtual QString table() = 0;
+    void ensure(int mask);
 protected:
     void setID(int id);
     virtual void addBindValues(QSqlQuery query) = 0;

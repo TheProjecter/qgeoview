@@ -43,16 +43,16 @@ void Point::addBindValues(QSqlQuery query)
 {
     query.addBindValue(isSet(NULLMASK_POINT_TIME) ? _time : QVariant(QVariant::String));
     query.addBindValue(isSet(NULLMASK_POINT_ELEVATION) ? _elevation : QVariant(QVariant::Double));
-    query.addBindValue(isSet(NULLMASK_POINT_MAGNETICVARIATION) ? _magneticVariation : QVariant(QVariant::Double));
-    query.addBindValue(isSet(NULLMASK_POINT_GEOIDHEIGHT) ? _geoIDHeight : QVariant(QVariant::Double));
+    query.addBindValue(isSet(NULLMASK_POINT_MAGNETICVARIATION) ? _magnetic_variation : QVariant(QVariant::Double));
+    query.addBindValue(isSet(NULLMASK_POINT_GEOIDHEIGHT) ? _geo_id_height: QVariant(QVariant::Double));
     query.addBindValue(isSet(NULLMASK_POINT_SYMBOL) ? _symbol : QVariant(QVariant::String));
     query.addBindValue(isSet(NULLMASK_POINT_FIX) ? _fix : QVariant(QVariant::String));
     query.addBindValue(isSet(NULLMASK_POINT_SATELITES) ? _satelites : QVariant(QVariant::Int));
-    query.addBindValue(isSet(NULLMASK_POINT_HORIZONTALDOP) ? _horizontalDOP : QVariant(QVariant::Double));
-    query.addBindValue(isSet(NULLMASK_POINT_VERTICALDOP) ? _verticalDOP : QVariant(QVariant::Double));
-    query.addBindValue(isSet(NULLMASK_POINT_POSITIONDOP) ? _positionDOP : QVariant(QVariant::Double));
-    query.addBindValue(isSet(NULLMASK_POINT_AGEOFDGPSDATA) ? _ageOfDGPSData : QVariant(QVariant::Double));
-    query.addBindValue(isSet(NULLMASK_POINT_DGPSID) ? _DGPSID : QVariant(QVariant::Int));
+    query.addBindValue(isSet(NULLMASK_POINT_HORIZONTALDOP) ? _horizontal_dop : QVariant(QVariant::Double));
+    query.addBindValue(isSet(NULLMASK_POINT_VERTICALDOP) ? _vertical_dop: QVariant(QVariant::Double));
+    query.addBindValue(isSet(NULLMASK_POINT_POSITIONDOP) ? _position_dop: QVariant(QVariant::Double));
+    query.addBindValue(isSet(NULLMASK_POINT_AGEOFDGPSDATA) ? _age_of_dgps_data: QVariant(QVariant::Double));
+    query.addBindValue(isSet(NULLMASK_POINT_DGPSID) ? _dgps_id: QVariant(QVariant::Int));
     query.addBindValue(isSet(NULLMASK_POINT_LATITUDE) ? _latitude : QVariant(QVariant::Double));
     query.addBindValue(isSet(NULLMASK_POINT_LONGITUDE) ? _longitude : QVariant(QVariant::Double));
 }
@@ -117,10 +117,10 @@ void Point::setFloatValue(int mask, float value)
             _elevation = value;
             break;
         case NULLMASK_POINT_MAGNETICVARIATION:
-            _magneticVariation = value;
+            _magnetic_variation = value;
             break;
         case NULLMASK_POINT_GEOIDHEIGHT:
-            _geoIDHeight = value;
+            _geo_id_height = value;
             break;
         case NULLMASK_POINT_LATITUDE:
             _latitude = value;
@@ -129,16 +129,16 @@ void Point::setFloatValue(int mask, float value)
             _longitude = value;
             break;
         case NULLMASK_POINT_HORIZONTALDOP:
-            _horizontalDOP = value;
+            _horizontal_dop = value;
             break;
         case NULLMASK_POINT_VERTICALDOP:
-            _verticalDOP = value;
+            _vertical_dop= value;
             break;
         case NULLMASK_POINT_POSITIONDOP:
-            _positionDOP = value;
+            _position_dop= value;
             break;
         case NULLMASK_POINT_AGEOFDGPSDATA:
-            _ageOfDGPSData = value;
+            _age_of_dgps_data= value;
             break;
         default:
             throw MaskNotFoundException(this, mask, "Float");
@@ -153,7 +153,7 @@ void Point::setIntValue(int mask, int value)
             _satelites = value;
             break;
         case NULLMASK_POINT_DGPSID:
-            _DGPSID = value;
+            _dgps_id= value;
             break;
         default:
             throw MaskNotFoundException(this, mask, "Int");
@@ -184,21 +184,21 @@ float Point::getFloatValue(int mask)
         case NULLMASK_POINT_ELEVATION:
             return _elevation;
         case NULLMASK_POINT_MAGNETICVARIATION:
-            return _magneticVariation;
+            return _magnetic_variation;
         case NULLMASK_POINT_GEOIDHEIGHT:
-            return _geoIDHeight;
+            return _geo_id_height;
         case NULLMASK_POINT_LATITUDE:
             return _latitude;
         case NULLMASK_POINT_LONGITUDE:
             return _longitude;
         case NULLMASK_POINT_HORIZONTALDOP:
-            return _horizontalDOP;
+            return _horizontal_dop;
         case NULLMASK_POINT_VERTICALDOP:
-            return _verticalDOP;
+            return _vertical_dop;
         case NULLMASK_POINT_POSITIONDOP:
-            return _positionDOP;
+            return _position_dop;
         case NULLMASK_POINT_AGEOFDGPSDATA:
-            return _ageOfDGPSData;
+            return _age_of_dgps_data;
     }
     throw MaskNotFoundException(this, mask, "Float");
 }
@@ -211,7 +211,176 @@ int Point::getIntValue(int mask)
         case NULLMASK_POINT_SATELITES:
             return _satelites;
         case NULLMASK_POINT_DGPSID:
-            return _DGPSID;
+            return _dgps_id;
     }
     throw MaskNotFoundException(this, mask, "Int");
 }
+
+void Point::setTime(QString time)
+{
+    set(NULLMASK_POINT_TIME);
+    _time = time;
+}
+
+QString Point::getTime()
+{
+    ensure(NULLMASK_POINT_TIME);
+    return _time;
+}
+
+void Point::setSymbol(QString symbol)
+{
+    set(NULLMASK_POINT_SYMBOL);
+    _symbol = symbol;
+}
+
+QString Point::getSymbol()
+{
+    ensure(NULLMASK_POINT_SYMBOL);
+    return _symbol;
+}
+
+void Point::setFix(QString fix)
+{
+    set(NULLMASK_POINT_FIX);
+    _fix = fix;
+}
+
+QString Point::getFix()
+{
+    ensure(NULLMASK_POINT_FIX);
+    return _fix;
+}
+
+void Point::setElevation(float elevation)
+{
+    set(NULLMASK_POINT_ELEVATION);
+    _elevation = elevation;
+}
+
+float Point::getElevation()
+{
+    ensure(NULLMASK_POINT_ELEVATION);
+    return _elevation;
+}
+
+void Point::setMagneticVariation(float magnetic_variation)
+{
+    set(NULLMASK_POINT_MAGNETICVARIATION);
+    _magnetic_variation = magnetic_variation;
+}
+
+float Point::getMagneticVariation()
+{
+    ensure(NULLMASK_POINT_MAGNETICVARIATION);
+    return _magnetic_variation;
+}
+
+void Point::setGeoIDHeight(float geo_id_height)
+{
+    set(NULLMASK_POINT_GEOIDHEIGHT);
+    _geo_id_height = geo_id_height;
+}
+
+float Point::getGeoIDHeight()
+{
+    ensure(NULLMASK_POINT_GEOIDHEIGHT);
+    return _geo_id_height;
+}
+
+void Point::setLatitude(float latitude)
+{
+    set(NULLMASK_POINT_LATITUDE);
+    _latitude = latitude;
+}
+
+float Point::getLatitude()
+{
+    ensure(NULLMASK_POINT_LATITUDE);
+    return _latitude;
+}
+
+void Point::setLongitude(float longitude)
+{
+    set(NULLMASK_POINT_LONGITUDE);
+    _longitude = longitude;
+}
+
+float Point::getLongitude()
+{
+    ensure(NULLMASK_POINT_LONGITUDE);
+    return _longitude;
+}
+
+void Point::setHorizontalDOP(float horizontal_dop)
+{
+    set(NULLMASK_POINT_HORIZONTALDOP);
+    _horizontal_dop = horizontal_dop;
+}
+
+float Point::getHorizontalDOP()
+{
+    ensure(NULLMASK_POINT_HORIZONTALDOP);
+    return _horizontal_dop;
+}
+
+void Point::setVerticalDOP(float vertical_dop)
+{
+    set(NULLMASK_POINT_VERTICALDOP);
+    _vertical_dop = vertical_dop;
+}
+
+float Point::getVerticalDOP()
+{
+    ensure(NULLMASK_POINT_VERTICALDOP);
+    return _vertical_dop;
+}
+
+void Point::setPositionDOP(float position_dop)
+{
+    set(NULLMASK_POINT_POSITIONDOP);
+    _position_dop = position_dop;
+}
+
+float Point::getPositionDOP()
+{
+    ensure(NULLMASK_POINT_POSITIONDOP);
+    return _position_dop;
+}
+
+void Point::setAgeOfDGPSData(float age_of_dgps_data)
+{
+    set(NULLMASK_POINT_AGEOFDGPSDATA);
+    _age_of_dgps_data = age_of_dgps_data;
+}
+
+float Point::getAgeOfDGPSData()
+{
+    ensure(NULLMASK_POINT_AGEOFDGPSDATA);
+    return _age_of_dgps_data;
+}
+
+void Point::setSatelites(int satelites)
+{
+    set(NULLMASK_POINT_SATELITES);
+    _satelites = satelites;
+}
+
+int Point::getSatelites()
+{
+    ensure(NULLMASK_POINT_SATELITES);
+    return _satelites;
+}
+
+void Point::setDGPSID(int dgps_id)
+{
+    set(NULLMASK_POINT_DGPSID);
+    _dgps_id = dgps_id;
+}
+
+int Point::getDGPSID()
+{
+    ensure(NULLMASK_POINT_DGPSID);
+    return _dgps_id;
+}
+

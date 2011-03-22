@@ -37,6 +37,34 @@ public:
     static QString tableName();
     QStringList fields();
     static QStringList fieldNames();
+    void setTime(QString time);
+    void setSymbol(QString symbol);
+    void setFix(QString fix);
+    void setElevation(float elevation);
+    void setMagneticVariation(float magnetic_variation);
+    void setGeoIDHeight(float geo_id_height);
+    void setLatitude(float latitude);
+    void setLongitude(float longitude);
+    void setHorizontalDOP(float horizontal_dop);
+    void setVerticalDOP(float vertical_dop);
+    void setPositionDOP(float position_dop);
+    void setAgeOfDGPSData(float age_of_dgps_data);
+    void setSatelites(int satelites);
+    void setDGPSID(int dgps_id);
+    QString getTime();
+    QString getSymbol();
+    QString getFix();
+    float getElevation();
+    float getMagneticVariation();
+    float getGeoIDHeight();
+    float getLatitude();
+    float getLongitude();
+    float getHorizontalDOP();
+    float getVerticalDOP();
+    float getPositionDOP();
+    float getAgeOfDGPSData();
+    int getSatelites();
+    int getDGPSID();
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:
@@ -44,16 +72,15 @@ private:
     QString _symbol;
     QString _fix;
     float _elevation;
-    float _magneticVariation;
-    float _geoIDHeight;
+    float _magnetic_variation;
+    float _geo_id_height;
     float _latitude;
     float _longitude;
-    float _horizontalDOP;
-    float _verticalDOP;
-    float _positionDOP;
-    float _ageOfDGPSData;
+    float _horizontal_dop;
+    float _vertical_dop;
+    float _position_dop;
+    float _age_of_dgps_data;
     int _satelites;
-    int _DGPSID;
-
+    int _dgps_id;
 };
 #endif // POINT_H

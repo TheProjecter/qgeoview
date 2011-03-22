@@ -33,6 +33,10 @@ public:
     static QList<Collection*> getAll(QSqlDatabase *db);
     QList<Cache*> caches();
     QList<Waypoint*> waypoints();
+    void setName(QString name);
+    void setDescription(QString description);
+    QString getName();
+    QString getDescription();
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:

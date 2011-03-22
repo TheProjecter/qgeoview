@@ -27,6 +27,8 @@ public:
     QStringList fields();
     static QStringList fieldNames();
     static QList<Waypoint*> getAll(QSqlDatabase *db);
+    void setPoint(int point);
+    void setDescription(int description);
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:

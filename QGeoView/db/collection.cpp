@@ -225,3 +225,27 @@ QList<Waypoint*> Collection::waypoints()
 
     return waypoints;
 }
+
+void Collection::setName(QString name)
+{
+    set(NULLMASK_COLLECTION_NAME);
+    _name = name;
+}
+
+QString Collection::getName()
+{
+    ensure(NULLMASK_COLLECTION_NAME);
+    return _name;
+}
+
+void Collection::setDescription(QString description)
+{
+    set(NULLMASK_COLLECTION_DESCRIPTION);
+    _description = description;
+}
+
+QString Collection::getDescription()
+{
+    ensure(NULLMASK_COLLECTION_DESCRIPTION);
+    return _description;
+}

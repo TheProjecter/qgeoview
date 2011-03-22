@@ -302,3 +302,194 @@ QList<int> Cache::getLogIDs()
     }
     return ids;
 }
+
+void Cache::setName(QString name)
+{
+    set(NULLMASK_CACHE_NAME);
+    _name = name;
+}
+
+QString Cache::getName()
+{
+    ensure(NULLMASK_CACHE_NAME);
+    return _name;
+}
+
+void Cache::setPlacedBy(QString placed_by)
+{
+    set(NULLMASK_CACHE_PLACEDBY);
+    _placed_by = placed_by;
+}
+
+QString Cache::getPlacedBy()
+{
+    ensure(NULLMASK_CACHE_PLACEDBY);
+    return _placed_by;
+}
+
+void Cache::setOwnerGUID(QString owner_guid)
+{
+    set(NULLMASK_CACHE_OWNERGUID);
+    _owner_guid = owner_guid;
+}
+
+QString Cache::getOwnerGUID()
+{
+    ensure(NULLMASK_CACHE_OWNERGUID);
+    return _owner_guid;
+}
+
+void Cache::setOwnerName(QString owner_name)
+{
+    set(NULLMASK_CACHE_OWNERNAME);
+    _owner_name = owner_name;
+}
+
+QString Cache::getOwnerName()
+{
+    ensure(NULLMASK_CACHE_OWNERNAME);
+    return _owner_name;
+}
+
+void Cache::setType(QString type)
+{
+    set(NULLMASK_CACHE_TYPE);
+    _type = type;
+}
+
+QString Cache::getType()
+{
+    ensure(NULLMASK_CACHE_TYPE);
+    return _type;
+}
+
+void Cache::setContainer(QString container)
+{
+    set(NULLMASK_CACHE_CONTAINER);
+    _container = container;
+}
+
+QString Cache::getContainer()
+{
+    ensure(NULLMASK_CACHE_CONTAINER);
+    return _container;
+}
+
+void Cache::setCountry(QString country)
+{
+    set(NULLMASK_CACHE_COUNTRY);
+    _country = country;
+}
+
+QString Cache::getCountry()
+{
+    ensure(NULLMASK_CACHE_COUNTRY);
+    return _country;
+}
+
+void Cache::setState(QString state)
+{
+    set(NULLMASK_CACHE_STATE);
+    _state = state;
+}
+
+QString Cache::getState()
+{
+    ensure(NULLMASK_CACHE_STATE);
+    return _state;
+}
+
+void Cache::setShortDescription(QString description, bool html)
+{
+    set(NULLMASK_CACHE_SHORTDESCRIPTION);
+    set(NULLMASK_CACHE_SHORTDESCRIPTIONHTML);
+    _short_description = description;
+    _short_description_html = html;
+}
+
+QString Cache::getShortDescription()
+{
+    ensure(NULLMASK_CACHE_SHORTDESCRIPTION);
+    return _short_description;
+}
+
+bool Cache::getShortDescriptionHTML()
+{
+    ensure(NULLMASK_CACHE_SHORTDESCRIPTION);
+    return _short_description_html;
+}
+
+void Cache::setLongDescription(QString description, bool html)
+{
+    set(NULLMASK_CACHE_LONGDESCRIPTION);
+    set(NULLMASK_CACHE_LONGDESCRIPTIONHTML);
+    _long_description = description;
+    _long_description_html = html;
+}
+
+QString Cache::getLongDescription()
+{
+    ensure(NULLMASK_CACHE_LONGDESCRIPTION);
+    return _long_description;
+}
+
+bool Cache::getLongDescriptionHTML()
+{
+    ensure(NULLMASK_CACHE_LONGDESCRIPTIONHTML);
+    return _long_description_html;
+}
+
+void Cache::setEncodedHints(QString encoded_hints)
+{
+    set(NULLMASK_CACHE_ENCODEDHINTS);
+    _encoded_hints = encoded_hints;
+}
+
+QString Cache::getEncodedHints()
+{
+    ensure(NULLMASK_CACHE_ENCODEDHINTS);
+    return _encoded_hints;
+}
+
+void Cache::setDifficulty(float difficulty)
+{
+    set(NULLMASK_CACHE_DIFFICULTY);
+    _difficulty = difficulty;
+}
+
+float Cache::getDifficulty()
+{
+    ensure(NULLMASK_CACHE_DIFFICULTY);
+    return _difficulty;
+}
+
+void Cache::setTerrain(float terrain)
+{
+    set(NULLMASK_CACHE_TERRAIN);
+    _terrain = terrain;
+}
+
+float Cache::getTerrain()
+{
+    ensure(NULLMASK_CACHE_TERRAIN);
+    return _terrain;
+}
+
+void Cache::setOwnerID(int owner_id)
+{
+    set(NULLMASK_CACHE_OWNERID);
+    _owner_id = owner_id;
+}
+
+int Cache::getOwnerID()
+{
+    ensure(NULLMASK_CACHE_OWNERID);
+    return _owner_id;
+}
+
+void Cache::setWaypoint(int waypoint)
+{
+    set(NULLMASK_CACHE_WAYPOINT);
+    _fk_waypoint = waypoint;
+}
+

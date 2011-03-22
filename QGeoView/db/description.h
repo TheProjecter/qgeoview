@@ -23,6 +23,17 @@ public:
     QString table();
     QStringList fields();
     static QStringList fieldNames();
+    void setName(QString name);
+    void setLink(QString link, QString name);
+    void setComments(QString comments);
+    void setSource(QString source);
+    void setType(QString type);
+    QString getName();
+    QString getLinkURL();
+    QString getLinkName();
+    QString getComments();
+    QString getSource();
+    QString getType();
 protected:
     void loadValues(QSqlQuery query, bool loadID=false);
 private:
