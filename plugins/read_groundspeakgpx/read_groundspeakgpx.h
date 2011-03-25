@@ -17,8 +17,8 @@
 ** along with QGeoView.  If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
-#ifndef READ_GPX_H
-#define READ_GPX_H
+#ifndef READ_GROUNDSPEAKGPX_H
+#define READ_GROUNDSPEAKGPX_H
 
 #include <QDomNodeList>
 #include <QObject>
@@ -34,10 +34,10 @@
 #define DATABASE_DATATYPE_INT       2
 #define DATABASE_DATATYPE_DOUBLE    3
 
-class ReadGpxPlugin : public ReadPlugin {
+class ReadGroundspeakGpxPlugin : public ReadPlugin {
     Q_OBJECT
 public:
-    ReadGpxPlugin(QSqlDatabase *db);
+    ReadGroundspeakGpxPlugin(QSqlDatabase *db);
     QString name();
     void read(QDomDocument *doc);
 signals:
@@ -52,7 +52,7 @@ protected:
     QVariant child_value(QDomNodeList list, int format);
 };
 
-class ReadGpxPluginFactory : public QObject, public ReadPluginFactory
+class ReadGroundspeakGpxPluginFactory : public QObject, public ReadPluginFactory
 {
     Q_OBJECT
     Q_INTERFACES(ReadPluginFactory)

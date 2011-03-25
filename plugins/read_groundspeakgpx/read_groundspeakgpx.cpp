@@ -23,19 +23,19 @@
 #include <QFileDialog>
 #include <QVariant>
 
-#include "read_gpx.h"
+#include "read_groundspeakgpx.h"
 
-ReadGpxPlugin::ReadGpxPlugin(QSqlDatabase *db) :
+ReadGroundspeakGpxPlugin::ReadGroundspeakGpxPlugin(QSqlDatabase *db) :
     ReadPlugin(db)
 {
 }
 
-QString ReadGpxPlugin::name()
+QString ReadGroundspeakGpxPlugin::name()
 {
-    return "GPX Reader";
+    return "Groundspeak GPX Reader";
 }
 
-void ReadGpxPlugin::open()
+void ReadGroundspeakGpxPlugin::open()
 {
     QString filename = QFileDialog::getOpenFileName();
     if (filename.isNull())
@@ -57,7 +57,7 @@ void ReadGpxPlugin::open()
     emit done();
 }
 
-void ReadGpxPlugin::read(QDomDocument *doc)
+void ReadGroundspeakGpxPlugin::read(QDomDocument *doc)
 {
     QSqlQuery query;
     QDomElement gpx_element = doc->documentElement();
@@ -197,7 +197,7 @@ void ReadGpxPlugin::read(QDomDocument *doc)
 /*
  * Converts an sql string to either a specified format, or null (QVariant())
  */
-QVariant ReadGpxPlugin::child_value(QDomNodeList list, int format=0)
+QVariant ReadGroundspeakGpxPlugin::child_value(QDomNodeList list, int format=0)
 {
     if (list.size() == 0) {
         switch (format) {
@@ -222,9 +222,9 @@ QVariant ReadGpxPlugin::child_value(QDomNodeList list, int format=0)
     return QVariant();
 }
 
-ReadPlugin *ReadGpxPluginFactory::get_plugin(QSqlDatabase *db)
+ReadPlugin *ReadGroundspeakGpxPluginFactory::get_plugin(QSqlDatabase *db)
 {
-    return new ReadGpxPlugin(db);
+    return new ReadGroundspeakGpxPlugin(db);
 }
 
-Q_EXPORT_PLUGIN2(readgpxpluginfactory, ReadGpxPluginFactory);
+Q_EXPORT_PLUGIN2(readgroundspeakgpxpluginfactory, ReadGroundspeakGpxPluginFactory);
