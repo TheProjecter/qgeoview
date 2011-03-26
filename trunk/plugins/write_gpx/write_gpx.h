@@ -30,6 +30,7 @@
 #include "db/description.h"
 #include "db/waypoint.h"
 #include "db/cache.h"
+#include "db/collection.h"
 #include "db/log.h"
 
 class WriteGpxPlugin : public WritePlugin {
@@ -40,6 +41,12 @@ public:
     void write(QFile *file, int collection_id);
 public slots:
     void save();
+private:
+    QDomElement cache2gpx(QDomDocument *doc, Cache *cache);
+    QDomElement waypoint2gpx(QDomDocument *doc, Waypoint *waypoint);
+    QList<QDomElement> point2gpx(QDomDocument *doc, Point *point);
+    QList<QDomElement> description2gpx(QDomDocument *doc, Description *description);
+    QDomElement createTextElement(QDomDocument *doc, QString name, QString value);
 };
 
 class WriteGpxPluginFactory : public QObject, public WritePluginFactory
