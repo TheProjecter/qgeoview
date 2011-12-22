@@ -1,6 +1,6 @@
 TEMPLATE    = subdirs
 SUBDIRS     = \
-              read_gpx \
+              read_groundspeakgpx \
               write_gpx \
               details_tab \
               collectioneditor_tab
